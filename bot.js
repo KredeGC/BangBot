@@ -34,7 +34,7 @@ client.on('message', message => {
 		var request = http.get("http://thefern.netau.net/api/meme/generator?meme=thot&top=begone&bottom=thot", function(response) {
 			response.pipe(file);
 			message.channel.send('', {
-				files: ["./images/headpat1.png"]
+				files: ["file.jpg"]
 			})
 			fs.unlinkSync("file.jpg");
 		});
