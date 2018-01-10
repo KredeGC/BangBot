@@ -1,6 +1,9 @@
 const Discord = require('discord.js');
 const client = new Discord.Client();
 
+const http = require('http');
+const fs = require('fs');
+
 const prefix = "-";
 
 client.on('ready', () => {
@@ -23,6 +26,14 @@ client.on('message', message => {
 	
 	if (command == "help") {
 		message.channel.send((message.author.nickname || message.author.username) + ", er du autist eller noget?");
+	}
+	
+	if (command == "meme") {
+		var file = fs.createWriteStream("file.jpg");
+		var request = http.get("http://thefern.netau.net/api/meme/generator?meme=thot&top=begone&bottom=thot", function(response) {
+			response.pipe(file);
+			message.channel.send(file);
+		});
 	}
 });
 
