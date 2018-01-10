@@ -1,9 +1,6 @@
 const Discord = require('discord.js');
 const client = new Discord.Client();
 
-const http = require('http');
-const fs = require('fs');
-
 const prefix = "-";
 
 client.on('ready', () => {
@@ -30,14 +27,9 @@ client.on('message', message => {
 	
 	if (command == "meme") {
 		message.channel.send("Finder en dank meme...");
-		var file = fs.createWriteStream("file.jpg");
-		var request = http.get("http://thefern.netau.net/api/meme/generator?meme=thot&top=begone&bottom=thot", function(response) {
-			response.pipe(file);
-			message.channel.send('', {
-				files: ["file.jpg"]
-			})
-			fs.unlinkSync("file.jpg");
-		});
+		message.channel.send('', {
+			files: ["http://thefern.netau.net/api/meme/generator?meme=thot&top=begone&bottom=thot"]
+		})
 	}
 });
 
