@@ -5,7 +5,7 @@ const prefix = "-";
 
 client.on('ready', () => {
     console.log('BangBot intensifies!');
-	client.user.setGame("BANG");
+	client.user.setGame('BANG');
 });
 
 client.on('guildMemberAdded', member => {
@@ -22,7 +22,7 @@ client.on('message', message => {
 	var args = message.content.split("").slice(1);
 	
 	if (command == "help") {
-		message.channel.send(message.author.name + ", er du autist eller noget?");
+		message.channel.send((message.author.nickname || message.author.username) + ", er du autist eller noget?");
 	}
 });
 
