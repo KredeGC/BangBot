@@ -17,7 +17,7 @@ client.on('message', message => {
 	if (!message.content.startsWith(prefix)) return;
     
 	var command = message.content.split(" ")[0];
-	command = command.slice(prefix.length);
+	command = command.slice(prefix.length).toLowerCase();
 	
 	var args = message.content.split("").slice(1);
 	
@@ -26,9 +26,18 @@ client.on('message', message => {
 	}
 	
 	if (command == "meme") {
-		message.channel.send('file.jpg', {
-			files: ["http://thefern.netau.net/api/meme/generator?meme=thot&top=begone&bottom=thot&type=.jpg"]
-		});
+		var meme = args[0];
+		var txt = args.slice(1).join(" ");
+		var tbl = txt.split(";");
+		if (tbl[1] != null) {
+			message.channel.send('', {
+				files: ["http://thefern.netau.net/api/meme/generator?meme=" + meme + "&top=" + tbl[0] + "&bottom=" + tbl[1] + "&type=.jpg"]
+			});
+		} else {
+			message.channel.send('', {
+				files: ["http://thefern.netau.net/api/meme/generator?meme=" + meme + "&top=" + tbl[0] + "&type=.jpg"]
+			});
+		}
 	}
 });
 
