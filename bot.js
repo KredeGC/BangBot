@@ -25,18 +25,26 @@ client.on('message', message => {
 	command = command.slice(prefix.length).toLowerCase();
 	var args = message.content.split(" ").slice(1);
 	
-	if (!rank[user]) rank[user] = 0;
+	if (!rank[user.id]) rank[user.id] = 0;
 	
-	rank[user]++;
+	rank[user.id]++;
+	
+	if (rank[user.id] % 2 == 0) {
+		message.channel.send("");
+	}
 	
 	fs.writeFile("rank.json", JSON.stringify(rank), (err) => {
 		if (err) console.error(err);
-	}
+	});
 	
 	if (command == "help") {
 		message.channel.send("**Kommandoer**" +
 		"\n  **" + prefix + "meme** `<template>` `<top;bottom>` : Lav en dank mehmay" +
 		"\n  **" + prefix + "communism** : Vi er alle lige");
+	}
+	
+	if (command == "rank") {
+		message.channel.send(user.nickname + " har sendt " + rank[user.id] + " beskeder. Sikke en nørd");
 	}
 	
 	if (command == "communism") {
