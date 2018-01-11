@@ -33,8 +33,7 @@ function playVideo( id ) {
 
 
 client.on('ready', () => {
-    console.log('Bang bang into the room!');
-	client.user.setGame('BANG');
+    console.log('Bang bang is into the room!');
 	client.user.setPresence({ game: { name: 'Bang Bang Bang', type: 0 } });
 });
 
