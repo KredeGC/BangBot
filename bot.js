@@ -29,6 +29,7 @@ client.on('message', message => {
 		var meme = args[0];
 		var txt = args.slice(1).join(" ");
 		var tbl = txt.split(";");
+		console.log("http://thefern.netau.net/api/meme/generator?meme=" + meme + "&top=" + tbl[0] + "&bottom=" + tbl[1] + "&type=.jpg");
 		if (tbl[1] != null) {
 			message.channel.send('', {
 				files: ["http://thefern.netau.net/api/meme/generator?meme=" + meme + "&top=" + tbl[0] + "&bottom=" + tbl[1] + "&type=.jpg"]
