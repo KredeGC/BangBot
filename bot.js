@@ -27,9 +27,10 @@ client.on('message', message => {
 	
 	if (command == "meme") {
 		message.channel.send("Finder en dank meme...");
-		var att = new Discord.MessageAttachment("http://thefern.netau.net/api/meme/generator?meme=thot&top=begone&bottom=thot", "thot.jpg");
 		message.channel.send('file.jpg', {
-			files: [att]
+			files: [
+				["http://thefern.netau.net/api/meme/generator?meme=thot&top=begone&bottom=thot", "thot.jpg"]
+			]
 		});
 	}
 });
