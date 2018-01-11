@@ -15,7 +15,9 @@ const stream_handler = null;
 
 
 function joinVoiceChannel( channel ) {
-	if (voice_connection != null) return;
+	if (channel.guild.voiceChannel) {
+		channel.guild.voiceChannel.leave();
+	}
 	channel.join().then(connection => {
 		voice_connection = connection;
 	}).catch(console.error);
