@@ -130,7 +130,7 @@ client.on('message', message => {
 			files: ["communism.gif"]
 		});
 		if (message.member.voiceChannel) {
-			joinChannel( "U06jlgpMtQs" );
+			joinChannel( message.member.voiceChannel, "U06jlgpMtQs" );
 		}
 	}
 	
