@@ -30,7 +30,9 @@ client.on('message', message => {
 	rank[user.id]++;
 	
 	if (rank[user.id] % 2 == 0) {
-		message.channel.send("");
+		message.channel.send("", {
+			files: ["10points.png"]
+		});
 	}
 	
 	fs.writeFile("rank.json", JSON.stringify(rank), (err) => {
@@ -40,11 +42,11 @@ client.on('message', message => {
 	if (command == "help") {
 		message.channel.send("**Kommandoer**" +
 		"\n  **" + prefix + "meme** `<template>` `<top;bottom>` : Lav en dank mehmay" +
-		"\n  **" + prefix + "communism** : Vi er alle lige");
+		"\n  **" + prefix + "communism** : Her er vi alle lige");
 	}
 	
 	if (command == "rank") {
-		message.channel.send(user.nickname + " har sendt " + rank[user.id] + " beskeder. Sikke en nørd");
+		message.channel.send((user.nickname || user.username) + " har sendt " + rank[user.id] + " beskeder. Sikke en nørd");
 	}
 	
 	if (command == "communism") {
@@ -61,17 +63,16 @@ client.on('message', message => {
 		var tbl = txt.split(";");
 		
 		var url = "http://thefern.netau.net/api/meme/generator?meme=";
-		var end = "&type=.jpg";
 		
 		if (tbl[1] != null) {
-			message.channel.send('', {
-				files: [url + meme + "&top=" + tbl[0] + "&bottom=" + tbl[1] + end]
-			});
+			url += meme + "&top=" + tbl[0] + "&bottom=" + tbl[1];
 		} else {
-			message.channel.send('', {
-				files: [url + meme + "&top=" + tbl[0] + end]
-			});
+			url += meme + "&top=" + tbl[0];
 		}
+		
+		message.channel.send("**" + (user.username || user.nickname) + "** sendte", {
+			files: [url + meme + "&type=.jpg"]
+		});
 	}
 });
 
