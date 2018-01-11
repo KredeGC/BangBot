@@ -22,10 +22,11 @@ client.on('message', message => {
 	var args = message.content.split(" ").slice(1);
 	
 	if (command == "help") {
-		message.channel.send((message.author.nickname || message.author.username) + ", er du autist eller noget?");
+		message.channel.send("**Kommandoer**" +
+		"\n  **" + prefix + "meme** `<template>` `<top;bottom>`");
 	}
 	
-	if (command == "meme") {
+	if (command == "meme" || command == "maymay") {
 		var meme = args[0];
 		var txt = args.slice(1).join(" ");
 		var tbl = txt.split(";");
