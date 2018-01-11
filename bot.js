@@ -73,7 +73,13 @@ client.on('message', message => {
 	if (command == "memelist") {
 		request('http://thefern.netau.net/api/meme/list', { json: true }, (err, res, body) => {
 			if (err) { return console.log(err); }
-			console.log(body);
+			var txt = "**Mulige memes**";
+			var memes = JSON.parse(body);
+			for (i = 0; i < memes.length; i++) {
+				txt += "\n  " + memes[i];
+			}
+			
+			message.channel.send(txt);
 		});
 	}
 	
