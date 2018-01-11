@@ -56,7 +56,7 @@ client.on('guildMemberAdded', member => {
 	member.guild.defaultChannel.send("Velkommen " + member.guild.name + " til " + member.guild.name);
 });
 
-bot.on('voiceStateUpdate', (oldMember, newMember) => {
+client.on('voiceStateUpdate', (oldMember, newMember) => {
 	if (voice_connection == null) return;
 	if (!newMember.voiceChannel && oldMember.voiceChannel) {
 		if (oldMember.voiceChannel == voice_connection.channel) {
