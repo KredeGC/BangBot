@@ -19,6 +19,7 @@ client.on('guildMemberAdded', member => {
 
 client.on('message', message => {
 	var user = message.author;
+	var name = user.nickname || user.username;
 	
 	if (user.bot) return;
 	
@@ -52,7 +53,7 @@ client.on('message', message => {
 	}
 	
 	if (command == "rank") {
-		message.channel.send("**" + user.displayName + "** har sendt " + rank[user.id] + " beskeder. Sikke en nørd");
+		message.channel.send("**" + name + "** har sendt " + (rank[user.id] || 0) + " beskeder. Sikke en nørd");
 	}
 	
 	if (command == "report") {
@@ -74,16 +75,16 @@ client.on('message', message => {
 		var txt = args.slice(1).join(" ");
 		var tbl = txt.split(";");
 		
-		var url = "http://thefern.netau.net/api/meme/generator?meme=";
+		var url = "http://thefern.netau.net/api/meme/generator?meme=" + meme;
 		
 		if (tbl[1] != null) {
-			url += meme + "&top=" + tbl[0] + "&bottom=" + tbl[1];
+			url += "&top=" + tbl[0] + "&bottom=" + tbl[1];
 		} else {
-			url += meme + "&top=" + tbl[0];
+			url += "&top=" + tbl[0];
 		}
 		
-		message.channel.send("Courtesy of **" + user.displayName + "**", {
-			files: [url + meme + "&type=.jpg"]
+		message.channel.send("Courtesy of **" + name + "**", {
+			files: [url + "&type=.jpg"]
 		});
 	}
 });
