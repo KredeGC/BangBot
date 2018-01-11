@@ -58,13 +58,9 @@ client.on('guildMemberAdded', member => {
 
 client.on('voiceStateUpdate', (oldMember, newMember) => {
 	if (voice_connection == null) return;
-	if (!newMember.voiceChannel && oldMember.voiceChannel) {
-		if (oldMember.voiceChannel == voice_connection.channel) {
-			var members = voice_connection.channel.members.array();
-			if (members.length == 0) {
-				leaveChannel( voice_connection.channel.guild );
-			}
-		}
+	var members = voice_connection.channel.members.array();
+	if (members.length == 0) {
+		leaveChannel( voice_connection.channel.guild );
 	}
 });
 
