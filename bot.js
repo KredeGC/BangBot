@@ -28,9 +28,7 @@ client.on('message', message => {
 	if (command == "meme") {
 		message.channel.send("Finder en dank meme...");
 		message.channel.send('file.jpg', {
-			files: [
-				["http://thefern.netau.net/api/meme/generator?meme=thot&top=begone&bottom=thot", "thot.jpg"]
-			]
+			files: ["http://thefern.netau.net/api/meme/generator?meme=thot&top=begone&bottom=thot.jpg"]
 		});
 	}
 });
