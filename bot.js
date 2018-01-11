@@ -56,6 +56,18 @@ client.on('guildMemberAdded', member => {
 	member.guild.defaultChannel.send("Velkommen " + member.guild.name + " til " + member.guild.name);
 });
 
+bot.on('voiceStateUpdate', (oldMember, newMember) => {
+	if (voice_connection == null) return;
+	if (!newMember.voiceChannel && oldMember.voiceChannel) {
+		if (oldMember.voiceChannel == voice_connection.channel) {
+			var members = voice_connection.channel.members.array();
+			if (members.length == 0) {
+				leaveChannel( voice_connection.channel.guild );
+			}
+		}
+	}
+});
+
 client.on('message', message => {
 	if (message.author.bot) return;
 	
@@ -92,11 +104,11 @@ client.on('message', message => {
 		"**Music**" +
 		"\n  **" + prefix + "join** : Join my minekraft server" +
 		"\n  **" + prefix + "leave** : Unsub to my channel" +
-		"\n  **" + prefix + "play** : Nastrovia!");
+		"\n  **" + prefix + "play** : Spil ulovlige youtube videoer!");
 	}
 	
 	if (command == "rank") {
-		message.channel.send("**" + name + "** har sendt " + (rank[user.id] || 0) + " beskeder. Sikke en nørd");
+		message.channel.send("**" + name + "** har " + (rank[user.id] || 0) + " point. Sikke en nørd");
 	}
 	
 	if (command == "repost") {
@@ -106,18 +118,21 @@ client.on('message', message => {
 	}
 	
 	if (command == "join") {
+		message.delete();
 		if (message.member.voiceChannel) {
 			joinChannel(message.member.voiceChannel);
 		} else {
-			message.channel.send("Du skal være i en VoiceChannel din tard");
+			message.channel.send(name + ", du skal være i en VoiceChannel din tard");
 		}
 	}
 	
 	if (command == "leave") {
+		message.delete();
 		leaveChannel( message.guild );
 	}
 	
 	if (command == "play") {
+		message.delete();
 		if (message.member.voiceChannel) {
 			var id = args[0];
 			playVideo( id );
@@ -126,7 +141,7 @@ client.on('message', message => {
 	
 	if (command == "communism") {
 		message.delete();
-		message.channel.send('', {
+		message.channel.send('Special tribute to Karl Marx, Stalin and Lenin', {
 			files: ["communism.gif"]
 		});
 		if (message.member.voiceChannel) {
