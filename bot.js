@@ -74,7 +74,7 @@ client.on('message', message => {
 		request('http://thefern.netau.net/api/meme/list', { json: true }, (err, res, body) => {
 			if (err) { return console.log(err); }
 			var txt = "**Mulige memes**";
-			var memes = JSON.parse(body);
+			var memes = body.split(',');
 			for (i = 0; i < memes.length; i++) {
 				txt += "\n  " + memes[i];
 			}
