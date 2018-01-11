@@ -5,6 +5,7 @@ const fs = require('fs');
 var rank = JSON.parse(fs.readFileSync("rank.json", "utf8"));
 
 const prefix = "-";
+const minLength = 10;
 
 client.on('ready', () => {
     console.log('Bang bang into the room!');
@@ -25,19 +26,21 @@ client.on('message', message => {
 	command = command.slice(prefix.length).toLowerCase();
 	var args = message.content.split(" ").slice(1);
 	
-	if (!rank[user.id]) rank[user.id] = 0;
-	
-	rank[user.id]++;
-	
-	if (rank[user.id] % 2 == 0) {
-		message.channel.send("", {
-			files: ["10points.png"]
+	if (message.content.length >= minLength) {
+		if (!rank[user.id]) rank[user.id] = 0;
+		
+		rank[user.id] += Math.floor((Math.random() * 10) + 1);
+		
+		if (rank[user.id] % 10 == 0) {
+			message.channel.send("", {
+				files: ["10points.png"]
+			});
+		}
+		
+		fs.writeFile("rank.json", JSON.stringify(rank), (err) => {
+			if (err) console.error(err);
 		});
 	}
-	
-	fs.writeFile("rank.json", JSON.stringify(rank), (err) => {
-		if (err) console.error(err);
-	});
 	
 	if (command == "help") {
 		message.channel.send("**Kommandoer**" +
@@ -46,7 +49,7 @@ client.on('message', message => {
 	}
 	
 	if (command == "rank") {
-		message.channel.send((user.nickname || user.username) + " har sendt " + rank[user.id] + " beskeder. Sikke en nørd");
+		message.channel.send("**" + (user.nickname || user.username) + "** har sendt " + rank[user.id] + " beskeder. Sikke en nørd");
 	}
 	
 	if (command == "communism") {
@@ -56,7 +59,7 @@ client.on('message', message => {
 		});
 	}
 	
-	if (command == "meme" || command == "maymay") {
+	if (command == "meme") {
 		message.delete();
 		var meme = args[0];
 		var txt = args.slice(1).join(" ");
@@ -70,7 +73,7 @@ client.on('message', message => {
 			url += meme + "&top=" + tbl[0];
 		}
 		
-		message.channel.send("**" + (user.username || user.nickname) + "** sendte", {
+		message.channel.send("Courtesy of **" + (user.username || user.nickname) + "**", {
 			files: [url + meme + "&type=.jpg"]
 		});
 	}
