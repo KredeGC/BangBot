@@ -73,8 +73,7 @@ client.on('message', message => {
 	if (command == "memelist") {
 		request('http://thefern.netau.net/api/meme/list', { json: true }, (err, res, body) => {
 			if (err) { return console.log(err); }
-			console.log(body.url);
-			console.log(body.explanation);
+			console.log(body);
 		});
 	}
 	
