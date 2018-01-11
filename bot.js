@@ -1,5 +1,8 @@
 const Discord = require('discord.js');
 const client = new Discord.Client();
+const fs = require('fs');
+
+var rank = JSON.parse(fs.readFileSync("rank.json", "utf8"));
 
 const prefix = "-";
 
@@ -17,10 +20,18 @@ client.on('message', message => {
 	if (message.author.bot) return;
 	if (!message.content.startsWith(prefix)) return;
     
+	var user = message.author;
 	var command = message.content.split(" ")[0];
 	command = command.slice(prefix.length).toLowerCase();
-	
 	var args = message.content.split(" ").slice(1);
+	
+	if (!rank[user]) rank[user] = 0;
+	
+	rank[user]++;
+	
+	fs.writeFile("rank.json", JSON.stringify(rank), (err) => {
+		if (err) console.error(err);
+	}
 	
 	if (command == "help") {
 		message.channel.send("**Kommandoer**" +
