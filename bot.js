@@ -4,7 +4,7 @@ const client = new Discord.Client();
 const prefix = "-";
 
 client.on('ready', () => {
-    console.log('BangBot intensifies!');
+    console.log('BangBot has intensified!');
 	client.user.setGame('BANG');
 });
 
@@ -27,9 +27,9 @@ client.on('message', message => {
 	
 	if (command == "meme") {
 		message.channel.send("Finder en dank meme...");
-		// var att = new Discord.Attachment("http://thefern.netau.net/api/meme/generator?meme=thot&top=begone&bottom=thot", "thot.jpg");
+		var att = new Discord.Attachment("http://thefern.netau.net/api/meme/generator?meme=thot&top=begone&bottom=thot", "thot.jpg");
 		message.channel.send('file.jpg', {
-			files: [new FileOptions("http://thefern.netau.net/api/meme/generator?meme=thot&top=begone&bottom=thot", "file.jpg")]
+			files: [att]
 		});
 	}
 });
