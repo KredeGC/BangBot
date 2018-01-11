@@ -25,7 +25,7 @@ client.on('message', message => {
 	if (message.content.length >= minLength) {
 		if (!rank[user.id]) rank[user.id] = 0;
 		
-		rank[user.id] += Math.floor((Math.random() * 10) + 1);
+		rank[user.id] += message.content.length - minLength;
 		
 		if (rank[user.id] % 10 == 0) {
 			message.channel.send("", {
@@ -47,11 +47,18 @@ client.on('message', message => {
 	if (command == "help") {
 		message.channel.send("**Kommandoer**" +
 		"\n  **" + prefix + "meme** `<template>` `<top;bottom>` : Lav en dank mehmay" +
+		"\n  **" + prefix + "report** : Fortæl alle at der er en meme tyv" +
 		"\n  **" + prefix + "communism** : Her er vi alle lige");
 	}
 	
 	if (command == "rank") {
-		message.channel.send("**" + (user.nickname || user.username) + "** har sendt " + rank[user.id] + " beskeder. Sikke en nørd");
+		message.channel.send("**" + user.displayName + "** har sendt " + rank[user.id] + " beskeder. Sikke en nørd");
+	}
+	
+	if (command == "report") {
+		message.channel.send("__**MEME THIEF SPOTTED**__", {
+			files: ["theft.jpg"]
+		});
 	}
 	
 	if (command == "communism") {
@@ -75,7 +82,7 @@ client.on('message', message => {
 			url += meme + "&top=" + tbl[0];
 		}
 		
-		message.channel.send("Courtesy of **" + (user.username || user.nickname) + "**", {
+		message.channel.send("Courtesy of **" + user.displayName + "**", {
 			files: [url + meme + "&type=.jpg"]
 		});
 	}
