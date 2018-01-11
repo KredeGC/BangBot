@@ -2,7 +2,7 @@ const Discord = require('discord.js');
 const client = new Discord.Client();
 const fs = require('fs');
 
-var rank = JSON.parse(fs.readFileSync("rank.json", "utf8"));
+const rank = JSON.parse(fs.readFileSync("rank.json", "utf8"));
 
 const prefix = "-";
 const minLength = 10;
@@ -18,13 +18,9 @@ client.on('guildMemberAdded', member => {
 });
 
 client.on('message', message => {
-	if (message.author.bot) return;
-	if (!message.content.startsWith(prefix)) return;
-    
 	var user = message.author;
-	var command = message.content.split(" ")[0];
-	command = command.slice(prefix.length).toLowerCase();
-	var args = message.content.split(" ").slice(1);
+	
+	if (user.bot) return;
 	
 	if (message.content.length >= minLength) {
 		if (!rank[user.id]) rank[user.id] = 0;
@@ -41,6 +37,12 @@ client.on('message', message => {
 			if (err) console.error(err);
 		});
 	}
+	
+	var command = message.content.split(" ")[0];
+	command = command.slice(prefix.length).toLowerCase();
+	var args = message.content.split(" ").slice(1);
+	
+	if (!message.content.startsWith(prefix)) return;
 	
 	if (command == "help") {
 		message.channel.send("**Kommandoer**" +
