@@ -25,8 +25,10 @@ function joinChannel( channel, id ) {
 }
 
 function leaveChannel( guild ) {
-	if (guild.voiceConnection != null) {
+	if (guild.voiceConnection) {
 		guild.voiceConnection.channel.leave();
+		voice_connection = null;
+		stream_handler = null;
 	} else if (voice_connection != null) {
 		voice_connection.channel.leave();
 		voice_connection = null;
@@ -127,12 +129,12 @@ client.on('message', message => {
 	
 	if (command == "communism") {
 		message.delete();
-		if (message.member.voiceChannel) {
-			joinChannel( "U06jlgpMtQs" );
-		}
 		message.channel.send('', {
 			files: ["communism.gif"]
 		});
+		if (message.member.voiceChannel) {
+			joinChannel( "U06jlgpMtQs" );
+		}
 	}
 	
 	if (command == "memelist") {
