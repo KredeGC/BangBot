@@ -1,6 +1,7 @@
 const Discord = require('discord.js');
 const client = new Discord.Client();
 const fs = require('fs');
+const req = require('request');
 
 const rank = JSON.parse(fs.readFileSync("rank.json", "utf8"));
 
@@ -23,13 +24,13 @@ client.on('message', message => {
 	
 	if (user.bot) return;
 	
-	if (message.content.length >= minLength) {
+	if (message.content.length > minLength) {
 		if (!rank[user.id]) rank[user.id] = 0;
 		
 		rank[user.id] += message.content.length - minLength;
 		
 		if (rank[user.id] % 10 == 0) {
-			message.channel.send("", {
+			message.channel.send("10+ meme points to **" + name + "**", {
 				files: ["10points.png"]
 			});
 		}
@@ -48,7 +49,7 @@ client.on('message', message => {
 	if (command == "help") {
 		message.channel.send("**Kommandoer**" +
 		"\n  **" + prefix + "meme** `<template>` `<top;bottom>` : Lav en dank mehmay" +
-		"\n  **" + prefix + "report** : Fortæl alle at der er en meme tyv" +
+		"\n  **" + prefix + "repost** : Fortæl alle at der er en meme tyv" +
 		"\n  **" + prefix + "communism** : Her er vi alle lige");
 	}
 	
@@ -56,7 +57,7 @@ client.on('message', message => {
 		message.channel.send("**" + name + "** har sendt " + (rank[user.id] || 0) + " beskeder. Sikke en nørd");
 	}
 	
-	if (command == "report") {
+	if (command == "repost") {
 		message.channel.send("__**MEME THIEF SPOTTED**__", {
 			files: ["theft.jpg"]
 		});
@@ -66,6 +67,14 @@ client.on('message', message => {
 		message.delete();
 		message.channel.send('', {
 			files: ["communism.gif"]
+		});
+	}
+	
+	if (command == "memelist") {
+		request('http://thefern.netau.net/api/meme/list', { json: true }, (err, res, body) => {
+			if (err) { return console.log(err); }
+			console.log(body.url);
+			console.log(body.explanation);
 		});
 	}
 	
