@@ -35,13 +35,13 @@ function leaveVoiceChannel( guild ) {
 	}
 }
 
-function playVideo( channel, id ) {
+function playVideo( channel, video ) {
 	if (stream_handler != null) return;
 	if (voice_connection == null) {
 		joinVoiceChannel( channel );
 	}
 	
-	var audio_stream = ytdl("https://www.youtube.com/watch?v=" + id, { filter : 'audioonly' });
+	var audio_stream = ytdl("https://www.youtube.com/watch?v=" + video, { filter : 'audioonly' });
 	stream_handler = voice_connection.playStream(audio_stream, { seek: 0, volume: 1 });
 	
 	stream_handler.once("end", reason => {
@@ -53,7 +53,7 @@ function playVideo( channel, id ) {
 
 
 client.on('ready', () => {
-    console.log('Bang bang is into the room!');
+    console.log('Bang bang into the room!');
 	client.user.setPresence({ game: { name: 'Bang Bang Bang', type: 0 } });
 });
 
