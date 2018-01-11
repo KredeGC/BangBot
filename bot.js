@@ -14,20 +14,19 @@ var voice_connection = null;
 var stream_handler = null;
 
 
-function nationalAnthem( channel ) {
-	playVideo( channel, "U06jlgpMtQs" );
-}
-
-function joinVoiceChannel( channel ) {
-	leaveVoiceChannel( channel.guild );
+function joinChannel( channel, id ) {
+	leaveChannel( channel.guild );
 	channel.join().then(connection => {
 		voice_connection = connection;
+		if (id != null) {
+			playVideo( id );
+		}
 	}).catch(console.error);
 }
 
-function leaveVoiceChannel( guild ) {
-	if (guild.voiceChannel) {
-		guild.voiceChannel.leave();
+function leaveChannel( guild ) {
+	if (guild.voiceConnection != null) {
+		guild.voiceConnection.channel.leave();
 	} else if (voice_connection != null) {
 		voice_connection.channel.leave();
 		voice_connection = null;
@@ -35,11 +34,9 @@ function leaveVoiceChannel( guild ) {
 	}
 }
 
-function playVideo( channel, video ) {
+function playVideo( video ) {
 	if (stream_handler != null) return;
-	if (voice_connection == null) {
-		joinVoiceChannel( channel );
-	}
+	if (voice_connection == null) return;
 	
 	var audio_stream = ytdl("https://www.youtube.com/watch?v=" + video, { filter : 'audioonly' });
 	stream_handler = voice_connection.playStream(audio_stream, { seek: 0, volume: 1 });
@@ -112,26 +109,27 @@ client.on('message', message => {
 	
 	if (command == "join") {
 		if (message.member.voiceChannel) {
-			joinVoiceChannel(message.member.voiceChannel);
+			joinChannel(message.member.voiceChannel);
 		} else {
 			message.channel.send("Du skal være i en VoiceChannel din tard");
 		}
 	}
 	
 	if (command == "leave") {
-		if (message.guild.voiceChannel) {
-			leaveVoiceChannel( message.guild );
-		}
+		leaveChannel( message.guild );
 	}
 	
 	if (command == "play") {
 		if (message.member.voiceChannel) {
-			nationalAnthem( message.member.voiceChannel );
+			playVideo( "U06jlgpMtQs" );
 		}
 	}
 	
 	if (command == "communism") {
 		message.delete();
+		if (message.member.voiceChannel) {
+			joinChannel( "U06jlgpMtQs" );
+		}
 		message.channel.send('', {
 			files: ["communism.gif"]
 		});
