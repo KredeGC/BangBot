@@ -14,8 +14,8 @@ var voice_connection = null;
 var stream_handler = null;
 
 
-function nationalAnthem() {
-	playVideo( "U06jlgpMtQs" );
+function nationalAnthem( channel ) {
+	playVideo( channel, "U06jlgpMtQs" );
 }
 
 function joinVoiceChannel( channel ) {
@@ -35,12 +35,10 @@ function leaveVoiceChannel( guild ) {
 	}
 }
 
-function playVideo( id ) {
+function playVideo( channel, id ) {
 	if (stream_handler != null) return;
 	if (voice_connection == null) {
-		if (!message.member.voiceChannel) return;
-		
-		joinVoiceChannel( message.member.voiceChannel );
+		joinVoiceChannel( channel );
 	}
 	
 	var audio_stream = ytdl("https://www.youtube.com/watch?v=" + id, { filter : 'audioonly' });
@@ -64,10 +62,10 @@ client.on('guildMemberAdded', member => {
 });
 
 client.on('message', message => {
-	var user = message.author;
-	var name = user.nickname || user.username;
+	if (message.author.bot) return;
 	
-	if (user.bot) return;
+	var user = message.member;
+	var name = user.displayName;
 	
 	if (message.content.length > minLength) {
 		if (!rank[user.id]) rank[user.id] = 0;
@@ -127,7 +125,9 @@ client.on('message', message => {
 	}
 	
 	if (command == "play") {
-		nationalAnthem();
+		if (message.member.voiceChannel) {
+			nationalAnthem( message.member.voiceChannel );
+		}
 	}
 	
 	if (command == "communism") {
