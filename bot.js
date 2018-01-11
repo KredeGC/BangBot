@@ -28,9 +28,7 @@ client.on('message', message => {
 	}
 	
 	if (command = "communism") {
-		message.channel.send('', {
-			files: ["https://media1.tenor.com/images/a79ad7b03efb0fd3750efa7b7d4b56fc/tenor.gif?itemid=5148606"]
-		});
+		message.channel.send("https://media1.tenor.com/images/a79ad7b03efb0fd3750efa7b7d4b56fc/tenor.gif?itemid=5148606");
 	}
 	
 	if (command == "meme" || command == "maymay") {
