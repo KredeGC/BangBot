@@ -22,8 +22,9 @@ function joinVoiceChannel( channel ) {
 }
 
 function playVideo( id ) {
-	var audio_stream = ytdl("https://www.youtube.com/watch?v=" + id);
-	stream_handler = voice_connection.playStream(audio_stream);
+	if (voice_connection == null) return;
+	var audio_stream = ytdl("https://www.youtube.com/watch?v=" + id, { filter : 'audioonly' });
+	stream_handler = voice_connection.playStream(audio_stream, { seek: 0, volume: 1 });
 	
 	stream_handler.once("end", reason => {
 		stream_handler = null;
