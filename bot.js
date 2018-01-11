@@ -14,27 +14,42 @@ var voice_connection = null;
 var stream_handler = null;
 
 
+function nationalAnthem() {
+	playVideo( "U06jlgpMtQs" );
+}
+
 function joinVoiceChannel( channel ) {
-	if (channel.guild.voiceChannel) {
-		channel.guild.voiceChannel.leave();
-	}
+	leaveVoiceChannel( channel.guild );
 	channel.join().then(connection => {
 		voice_connection = connection;
 	}).catch(console.error);
 }
 
 function leaveVoiceChannel( guild ) {
-	
+	if (guild.voiceChannel) {
+		guild.voiceChannel.leave();
+	} else if (voice_connection != null) {
+		voice_connection.channel.leave();
+		voice_connection = null;
+		stream_handler = null;
+	}
 }
 
 function playVideo( id ) {
-	if (voice_connection == null) return;
+	if (stream_handler != null) return;
+	if (voice_connection == null) {
+		if (!message.member.voiceChannel) return;
+		
+		joinVoiceChannel( message.member.voiceChannel );
+	}
+	
 	var audio_stream = ytdl("https://www.youtube.com/watch?v=" + id, { filter : 'audioonly' });
 	stream_handler = voice_connection.playStream(audio_stream, { seek: 0, volume: 1 });
 	
 	stream_handler.once("end", reason => {
-		stream_handler = null;
 		voice_connection.channel.leave();
+		voice_connection = null;
+		stream_handler = null;
 	});
 }
 
@@ -80,7 +95,11 @@ client.on('message', message => {
 		message.channel.send("**Kommandoer**" +
 		"\n  **" + prefix + "meme** `<template>` `<top;bottom>` : Lav en dank mehmay" +
 		"\n  **" + prefix + "repost** : Fortæl alle at der er en meme tyv" +
-		"\n  **" + prefix + "communism** : Her er vi alle lige");
+		"\n  **" + prefix + "communism** : Her er vi alle lige" +
+		"**Music**" +
+		"\n  **" + prefix + "join** : Join my minekraft server" +
+		"\n  **" + prefix + "leave** : Unsub to my channel" +
+		"\n  **" + prefix + "play** : Nastrovia!");
 	}
 	
 	if (command == "rank") {
@@ -101,8 +120,14 @@ client.on('message', message => {
 		}
 	}
 	
+	if (command == "leave") {
+		if (message.guild.voiceChannel) {
+			leaveVoiceChannel( message.guild );
+		}
+	}
+	
 	if (command == "play") {
-		playVideo( "U06jlgpMtQs" );
+		nationalAnthem();
 	}
 	
 	if (command == "communism") {
