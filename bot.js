@@ -1,12 +1,36 @@
 const Discord = require('discord.js');
-const client = new Discord.Client();
-const fs = require('fs');
 const request = require('request');
+const ytdl = require("ytdl-core");
+const fs = require('fs');
+
+const client = new Discord.Client();
 
 const rank = JSON.parse(fs.readFileSync("rank.json", "utf8"));
 
 const prefix = "-";
 const minLength = 10;
+
+const voice_connection = null;
+const stream_handler = null;
+
+
+function joinVoiceChannel( channel ) {
+	if (voice_connection != null) return;
+	channel.join().then(connection => {
+		voice_connection = connection;
+	}).catch(console.error);
+}
+
+function playVideo( id ) {
+	var audio_stream = ytdl("https://www.youtube.com/watch?v=" + id);
+	stream_handler = voice_connection.playStream(audio_stream);
+	
+	stream_handler.once("end", reason => {
+		stream_handler = null;
+		voice_connection.channel.leave();
+	});
+}
+
 
 client.on('ready', () => {
     console.log('Bang bang into the room!');
@@ -63,6 +87,18 @@ client.on('message', message => {
 		});
 	}
 	
+	if (command == "join") {
+		if (message.member.voiceChannel) {
+			joinVoiceChannel(message.member.voiceChannel);
+		} else {
+			message.channel.send("Du skal være i en VoiceChannel din tard");
+		}
+	}
+	
+	if (command == "play") {
+		playVideo( "U06jlgpMtQs" );
+	}
+	
 	if (command == "communism") {
 		message.delete();
 		message.channel.send('', {
@@ -73,7 +109,7 @@ client.on('message', message => {
 	if (command == "memelist") {
 		request('http://thefern.netau.net/api/meme/list', { json: true }, (err, res, body) => {
 			if (err) { return console.log(err); }
-			var txt = "**Mulige memes**";
+			var txt = "**Holy list of meme templates**";
 			for (i = 0; i < body.length; i++) {
 				txt += "\n  " + body[i];
 			}
