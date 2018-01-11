@@ -27,7 +27,8 @@ client.on('message', message => {
 		"\n  **" + prefix + "communism** : Vi er alle lige");
 	}
 	
-	if (command = "communism") {
+	if (command == "communism") {
+		message.delete();
 		message.channel.send('', {
 			files: ["communism.gif"]
 		});
