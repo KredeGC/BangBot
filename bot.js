@@ -23,7 +23,7 @@ client.on('message', message => {
 	
 	if (command == "help") {
 		message.channel.send("**Kommandoer**" +
-		"\n  **" + prefix + "meme** `<template>` `<top;bottom>`" +
+		"\n  **" + prefix + "meme** `<template>` `<top;bottom>` : Lav en dank mehmay" +
 		"\n  **" + prefix + "**");
 	}
 	
