@@ -5,13 +5,13 @@ const fs = require('fs');
 
 const client = new Discord.Client();
 
-const rank = JSON.parse(fs.readFileSync("rank.json", "utf8"));
+var rank = JSON.parse(fs.readFileSync("rank.json", "utf8"));
 
 const prefix = "-";
 const minLength = 10;
 
-const voice_connection = null;
-const stream_handler = null;
+var voice_connection = null;
+var stream_handler = null;
 
 
 function joinVoiceChannel( channel ) {
@@ -21,6 +21,10 @@ function joinVoiceChannel( channel ) {
 	channel.join().then(connection => {
 		voice_connection = connection;
 	}).catch(console.error);
+}
+
+function leaveVoiceChannel( guild ) {
+	
 }
 
 function playVideo( id ) {
