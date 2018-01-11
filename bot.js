@@ -25,11 +25,7 @@ function joinChannel( channel, id ) {
 }
 
 function leaveChannel( guild ) {
-	if (guild.voiceConnection) {
-		guild.voiceConnection.channel.leave();
-		voice_connection = null;
-		stream_handler = null;
-	} else if (voice_connection != null) {
+	if (voice_connection != null) {
 		voice_connection.channel.leave();
 		voice_connection = null;
 		stream_handler = null;
@@ -123,7 +119,8 @@ client.on('message', message => {
 	
 	if (command == "play") {
 		if (message.member.voiceChannel) {
-			playVideo( "U06jlgpMtQs" );
+			var id = args[0];
+			playVideo( id );
 		}
 	}
 	
