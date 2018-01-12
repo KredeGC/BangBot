@@ -126,7 +126,8 @@ client.on('message', message => {
 		message.delete();
 		var redstar = message.guild.emojis.find("name", "redstar");
 		var marx = message.guild.emojis.find("name", "marx");
-		message.channel.send(redstar + "Special tribute to Karl " + marx + "**Marx**, :stalin:**Stalin** and **Lenin** from **" + name + "**:redstar:", {
+		var stalin = message.guild.emojis.find("name", "stalin");
+		message.channel.send(redstar + "Special tribute to " + marx + "**Marx**, " + stalin + "**Stalin** and **Lenin** from **" + name + "**" + redstar, {
 			files: ["communism.gif"]
 		});
 		if (message.member.voiceChannel) {
