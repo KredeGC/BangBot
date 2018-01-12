@@ -14,7 +14,8 @@ const minLength = 8;
 const capitalistWords = [
 	"i",
 	"my",
-	"mine"
+	"mine",
+	"capitalism"
 ];
 
 
@@ -52,7 +53,7 @@ function playVideo( video ) {
 
 
 client.on('ready', () => {
-    console.log('Bang bang into ze room!');
+    console.log('Bang bang into le room!');
 	client.user.setPresence({ game: { name: 'Bang Bang Bang', type: 0 } });
 });
 
@@ -77,9 +78,9 @@ client.on('message', message => {
 	
 	if (!msg.startsWith(prefix)) {
 		var txt = msg.split(" ");
-		for (var x in capitalistWords) {
-			var word = capitalistWords[x];
-			if (txt.indexOf(word) > -1) {
+		for (var x in txt) {
+			var word = txt[x];
+			if (capitalistWords.indexOf(word) > -1) {
 				message.channel.send("'**" + word.toUpperCase() + "**' is __CAPITALIST__ word. now off to *GULAG*", {
 					files: ["server.jpg"]
 				});
@@ -108,8 +109,9 @@ client.on('message', message => {
 		"\n  **" + prefix + "meme** `<template>` `<top;bottom>` : Lav en dank mehmay" +
 		"\n  **" + prefix + "repost** : Fortæl alle at der er en meme tyv" +
 		"\n  **" + prefix + "communism** : Her er vi alle lige" +
+		"\n  **" + prefix + "capitalism** : Konfiskeret kapitalistisk propaganda" +
 		"\n**Musik**" +
-		"\n  **" + prefix + "join** : Join my minekraft server" +
+		"\n  **" + prefix + "join** : Join my meinkraft server" +
 		"\n  **" + prefix + "leave** : Unsub to my channel" +
 		"\n  **" + prefix + "play** : Lyt til ulovlige youtube videoer!");
 	}
