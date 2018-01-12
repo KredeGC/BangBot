@@ -88,7 +88,7 @@ client.on('message', message => {
 		for (var x in capitalistWords) {
 			var word = capitalistWords[x];
 			if (txt.indexOf(word) > -1) {
-				message.channel.send("**\"" + word.toUpperCase() + "\"** Is a __BANNED__ word. Off to gulag", {
+				message.channel.send("'**" + word.toUpperCase() + "**' is __CAPITALIST__ word. off to GULAG", {
 					files: ["server.jpg"]
 				});
 				break;
