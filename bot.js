@@ -88,13 +88,13 @@ client.on('message', message => {
 	var args = msg.split(" ").slice(1);
 	
 	if (!msg.startsWith(prefix)) {
-		var words = msg.split(" ");
+		var txt = msg.toLowerCase();
 		for (var word in capitalistWords) {
-			if (words.indexOf(capitalistWords[word]) > -1) {
+			if (txt.indexOf(capitalistWords[word]) > -1) {
 				message.channel.send('', {
 					files: ["server.jpg"]
 				});
-				return;
+				break;
 			}
 		}
 		return;
