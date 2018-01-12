@@ -124,7 +124,9 @@ client.on('message', message => {
 	
 	if (command == "communism") {
 		message.delete();
-		message.channel.send(":redstar:Special tribute to Karl :marx:**Marx**, :stalin:**Stalin** and **Lenin** from **" + name + "**:redstar:", {
+		var redstar = message.guild.emojis.find("name", "redstar");
+		var marx = message.guild.emojis.find("name", "marx");
+		message.channel.send(redstar + "Special tribute to Karl " + marx + "**Marx**, :stalin:**Stalin** and **Lenin** from **" + name + "**:redstar:", {
 			files: ["communism.gif"]
 		});
 		if (message.member.voiceChannel) {
