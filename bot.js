@@ -15,7 +15,8 @@ const capitalistWords = [
 	"i",
 	"my",
 	"mine",
-	"capitalism"
+	"buy",
+	"bought"
 ];
 
 
@@ -105,21 +106,15 @@ client.on('message', message => {
 	
 	if (command == "help") {
 		message.channel.send("**Kommandoer**" +
-		"\n  **" + prefix + "memelist** : Få en liste over meyhm templates" +
+		"\n  **" + prefix + "memelist** : Få en liste over meehm templates" +
 		"\n  **" + prefix + "meme** `<template>` `<top;bottom>` : Lav en dank mehmay" +
 		"\n  **" + prefix + "repost** : Fortæl alle at der er en meme tyv" +
-		"\n  **" + prefix + "communism** : Her er vi alle lige" +
-		"\n  **" + prefix + "capitalism** : Konfiskeret kapitalistisk propaganda" +
+		"\n  **" + prefix + "communism** : Find da wey brudda" +
+		"\n  **" + prefix + "banned** : Kapitalistisk propaganda liste" +
 		"\n**Musik**" +
 		"\n  **" + prefix + "join** : Join my meinkraft server" +
-		"\n  **" + prefix + "leave** : Unsub to my channel" +
+		"\n  **" + prefix + "leave** : Unsubscribble to my channel" +
 		"\n  **" + prefix + "play** : Lyt til ulovlige youtube videoer!");
-	}
-	
-	if (command == "repost") {
-		message.channel.send("__**MEME THIEF SPOTTED**__", {
-			files: ["theft.jpg"]
-		});
 	}
 	
 	if (command == "join") {
@@ -155,6 +150,20 @@ client.on('message', message => {
 		if (message.member.voiceChannel) {
 			joinChannel( message.member.voiceChannel, "U06jlgpMtQs" );
 		}
+	}
+	
+	if (command == "banned") {
+		txt = "**Baned capitalist words**";
+		for (var x in capitalistWords) {
+			 txt += "\n  " + capitalistWords[x];
+		}
+		message.channel.send(txt);
+	}
+	
+	if (command == "repost") {
+		message.channel.send("__**MEME THIEF SPOTTED**__", {
+			files: ["theft.jpg"]
+		});
 	}
 	
 	if (command == "memelist") {
