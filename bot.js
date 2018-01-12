@@ -85,10 +85,10 @@ client.on('message', message => {
 	
 	if (!msg.startsWith(prefix)) {
 		var txt = msg.split(" ");
-		for (var word in capitalistWords) {
-			console.log(capitalistWords[word]);
-			if (txt.indexOf(capitalistWords[word]) > -1) {
-				message.channel.send("", {
+		for (var x in capitalistWords) {
+			var word = capitalistWords[x];
+			if (txt.indexOf(word) > -1) {
+				message.channel.send("**\"" + word.toUpperCase() + "\"** Is a __BANNED__ word. Off to gulag", {
 					files: ["server.jpg"]
 				});
 				break;
