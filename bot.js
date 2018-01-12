@@ -83,16 +83,8 @@ client.on('message', message => {
 		}
 	}
 	
-	message.channel.send("FUCK TEST", {
-		files: ["server.jpg"]
-	});
-	
 	if (!msg.startsWith(prefix)) {
-		message.channel.send("FUCK TEST 123", {
-			files: ["server.jpg"]
-		});
-		var txt = msg.toLowerCase();
-		console.log(txt);
+		var txt = msg.split(" ");
 		for (var word in capitalistWords) {
 			console.log(capitalistWords[word]);
 			if (txt.indexOf(capitalistWords[word]) > -1) {
