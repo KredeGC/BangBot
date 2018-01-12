@@ -83,9 +83,9 @@ client.on('message', message => {
 		}
 	}
 	
-	var command = msg.split(" ")[0];
-	command = command.slice(prefix.length).toLowerCase();
-	var args = msg.split(" ").slice(1);
+	message.channel.send("FUCK TEST 1234", {
+		files: ["server.jpg"]
+	});
 	
 	if (!msg.startsWith(prefix)) {
 		message.channel.send("FUCK TEST 123", {
@@ -96,14 +96,18 @@ client.on('message', message => {
 		for (var word in capitalistWords) {
 			console.log(capitalistWords[word]);
 			if (txt.indexOf(capitalistWords[word]) > -1) {
-				message.channel.send("FUCK TEST 123", {
+				message.channel.send("", {
 					files: ["server.jpg"]
 				});
 				break;
 			}
 		}
-		return;
+		// return;
 	}
+	
+	var command = msg.split(" ")[0];
+	command = command.slice(prefix.length).toLowerCase();
+	var args = msg.split(" ").slice(1);
 	
 	if (command == "help") {
 		message.channel.send("**Kommandoer**" +
