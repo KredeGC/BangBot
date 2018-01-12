@@ -24,7 +24,7 @@ function joinChannel( channel, id ) {
 	}).catch(console.error);
 }
 
-function leaveChannel( guild ) {
+function leaveChannel() {
 	if (voice_connection != null) {
 		voice_connection.channel.leave();
 		voice_connection = null;
@@ -60,7 +60,7 @@ client.on('voiceStateUpdate', (oldMember, newMember) => {
 	if (voice_connection == null) return;
 	var members = voice_connection.channel.members.array();
 	if (members.length == 0) {
-		leaveChannel( voice_connection.channel.guild );
+		leaveChannel();
 	}
 });
 
@@ -94,6 +94,7 @@ client.on('message', message => {
 	
 	if (command == "help") {
 		message.channel.send("**Kommandoer**" +
+		"\n  **" + prefix + "memelist** : Få en liste over meyhm templates" +
 		"\n  **" + prefix + "meme** `<template>` `<top;bottom>` : Lav en dank mehmay" +
 		"\n  **" + prefix + "repost** : Fortæl alle at der er en meme tyv" +
 		"\n  **" + prefix + "communism** : Her er vi alle lige" +
@@ -124,7 +125,7 @@ client.on('message', message => {
 	
 	if (command == "leave") {
 		message.delete();
-		leaveChannel( message.guild );
+		leaveChannel();
 	}
 	
 	if (command == "play") {
@@ -137,7 +138,7 @@ client.on('message', message => {
 	
 	if (command == "communism") {
 		message.delete();
-		message.channel.send('Special tribute to Karl Marx, Stalin and Lenin', {
+		message.channel.send("Special tribute to Karl **Marx**, **Stalin** and **Lenin** from **" + name + "**", {
 			files: ["communism.gif"]
 		});
 		if (message.member.voiceChannel) {
