@@ -5,11 +5,17 @@ const fs = require('fs');
 
 const client = new Discord.Client();
 
-const prefix = "-";
-const minLength = 10;
-
 var voice_connection = null;
 var stream_handler = null;
+
+var prefix = "-";
+var minLength = 8;
+
+var capitalistwords = {
+	"i",
+	"my",
+	"mine"
+};
 
 
 function joinChannel( channel, id ) {
@@ -50,7 +56,7 @@ client.on('ready', () => {
 	client.user.setPresence({ game: { name: 'Bang Bang Bang', type: 0 } });
 });
 
-client.on('guildMemberAdded', member => {
+client.on('guildMemberAdded', (member) => {
 	member.guild.defaultChannel.send("Velkommen " + member.guild.name + " til " + member.guild.name);
 });
 
@@ -67,8 +73,9 @@ client.on('message', message => {
 	
 	var user = message.member;
 	var name = user.displayName;
+	var msg = message.content;
 	
-	if (message.content.length > minLength) {
+	if (msg.length > minLength) {
 		if (Math.random() > 0.9) {
 			message.channel.send("10+ meme points to **" + name + "**", {
 				files: ["10points.png"]
@@ -76,11 +83,21 @@ client.on('message', message => {
 		}
 	}
 	
-	var command = message.content.split(" ")[0];
+	var command = msg.split(" ")[0];
 	command = command.slice(prefix.length).toLowerCase();
-	var args = message.content.split(" ").slice(1);
+	var args = msg.split(" ").slice(1);
 	
-	if (!message.content.startsWith(prefix)) return;
+	if (!msg.startsWith(prefix)) {
+		var words = msg.split(" ");
+		for (var word in capitalistwords) {
+			if (words.indexOf(capitalistwords[word]) > -1) {
+				message.channel.send('', {
+					files: ["server.jpg"]
+				});
+				return;
+			}
+		}
+	}
 	
 	if (command == "help") {
 		message.channel.send("**Kommandoer**" +
@@ -88,10 +105,10 @@ client.on('message', message => {
 		"\n  **" + prefix + "meme** `<template>` `<top;bottom>` : Lav en dank mehmay" +
 		"\n  **" + prefix + "repost** : Fortæl alle at der er en meme tyv" +
 		"\n  **" + prefix + "communism** : Her er vi alle lige" +
-		"\n**Music**" +
+		"\n**Musik**" +
 		"\n  **" + prefix + "join** : Join my minekraft server" +
 		"\n  **" + prefix + "leave** : Unsub to my channel" +
-		"\n  **" + prefix + "play** : Spil ulovlige youtube videoer!");
+		"\n  **" + prefix + "play** : Lyt til ulovlige youtube videoer!");
 	}
 	
 	if (command == "repost") {
@@ -167,5 +184,4 @@ client.on('message', message => {
 	}
 });
 
-// THIS  MUST  BE  THIS  WAY
 client.login(process.env.BOT_TOKEN);
