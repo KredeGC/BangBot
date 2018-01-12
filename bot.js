@@ -11,11 +11,11 @@ var stream_handler = null;
 const prefix = "-";
 const minLength = 8;
 
-/*const capitalistWords = [
+const capitalistWords = [
 	"i",
 	"my",
 	"mine"
-];*/
+];
 
 
 function joinChannel( channel, id ) {
@@ -52,7 +52,7 @@ function playVideo( video ) {
 
 
 client.on('ready', () => {
-    console.log('Bang into the room!');
+    console.log('Bang bang into ze room!');
 	client.user.setPresence({ game: { name: 'Bang Bang Bang', type: 0 } });
 });
 
@@ -87,7 +87,7 @@ client.on('message', message => {
 		files: ["server.jpg"]
 	});
 	
-	/*if (!msg.startsWith(prefix)) {
+	if (!msg.startsWith(prefix)) {
 		message.channel.send("FUCK TEST 123", {
 			files: ["server.jpg"]
 		});
@@ -102,7 +102,8 @@ client.on('message', message => {
 				break;
 			}
 		}
-	}*/
+		return;
+	}
 	
 	var command = msg.split(" ")[0];
 	command = command.slice(prefix.length).toLowerCase();
