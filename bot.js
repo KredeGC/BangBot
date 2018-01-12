@@ -8,10 +8,10 @@ const client = new Discord.Client();
 var voice_connection = null;
 var stream_handler = null;
 
-var prefix = "-";
-var minLength = 8;
+const prefix = "-";
+const minLength = 8;
 
-var capitalistWords = [
+const capitalistWords = [
 	"i",
 	"my",
 	"mine"
@@ -52,7 +52,7 @@ function playVideo( video ) {
 
 
 client.on('ready', () => {
-    console.log('Bang bang into the room!');
+    console.log('Bang into the room!');
 	client.user.setPresence({ game: { name: 'Bang Bang Bang', type: 0 } });
 });
 
@@ -83,7 +83,7 @@ client.on('message', message => {
 		}
 	}
 	
-	message.channel.send("FUCK TEST 1234", {
+	message.channel.send("FUCK TEST", {
 		files: ["server.jpg"]
 	});
 	
@@ -102,7 +102,6 @@ client.on('message', message => {
 				break;
 			}
 		}
-		// return;
 	}
 	
 	var command = msg.split(" ")[0];
