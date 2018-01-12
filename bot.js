@@ -5,8 +5,6 @@ const fs = require('fs');
 
 const client = new Discord.Client();
 
-var rank = JSON.parse(fs.readFileSync("rank.json", "utf8"));
-
 const prefix = "-";
 const minLength = 10;
 
@@ -71,19 +69,11 @@ client.on('message', message => {
 	var name = user.displayName;
 	
 	if (message.content.length > minLength) {
-		if (!rank[user.id]) rank[user.id] = 0;
-		
-		rank[user.id] += message.content.length - minLength;
-		
-		if (rank[user.id] % 10 == 0) {
+		if (Math.random() > 0.9) {
 			message.channel.send("10+ meme points to **" + name + "**", {
 				files: ["10points.png"]
 			});
 		}
-		
-		fs.writeFile("rank.json", JSON.stringify(rank), (err) => {
-			if (err) console.error(err);
-		});
 	}
 	
 	var command = message.content.split(" ")[0];
@@ -98,14 +88,10 @@ client.on('message', message => {
 		"\n  **" + prefix + "meme** `<template>` `<top;bottom>` : Lav en dank mehmay" +
 		"\n  **" + prefix + "repost** : Fortæl alle at der er en meme tyv" +
 		"\n  **" + prefix + "communism** : Her er vi alle lige" +
-		"**Music**" +
+		"\n**Music**" +
 		"\n  **" + prefix + "join** : Join my minekraft server" +
 		"\n  **" + prefix + "leave** : Unsub to my channel" +
 		"\n  **" + prefix + "play** : Spil ulovlige youtube videoer!");
-	}
-	
-	if (command == "rank") {
-		message.channel.send("**" + name + "** har " + (rank[user.id] || 0) + " point. Sikke en nørd");
 	}
 	
 	if (command == "repost") {
