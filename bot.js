@@ -75,6 +75,19 @@ client.on('message', message => {
 	var name = user.displayName;
 	var msg = message.content;
 	
+	if (!msg.startsWith(prefix)) {
+		var txt = msg.split(" ");
+		for (var x in capitalistWords) {
+			var word = capitalistWords[x];
+			if (txt.indexOf(word) > -1) {
+				message.channel.send("'**" + word.toUpperCase() + "**' is __CAPITALIST__ word. now off to *GULAG*", {
+					files: ["server.jpg"]
+				});
+				break;
+			}
+		}
+	}
+	
 	if (msg.length > minLength) {
 		if (Math.random() > 0.9) {
 			message.channel.send("10+ meme points to **" + name + "**", {
@@ -83,19 +96,7 @@ client.on('message', message => {
 		}
 	}
 	
-	if (!msg.startsWith(prefix)) {
-		var txt = msg.split(" ");
-		for (var x in capitalistWords) {
-			var word = capitalistWords[x];
-			if (txt.indexOf(word) > -1) {
-				message.channel.send("'**" + word.toUpperCase() + "**' is __CAPITALIST__ word. off to GULAG", {
-					files: ["server.jpg"]
-				});
-				break;
-			}
-		}
-		return;
-	}
+	if (!msg.startsWith(prefix)) return;
 	
 	var command = msg.split(" ")[0];
 	command = command.slice(prefix.length).toLowerCase();
