@@ -11,11 +11,11 @@ var stream_handler = null;
 var prefix = "-";
 var minLength = 8;
 
-var capitalistwords = {
+var capitalistWords = [
 	"i",
 	"my",
 	"mine"
-};
+];
 
 
 function joinChannel( channel, id ) {
@@ -89,14 +89,15 @@ client.on('message', message => {
 	
 	if (!msg.startsWith(prefix)) {
 		var words = msg.split(" ");
-		for (var word in capitalistwords) {
-			if (words.indexOf(capitalistwords[word]) > -1) {
+		for (var word in capitalistWords) {
+			if (words.indexOf(capitalistWords[word]) > -1) {
 				message.channel.send('', {
 					files: ["server.jpg"]
 				});
 				return;
 			}
 		}
+		return;
 	}
 	
 	if (command == "help") {
