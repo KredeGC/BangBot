@@ -186,9 +186,17 @@ client.on('message', message => {
 			var noter = body['dagskema']['noter'];
 			var fag = body['dagskema']['fag'];
 			var txt = "```glsl\n#Skema for " + id;
-			for (i = 0; i < fag.length; i++) {
-				txt += "\n+" + fag[i].time + ' ' + fag[i].tekst.replace('\r\n', '');
+			
+			for (i = 0; i < noter.length; i++) {
+				txt += "\n" + noter[i];
 			}
+			
+			txt += "\n";
+			
+			for (i = 0; i < fag.length; i++) {
+				txt += "\n" + fag[i].time + ' ' + fag[i].tekst.replace('\r\n', '');
+			}
+			
 			txt += "```";
 			
 			message.channel.send(txt);
