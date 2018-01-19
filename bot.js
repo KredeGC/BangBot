@@ -188,7 +188,7 @@ client.on('message', message => {
 			var fag = body['dagskema']['fag'];
 			var txt = "```diff";
 			for (i = 0; i < fag.length; i++) {
-				txt += "\n+" + fag[i].time + ' ' + fag[i].tekst;
+				txt += "\n+" + fag[i].time + ' ' + fag[i].tekst.replace('\r\n', '');
 			}
 			txt += "```";
 			
