@@ -124,6 +124,7 @@ client.on('message', message => {
 		"\n  **" + prefix + "repost** : Fortæl alle at der er en meme tyv" +
 		"\n  **" + prefix + "communism** : Find da wey brudda" +
 		"\n  **" + prefix + "banned** : Konfiskeret kapitalistisk propaganda" +
+		"\n  **" + prefix + "lectio** `<id>`: Få en persons skema" +
 		"\n**Musik**" +
 		"\n  **" + prefix + "join** : Join my meinkraft server" +
 		"\n  **" + prefix + "leave** : Unsubscribble to my channel" +
@@ -165,6 +166,15 @@ client.on('message', message => {
 		}
 	}
 	
+	if (command == "kalinka") {
+		message.delete();
+		if (message.member.voiceChannel) {
+			var redstar = message.guild.emojis.find("name", "redstar");
+			message.channel.send(redstar + "Special kalinka from **" + name + "**" + redstar);
+			joinChannel( message.member.voiceChannel, "4xJoVCjBUco" );
+		}
+	}
+	
 	if (command == "banned") {
 		txt = "**Baned capitalist words**";
 		for (var x in capitalistWords) {
@@ -180,7 +190,11 @@ client.on('message', message => {
 	}
 	
 	if (command == "lectio") {
+		message.delete();
 		var id = '22352172603';
+		if (args[0] != null) {
+			id = args[0];
+		}
 		request('http://thefern.netau.net/api/lectio/schedule?school=523&student=' + id, { json: true }, (err, res, body) => {
 			if (err) { return console.log(err); }
 			var noter = body['dagskema']['noter'];
