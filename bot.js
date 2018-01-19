@@ -192,30 +192,37 @@ client.on('message', message => {
 	
 	if (command == "lectio") {
 		message.delete();
-		var id = '22352172603';
-		if (args[0] != null) {
-			id = args[0];
+		var arg = args[0];
+		var id = '';
+		if (arg == "matfys") {
+			id = '22303833699';
+		} else if(arg == "info" || arg == "pro" || arg == "program") {
+			id = '22352172603';
 		}
-		request('http://thefern.netau.net/api/lectio/schedule?school=523&student=' + id, { json: true }, (err, res, body) => {
-			if (err) { return console.log(err); }
-			var noter = body['dagskema']['noter'];
-			var fag = body['dagskema']['fag'];
-			var txt = "```glsl\n#" + body['dag'];
-			
-			for (i = 0; i < fag.length; i++) {
-				txt += "\n[" + fag[i].tid + '] ' + fag[i].tekst.replace('\r\n', '');
-			}
-			
-			txt += "\n#Noter";
-			
-			for (i = 0; i < noter.length; i++) {
-				txt += "\n" + noter[i];
-			}
-			
-			txt += "```";
-			
-			message.channel.send(txt);
-		});
+		if (id == '') {
+			message.channel.send("Mangler argumenter");
+		} else {
+			request('http://thefern.netau.net/api/lectio/schedule?school=523&student=' + id, { json: true }, (err, res, body) => {
+				if (err) { return console.log(err); }
+				var noter = body['dagskema']['noter'];
+				var fag = body['dagskema']['fag'];
+				var txt = "```glsl\n#" + body['dag'];
+				
+				for (i = 0; i < fag.length; i++) {
+					txt += "\n[" + fag[i].tid + '] ' + fag[i].tekst.replace('\r\n', '');
+				}
+				
+				txt += "\n#Noter";
+				
+				for (i = 0; i < noter.length; i++) {
+					txt += "\n" + noter[i];
+				}
+				
+				txt += "```";
+				
+				message.channel.send(txt);
+			});
+		}
 	}
 	
 	if (command == "memelist") {
