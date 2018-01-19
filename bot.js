@@ -14,11 +14,24 @@ const minLength = 8;
 const capitalistWords = [
 	"i",
 	"my",
+	"me",
 	"mine",
 	"buy",
 	"bought"
 ];
 
+
+
+function get_video_id(string) {
+	var regex = "/(?:\?v=|&v=|youtu\.be\/)(.*?)(?:\?|&|$)/";
+	var matches = string.match(regex);
+
+	if (matches) {
+		return matches[1];
+	} else {
+		return string;
+	}
+}
 
 function joinChannel( channel, id ) {
 	leaveChannel( channel.guild );
@@ -91,7 +104,7 @@ client.on('message', message => {
 	}
 	
 	if (msg.length > minLength) {
-		if (Math.random() > 0.9) {
+		if (Math.random() > 0.95) {
 			message.channel.send("10+ meme points to **" + name + "**", {
 				files: ["10points.png"]
 			});
@@ -110,7 +123,7 @@ client.on('message', message => {
 		"\n  **" + prefix + "meme** `<template>` `<top;bottom>` : Lav en dank mehmay" +
 		"\n  **" + prefix + "repost** : Fortæl alle at der er en meme tyv" +
 		"\n  **" + prefix + "communism** : Find da wey brudda" +
-		"\n  **" + prefix + "banned** : Kapitalistisk propaganda liste" +
+		"\n  **" + prefix + "banned** : Konfiskeret kapitalistisk propaganda" +
 		"\n**Musik**" +
 		"\n  **" + prefix + "join** : Join my meinkraft server" +
 		"\n  **" + prefix + "leave** : Unsubscribble to my channel" +
@@ -134,7 +147,7 @@ client.on('message', message => {
 	if (command == "play") {
 		message.delete();
 		if (message.member.voiceChannel) {
-			var id = args[0];
+			var id = get_video_id( args[0] );
 			playVideo( id );
 		}
 	}
@@ -163,6 +176,23 @@ client.on('message', message => {
 	if (command == "repost") {
 		message.channel.send("__**MEME THIEF SPOTTED**__", {
 			files: ["theft.jpg"]
+		});
+	}
+	
+	if (command == "lectio") {
+		var id = '22352172603';
+		request('http://thefern.netau.net/api/lectio/schedule?school=523&student=' + id, { json: true }, (err, res, body) => {
+			if (err) { return console.log(err); }
+			var skema = body['dagskema'];
+			var noter = body['dagskema']['noter'];
+			var fag = body['dagskema']['fag'];
+			var txt = "```diff";
+			for (i = 0; i < fag.length; i++) {
+				txt += "\n+" + fag[i].time + ' ' + fag[i].tekst;
+			}
+			txt += "```";
+			
+			message.channel.send(txt);
 		});
 	}
 	
