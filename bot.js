@@ -185,16 +185,16 @@ client.on('message', message => {
 			if (err) { return console.log(err); }
 			var noter = body['dagskema']['noter'];
 			var fag = body['dagskema']['fag'];
-			var txt = "```glsl\n#Noter";
-			
-			for (i = 0; i < noter.length; i++) {
-				txt += "\n" + noter[i];
-			}
-			
-			txt += "\n#" + body['dag'];
+			var txt = "```glsl\n#" + body['dag'];
 			
 			for (i = 0; i < fag.length; i++) {
 				txt += "\n[" + fag[i].time + '] ' + fag[i].tekst.replace('\r\n', '');
+			}
+			
+			txt += "\n#Noter";
+			
+			for (i = 0; i < noter.length; i++) {
+				txt += "\n" + noter[i];
 			}
 			
 			txt += "```";
