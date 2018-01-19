@@ -194,7 +194,7 @@ client.on('message', message => {
 			txt += "\n- Skema -";
 			
 			for (i = 0; i < fag.length; i++) {
-				txt += "\n+[" + fag[i].time + '] ' + fag[i].tekst.replace('\r\n', '');
+				txt += "\n[" + fag[i].time + ']+ ' + fag[i].tekst.replace('\r\n', '');
 			}
 			
 			txt += "```";
