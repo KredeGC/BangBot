@@ -123,6 +123,7 @@ client.on('message', message => {
 		"\n  **" + prefix + "meme** `<template>` `<top;bottom>` : Lav en dank mehmay" +
 		"\n  **" + prefix + "repost** : Fortæl alle at der er en meme tyv" +
 		"\n  **" + prefix + "communism** : Find da wey brudda" +
+		"\n  **" + prefix + "kalinka** : Start kalinka session" +
 		"\n  **" + prefix + "banned** : Konfiskeret kapitalistisk propaganda" +
 		"\n  **" + prefix + "lectio** `<id>`: Få en persons skema" +
 		"\n**Musik**" +
@@ -170,7 +171,7 @@ client.on('message', message => {
 		message.delete();
 		if (message.member.voiceChannel) {
 			var redstar = message.guild.emojis.find("name", "redstar");
-			message.channel.send(redstar + "Special kalinka from **" + name + "**" + redstar);
+			message.channel.send(redstar + "Special kalinka session by **" + name + "**" + redstar);
 			joinChannel( message.member.voiceChannel, "4xJoVCjBUco" );
 		}
 	}
@@ -202,7 +203,7 @@ client.on('message', message => {
 			var txt = "```glsl\n#" + body['dag'];
 			
 			for (i = 0; i < fag.length; i++) {
-				txt += "\n[" + fag[i].time + '] ' + fag[i].tekst.replace('\r\n', '');
+				txt += "\n[" + fag[i].tid + '] ' + fag[i].tekst.replace('\r\n', '');
 			}
 			
 			txt += "\n#Noter";
@@ -243,7 +244,7 @@ client.on('message', message => {
 			url += "&top=" + tbl[0];
 		}
 		
-		message.channel.send("Courtesy of **" + name + "**", {
+		message.channel.send("Meme Copyright by **" + name + "**", {
 			files: [url + "&type=.jpg"]
 		});
 	}
