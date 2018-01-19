@@ -183,10 +183,9 @@ client.on('message', message => {
 		var id = '22352172603';
 		request('http://thefern.netau.net/api/lectio/schedule?school=523&student=' + id, { json: true }, (err, res, body) => {
 			if (err) { return console.log(err); }
-			var skema = body['dagskema'];
 			var noter = body['dagskema']['noter'];
 			var fag = body['dagskema']['fag'];
-			var txt = "```diff";
+			var txt = "```glsl\n#Skema for " + id;
 			for (i = 0; i < fag.length; i++) {
 				txt += "\n+" + fag[i].time + ' ' + fag[i].tekst.replace('\r\n', '');
 			}
