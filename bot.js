@@ -185,13 +185,13 @@ client.on('message', message => {
 			if (err) { return console.log(err); }
 			var noter = body['dagskema']['noter'];
 			var fag = body['dagskema']['fag'];
-			var txt = "```glsl\n#Skema for " + id;
+			var txt = "```glsl\n#Noter";
 			
 			for (i = 0; i < noter.length; i++) {
 				txt += "\n" + noter[i];
 			}
 			
-			txt += "\n";
+			txt += "\n#Skema";
 			
 			for (i = 0; i < fag.length; i++) {
 				txt += "\n" + fag[i].time + ' ' + fag[i].tekst.replace('\r\n', '');
