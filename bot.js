@@ -185,7 +185,7 @@ client.on('message', message => {
 			if (err) { return console.log(err); }
 			var noter = body['dagskema']['noter'];
 			var fag = body['dagskema']['fag'];
-			var txt = "```glsl\n#Noter";
+			var txt = "```asciidoc\n= Noter =";
 			
 			for (i = 0; i < noter.length; i++) {
 				txt += "\n" + noter[i];
@@ -194,7 +194,7 @@ client.on('message', message => {
 			txt += "\n#Skema";
 			
 			for (i = 0; i < fag.length; i++) {
-				txt += "\n" + fag[i].time + ' ' + fag[i].tekst.replace('\r\n', '');
+				txt += "\n[" + fag[i].time + '] ' + fag[i].tekst.replace('\r\n', '');
 			}
 			
 			txt += "```";
