@@ -125,7 +125,7 @@ client.on('message', message => {
 		"\n  **" + prefix + "communism** : Find da wey brudda" +
 		"\n  **" + prefix + "kalinka** : Start kalinka session" +
 		"\n  **" + prefix + "banned** : Konfiskeret kapitalistisk propaganda" +
-		"\n  **" + prefix + "lectio** `<id>`: Få en persons skema" +
+		"\n  **" + prefix + "lectio** `<matfys|komit>`: Få en persons skema" +
 		"\n**Musik**" +
 		"\n  **" + prefix + "join** : Join my meinkraft server" +
 		"\n  **" + prefix + "leave** : Unsubscribble to my channel" +
@@ -194,22 +194,25 @@ client.on('message', message => {
 		message.delete();
 		var arg = args[0];
 		var id = '';
+		var name = '';
 		if (arg == "matfys") {
 			id = '22303833699';
-		} else if(arg == "info" || arg == "pro" || arg == "program") {
+			name = '1.6';
+		} else if(arg == "komit") {
 			id = '22352172603';
+			name = '1.4';
 		}
 		if (id == '') {
-			message.channel.send("Mangler argumenter");
+			message.channel.send("**-lectio** `matfys` eller `komit`");
 		} else {
 			request('http://thefern.netau.net/api/lectio/schedule?school=523&student=' + id, { json: true }, (err, res, body) => {
 				if (err) { return console.log(err); }
 				var noter = body['dagskema']['noter'];
 				var fag = body['dagskema']['fag'];
-				var txt = "```glsl\n#" + body['dag'];
+				var txt = "```glsl\n#" + body['dag'] + " " + name;
 				
 				for (i = 0; i < fag.length; i++) {
-					txt += "\n[" + fag[i].tid + '] ' + fag[i].tekst.replace('\r\n', '');
+					txt += "\n[" + fag[i].tid + '] ' + fag[i].titel + ' ' + fag[i].lokale;
 				}
 				
 				txt += "\n#Noter";
