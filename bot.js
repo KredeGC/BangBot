@@ -51,6 +51,19 @@ function leaveChannel() {
 	}
 }
 
+function playFile( file, channel ) {
+	if (stream_handler != null) return;
+	if (voice_connection == null) return;
+	
+	stream_handler = voice_connection.playFile(file, { seek: 0, volume: 1 });
+	
+	stream_handler.once("end", reason => {
+		voice_connection.channel.leave();
+		voice_connection = null;
+		stream_handler = null;
+	});
+}
+
 function playVideo( video ) {
 	if (stream_handler != null) return;
 	if (voice_connection == null) return;
@@ -121,7 +134,6 @@ client.on('message', message => {
 		message.channel.send("**Kommandoer**" +
 		"\n  **" + prefix + "memelist** : Få en liste over meehm templates" +
 		"\n  **" + prefix + "meme** `<template>` `<top;bottom>` : Lav en dank mehmay" +
-		"\n  **" + prefix + "repost** : Fortæl alle at der er en meme tyv" +
 		"\n  **" + prefix + "communism** : Find da wey brudda" +
 		"\n  **" + prefix + "kalinka** : Start kalinka session" +
 		"\n  **" + prefix + "banned** : Konfiskeret kapitalistisk propaganda" +
@@ -154,6 +166,13 @@ client.on('message', message => {
 		}
 	}
 	
+	if (command == "thot") {
+		message.delete();
+		if (message.member.voiceChannel) {
+			playFile( "thot.mp3", message.member.voiceChannel );
+		}
+	}
+	
 	if (command == "communism") {
 		message.delete();
 		var redstar = message.guild.emojis.find("name", "redstar");
@@ -182,12 +201,6 @@ client.on('message', message => {
 			 txt += "\n  " + capitalistWords[x];
 		}
 		message.channel.send(txt);
-	}
-	
-	if (command == "repost") {
-		message.channel.send("__**MEME THIEF SPOTTED**__", {
-			files: ["theft.jpg"]
-		});
 	}
 	
 	if (command == "lectio") {
