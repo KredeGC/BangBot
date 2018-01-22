@@ -33,12 +33,12 @@ function get_video_id(string) {
 	}
 }
 
-function joinChannel( channel, id ) {
+function joinChannel( channel, run ) {
 	leaveChannel( channel.guild );
 	channel.join().then(connection => {
 		voice_connection = connection;
-		if (id != null) {
-			playVideo( id );
+		if (run != null) {
+			run();
 		}
 	}).catch(console.error);
 }
@@ -53,34 +53,40 @@ function leaveChannel() {
 
 function playFile( file, channel ) {
 	if (stream_handler != null) return;
-	if (voice_connection == null) return;
-	
-	stream_handler = voice_connection.playFile(file, { seek: 0, volume: 1 });
-	
-	stream_handler.once("end", reason => {
-		voice_connection.channel.leave();
-		voice_connection = null;
-		stream_handler = null;
-	});
+	if (channel != null) {
+		leaveChannel();
+		joinChannel( channel, () => {
+			stream_handler = voice_connection.playFile(file, { seek: 0, volume: 1 });
+			
+			stream_handler.once("end", reason => {
+				voice_connection.channel.leave();
+				voice_connection = null;
+				stream_handler = null;
+			});
+		});
+	}
 }
 
-function playVideo( video ) {
+function playVideo( video, channel ) {
 	if (stream_handler != null) return;
-	if (voice_connection == null) return;
-	
-	var audio_stream = ytdl("https://www.youtube.com/watch?v=" + video, { filter : 'audioonly' });
-	stream_handler = voice_connection.playStream(audio_stream, { seek: 0, volume: 1 });
-	
-	stream_handler.once("end", reason => {
-		voice_connection.channel.leave();
-		voice_connection = null;
-		stream_handler = null;
-	});
+	if (channel != null) {
+		leaveChannel();
+		joinChannel( channel, () => {
+			var audio_stream = ytdl("https://www.youtube.com/watch?v=" + video, { filter : 'audioonly' });
+			stream_handler = voice_connection.playStream(audio_stream, { seek: 0, volume: 1 });
+			
+			stream_handler.once("end", reason => {
+				voice_connection.channel.leave();
+				voice_connection = null;
+				stream_handler = null;
+			});
+		});
+	}
 }
 
 
 client.on('ready', () => {
-    console.log('Bang bang into le room!');
+    console.log('Bang bang into ze room!');
 	client.user.setPresence({ game: { name: 'Bang Bang Bang', type: 0 } });
 });
 
@@ -162,7 +168,7 @@ client.on('message', message => {
 		message.delete();
 		if (message.member.voiceChannel) {
 			var id = get_video_id( args[0] );
-			playVideo( id );
+			playVideo( id, message.member.voiceChannel );
 		}
 	}
 	
@@ -182,7 +188,7 @@ client.on('message', message => {
 			files: ["communism.gif"]
 		});
 		if (message.member.voiceChannel) {
-			joinChannel( message.member.voiceChannel, "U06jlgpMtQs" );
+			playVideo( "U06jlgpMtQs", message.member.voiceChannel );
 		}
 	}
 	
@@ -191,7 +197,7 @@ client.on('message', message => {
 		if (message.member.voiceChannel) {
 			var redstar = message.guild.emojis.find("name", "redstar");
 			message.channel.send(redstar + "Special kalinka session by **" + name + "**" + redstar);
-			joinChannel( message.member.voiceChannel, "4xJoVCjBUco" );
+			playVideo( "4xJoVCjBUco", message.member.voiceChannel );
 		}
 	}
 	
