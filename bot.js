@@ -4,7 +4,7 @@ const ytdl = require("ytdl-core");
 const fs = require('fs');
 
 const client = new Discord.Client();
-const hook = new Discord.WebhookClient(process.env..WEBHOOK_ID, process.env..WEBHOOK_TOKEN);
+const hook = new Discord.WebhookClient(process.env.WEBHOOK_ID, process.env.WEBHOOK_TOKEN);
 
 var voice_connection = null;
 var stream_handler = null;
