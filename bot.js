@@ -4,6 +4,7 @@ const ytdl = require("ytdl-core");
 const fs = require('fs');
 
 const client = new Discord.Client();
+const hook = new Discord.WebhookClient(env.process.WEBHOOK_ID, env.process.WEBHOOK_TOKEN);
 
 var voice_connection = null;
 var stream_handler = null;
@@ -209,6 +210,14 @@ client.on('message', message => {
 			 txt += "\n  " + capitalistWords[x];
 		}
 		message.channel.send(txt);
+	}
+	
+	if (command == "cmd") {
+		message.delete();
+		hook.send(message.content, {
+			username: name,
+			avatarURL: message.author.avatarURL,
+		});
 	}
 	
 	if (command == "lectio") {
