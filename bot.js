@@ -140,10 +140,12 @@ client.on('message', message => {
 		message.channel.send("**Kommandoer**" +
 		"\n  **" + prefix + "memelist** : Få en liste over meehm templates" +
 		"\n  **" + prefix + "meme** `<template>` `<top;bottom>` : Lav en dank mehmay" +
-		"\n  **" + prefix + "communism** : Find da wey brudda" +
-		"\n  **" + prefix + "kalinka** : Start kalinka session" +
 		"\n  **" + prefix + "banned** : Konfiskeret kapitalistisk propaganda" +
 		"\n  **" + prefix + "lectio** `<matfys|komit>`: Få en persons skema" +
+		"\n**Voice Channel**" +
+		"\n  **" + prefix + "communism** : Find da wey brudda" +
+		"\n  **" + prefix + "kalinka** : Start kalinka session" +
+		"\n  **" + prefix + "thot** : Begone Thot!" +
 		"\n**Musik**" +
 		"\n  **" + prefix + "join** : Join my meinkraft server" +
 		"\n  **" + prefix + "leave** : Unsubscribble to my channel" +
