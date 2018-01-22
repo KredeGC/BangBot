@@ -143,6 +143,7 @@ client.on('message', message => {
 		message.channel.send("**Kommandoer** for **" + name + "**" +
 		"\n  **" + prefix + "memelist** : Få en liste over meehm templates" +
 		"\n  **" + prefix + "meme** `<template>` `<top;bottom>` : Lav en dank mehmay" +
+		"\n  **" + prefix + "mimic** `<tekst>`: Bot kontrol" +
 		"\n  **" + prefix + "banned** : Konfiskeret kapitalistisk propaganda" +
 		"\n  **" + prefix + "lectio** `<matfys|komit>`: Få en persons skema" +
 		"\n**Voice Channel**" +
@@ -153,47 +154,58 @@ client.on('message', message => {
 		"\n  **" + prefix + "join** : Join my meinkraft server" +
 		"\n  **" + prefix + "leave** : Unsubscribble to my channel" +
 		"\n  **" + prefix + "play** : Lyt til ulovlige youtube videoer!");
-	} else if (command == "join") {
-		if (message.member.voiceChannel) {
-			joinChannel(message.member.voiceChannel);
-		} else {
-			message.channel.send(name + ", du skal være i en VoiceChannel din tard");
-		}
-	} else if (command == "leave") {
-		leaveChannel();
-	} else if (command == "play") {
-		message.delete();
-		if (message.member.voiceChannel) {
-			var id = get_video_id( args[0] );
-			playVideo( id, message.member.voiceChannel );
-		}
-	} else if (command == "thot") {
-		if (message.member.voiceChannel) {
-			playFile( "thot.mp3", message.member.voiceChannel );
-		}
-	} else if (command == "communism") {
-		var redstar = message.guild.emojis.find("name", "redstar");
-		var marx = message.guild.emojis.find("name", "marx");
-		var stalin = message.guild.emojis.find("name", "stalin");
-		message.channel.send(redstar + "Special tribute to " + marx + "**Marx**, " + stalin + "**Stalin** and **Lenin** from **" + name + "**" + redstar, {
-			files: ["communism.gif"]
+	}
+	
+	// Commands
+	
+	if (command == "memelist") {
+		request('http://thefern.netau.net/api/meme/list', { json: true }, (err, res, body) => {
+			if (err) { return console.log(err); }
+			var txt = "**Holy list of meme templates**";
+			for (i = 0; i < body.length; i++) {
+				txt += "\n  " + body[i];
+			}
+			
+			message.channel.send(txt);
 		});
-		if (message.member.voiceChannel) {
-			playVideo( "U06jlgpMtQs", message.member.voiceChannel );
+	}
+	
+	if (command == "meme") {
+		message.delete();
+		var meme = args[0];
+		var txt = args.slice(1).join(" ");
+		var tbl = txt.split(";");
+		
+		var url = "http://thefern.netau.net/api/meme/generator?meme=" + meme;
+		
+		if (tbl[1] != null) {
+			url += "&top=" + tbl[0] + "&bottom=" + tbl[1];
+		} else {
+			url += "&top=" + tbl[0];
 		}
-	} else if (command == "kalinka") {
-		if (message.member.voiceChannel) {
-			var redstar = message.guild.emojis.find("name", "redstar");
-			message.channel.send(redstar + "Special kalinka session by **" + name + "**" + redstar);
-			playVideo( "4xJoVCjBUco", message.member.voiceChannel );
-		}
-	} else if (command == "banned") {
+		
+		message.channel.send("Meme Copyright by **" + name + "**", {
+			files: [url + "&type=.jpg"]
+		});
+	}
+	
+	if (command == "mimic") {
+		hook.send(args.join(" "), {
+			username: name,
+			avatarURL: message.author.avatarURL,
+		});
+	}
+	
+	if (command == "banned") {
 		txt = "**Baned capitalist words**";
 		for (var x in capitalistWords) {
 			 txt += "\n  " + capitalistWords[x];
 		}
 		message.channel.send(txt);
-	} else if (command == "lectio") {
+	}
+	
+	if (command == "lectio") {
+		message.delete();
 		var arg = args[0];
 		var id = '';
 		var name = '';
@@ -228,37 +240,61 @@ client.on('message', message => {
 				message.channel.send(txt);
 			});
 		}
-	} else if (command == "memelist") {
-		request('http://thefern.netau.net/api/meme/list', { json: true }, (err, res, body) => {
-			if (err) { return console.log(err); }
-			var txt = "**Holy list of meme templates**";
-			for (i = 0; i < body.length; i++) {
-				txt += "\n  " + body[i];
-			}
-			
-			message.channel.send(txt);
+	}
+	
+	// Voice
+	
+	if (command == "communism") {
+		message.delete();
+		var redstar = message.guild.emojis.find("name", "redstar");
+		var marx = message.guild.emojis.find("name", "marx");
+		var stalin = message.guild.emojis.find("name", "stalin");
+		message.channel.send(redstar + "Special tribute to " + marx + "**Marx**, " + stalin + "**Stalin** and **Lenin** from **" + name + "**" + redstar, {
+			files: ["communism.gif"]
 		});
-	} else if (command == "meme") {
-		var meme = args[0];
-		var txt = args.slice(1).join(" ");
-		var tbl = txt.split(";");
-		
-		var url = "http://thefern.netau.net/api/meme/generator?meme=" + meme;
-		
-		if (tbl[1] != null) {
-			url += "&top=" + tbl[0] + "&bottom=" + tbl[1];
-		} else {
-			url += "&top=" + tbl[0];
+		if (message.member.voiceChannel) {
+			playVideo( "U06jlgpMtQs", message.member.voiceChannel );
 		}
-		
-		message.channel.send("Meme Copyright by **" + name + "**", {
-			files: [url + "&type=.jpg"]
-		});
-	} else {
-		hook.send(message.content, {
-			username: name,
-			avatarURL: message.author.avatarURL,
-		});
+	}
+	
+	if (command == "kalinka") {
+		message.delete();
+		if (message.member.voiceChannel) {
+			var redstar = message.guild.emojis.find("name", "redstar");
+			message.channel.send(redstar + "Special kalinka session by **" + name + "**" + redstar);
+			playVideo( "4xJoVCjBUco", message.member.voiceChannel );
+		}
+	}
+	
+	if (command == "thot") {
+		message.delete();
+		if (message.member.voiceChannel) {
+			playFile( "thot.mp3", message.member.voiceChannel );
+		}
+	}
+	
+	// Music
+	
+	if (command == "join") {
+		message.delete();
+		if (message.member.voiceChannel) {
+			joinChannel(message.member.voiceChannel);
+		} else {
+			message.channel.send(name + ", du skal være i en VoiceChannel din tard");
+		}
+	}
+	
+	if (command == "leave") {
+		message.delete();
+		leaveChannel();
+	}
+	
+	if (command == "play") {
+		message.delete();
+		if (message.member.voiceChannel) {
+			var id = get_video_id( args[0] );
+			playVideo( id, message.member.voiceChannel );
+		}
 	}
 });
 
