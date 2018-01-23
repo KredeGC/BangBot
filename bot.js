@@ -26,6 +26,7 @@ const replies = [
 	"Bang Approves",
 	"Beep",
 	"Boo",
+	"Communism will rise",
 	"confusement",
 	"Doubt",
 	"Good job",
