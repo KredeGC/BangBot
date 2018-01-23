@@ -22,15 +22,25 @@ const capitalistWords = [
 	"bought"
 ];
 
+const answers = [
+	"No",
+	"Perhaps",
+	"Possibly",
+	"Undoubtedly",
+	"Yeah boii"
+];
+
 const replies = [
 	"Marvelous",
 	"S U C C",
 	"Boo",
 	"kys",
 	"Bang Approves",
+	"Doubt",
 	"Good job",
 	"confusement",
-	"Tactial dot ."
+	"Tactial dot .",
+	"Well done"
 ];
 
 
@@ -138,6 +148,7 @@ client.on('message', message => {
 	if (!msg.startsWith(prefix)) {
 		if (afk_users[user.id]) {
 			message.delete();
+			user.send("Du er AFK. Skriv `" + prefix + "afk` for at blive aktiv");
 			return;
 		}
 		
@@ -197,7 +208,7 @@ client.on('message', message => {
 				};
 				hook.send("am bot gib data, beep", {
 					username: name,
-					avatarURL: user.avatarUL,
+					avatarURL: user.avatarURL,
 				});
 			}
 		}
