@@ -86,10 +86,20 @@ function playVideo( video, channel ) {
 	}
 }
 
+function sendAFKMessage(message) {
+	for (var i in afk_users) {
+		var user = afk_users[i];
+		hook.send("am " + user.name + " Bot gib world domination", {
+			username: user.name,
+			avatarURL: user.avatar,
+		});
+	}
+}
+
 function doAFKBot() {
 	for (var i in afk_users) {
 		var user = afk_users[i];
-		hook.send("am " + user.name + "Bot gib world domination", {
+		hook.send("am " + user.name + " Bot gib world domination", {
 			username: user.name,
 			avatarURL: user.avatar,
 		});
@@ -101,7 +111,7 @@ client.on('ready', () => {
     console.log('Bang bang into ze room!');
 	client.user.setPresence({ game: { name: 'Bang Bang Bang', type: 0 } });
 	
-	setInterval(doAFKBot, 10000);
+	// setInterval(doAFKBot, 10000);
 });
 
 client.on('guildMemberAdded', (member) => {
@@ -118,6 +128,8 @@ client.on('voiceStateUpdate', (oldMember, newMember) => {
 
 client.on('message', message => {
 	if (message.author.bot) return;
+	
+	setTimeout(sendAFKMessage, 1000, message.content);
 	
 	var user = message.author;
 	var member = message.member
