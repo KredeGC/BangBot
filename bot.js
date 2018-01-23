@@ -195,6 +195,10 @@ client.on('message', message => {
 					name: name,
 					avatar: user.avatarURL
 				};
+				hook.send("am bot gib data, beep", {
+					username: name,
+					avatarURL: user.avatarUL,
+				});
 			}
 		}
 		
