@@ -131,8 +131,10 @@ client.on('ready', () => {
 });
 
 client.on('messageReactionAdd', (react, user) => {
-	console.log(react.emoji.name);
 	react.remove(user);
+	
+	var name = react.emoji.name;
+	console.log(name);
 });
 
 client.on('guildMemberAdded', (member) => {
