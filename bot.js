@@ -131,8 +131,7 @@ client.on('ready', () => {
 });
 
 client.on('messageReactionAdd', (react, user) => {
-	var name = react.emoji.name;
-	console.log(name);
+	console.log(react.emoji.name);
 	react.remove(user);
 });
 
