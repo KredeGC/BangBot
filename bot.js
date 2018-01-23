@@ -26,7 +26,6 @@ const capitalistWords = [
 const replies = [
 	"Bang Approves",
 	"Beep",
-	"Boo",
 	"Boop",
 	"Communism will rise",
 	"confusement",
@@ -39,11 +38,12 @@ const replies = [
 	"No",
 	"Perhaps",
 	"Possibly",
+	"*spits*",
 	"S U C C",
 	"Leaving a dot here .",
 	"Undoubtedly",
 	"Well done",
-	"Press X to Doubt",
+	"Yee",
 	"Yeah boii"
 ];
 
@@ -124,8 +124,8 @@ function doAFKBot() {
 
 
 client.on('ready', () => {
-    console.log('Bang bang into ze room!');
-	client.user.setPresence({ game: { name: 'Bang Bang Bang', type: 0 } });
+    console.log('Bang bang into the room!');
+	client.user.setPresence({ game: { name: 'Roblox', type: 0 } });
 	
 	// setInterval(doAFKBot, 60000);
 });
