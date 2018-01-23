@@ -131,13 +131,13 @@ client.on('ready', () => {
 });
 
 client.on('messageReactionAdd', (react, user) => {
-	react.remove(user);
-	
-	var name = react.emoji.name;
-	console.log(name);
+	/*if (game_users[user.id]) {
+		var name = react.emoji.name;
+		react.remove(user);
+	}*/
 });
 
-client.on('guildMemberAdded', (member) => {
+client.on('guildMemberAdd', (member) => {
 	member.guild.defaultChannel.send("Velkommen " + member.guild.name + " til " + member.guild.name);
 });
 
@@ -160,7 +160,7 @@ client.on('message', message => {
 	if (!msg.startsWith(prefix)) {
 		if (afk_users[user.id]) {
 			message.delete();
-			user.send("Du er AFK. Skriv `" + prefix + "afk` for at blive aktiv");
+			user.send("Du er inaktiv. Skriv `" + prefix + "afk` for at blive aktiv");
 			return;
 		}
 		
