@@ -22,9 +22,11 @@ const capitalistWords = [
 	"bought"
 ];
 
-const phrases = [
-	"",
-];
+
+
+const testclient = new Discord.Client();
+
+testclient.login(process.env.BOT_TOKEN2);
 
 
 
@@ -90,10 +92,10 @@ function playVideo( video, channel ) {
 	}
 }
 
-function sendAFKMessage(message) {
+function doAFKBot() {
 	for (var i in afk_users) {
 		var user = afk_users[i];
-		hook.send("am bot, gib data", {
+		hook.send("am " + user.name + " Bot gib data, beep", {
 			username: user.name,
 			avatarURL: user.avatar,
 		});
@@ -102,8 +104,10 @@ function sendAFKMessage(message) {
 
 
 client.on('ready', () => {
-    console.log('Bang bang into te room!');
+    console.log('Bang bang into ze room!');
 	client.user.setPresence({ game: { name: 'Bang Bang Bang', type: 0 } });
+	
+	setInterval(doAFKBot, 60000);
 });
 
 client.on('guildMemberAdded', (member) => {
@@ -126,8 +130,6 @@ client.on('message', message => {
 	var name = member.displayName;
 	var msg = message.content;
 	
-	setTimeout(sendAFKMessage, 1000, message.content);
-	
 	if (!msg.startsWith(prefix)) {
 		var txt = msg.split(" ");
 		for (var x in txt) {
@@ -136,7 +138,7 @@ client.on('message', message => {
 				message.channel.send("'**" + word.toUpperCase() + "**' is __CAPITALIST__ word. now off to *GULAG*", {
 					files: ["server.jpg"]
 				});
-				break;
+				return;
 			}
 		}
 	}
