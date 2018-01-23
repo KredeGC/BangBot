@@ -22,6 +22,10 @@ const capitalistWords = [
 	"bought"
 ];
 
+const phrases = [
+	"",
+];
+
 
 
 function get_video_id(string) {
@@ -98,7 +102,7 @@ function sendAFKMessage(message) {
 
 
 client.on('ready', () => {
-    console.log('Bang bang into the room!');
+    console.log('Bang bang into te room!');
 	client.user.setPresence({ game: { name: 'Bang Bang Bang', type: 0 } });
 });
 
@@ -121,12 +125,6 @@ client.on('message', message => {
 	var member = message.member
 	var name = member.displayName;
 	var msg = message.content;
-	
-	if (afk_users[user.id]) { // AFK users shouldn't chat
-		user.send("You are AFK. type `" + prefix + "afk` to stop being idle");
-		message.delete();
-		return;
-	}
 	
 	setTimeout(sendAFKMessage, 1000, message.content);
 	
