@@ -8,6 +8,7 @@ const hook = new Discord.WebhookClient(process.env.WEBHOOK_ID, process.env.WEBHO
 
 var voice_connection = null;
 var stream_handler = null;
+var afk_users = [];
 
 const prefix = "-";
 const minLength = 8;
@@ -85,10 +86,22 @@ function playVideo( video, channel ) {
 	}
 }
 
+function doAFKBot() {
+	for (var user in afk_users) {
+		var name = user.displayName;
+		hook.send("am " + name + "Bot gib world domination", {
+			username: name,
+			avatarURL: user.avatarURL,
+		});
+	}
+}
+
 
 client.on('ready', () => {
     console.log('Bang bang into ze room!');
 	client.user.setPresence({ game: { name: 'Bang Bang Bang', type: 0 } });
+	
+	setInterval(doAFKBot, 10000);
 });
 
 client.on('guildMemberAdded', (member) => {
@@ -157,6 +170,10 @@ client.on('message', message => {
 	}
 	
 	// Commands
+	
+	if (command == "afk") {
+		afk_users.push(message.member);
+	}
 	
 	if (command == "memelist") {
 		request('http://thefern.netau.net/api/meme/list', { json: true }, (err, res, body) => {
@@ -260,7 +277,7 @@ client.on('message', message => {
 	if (command == "kalinka") {
 		message.delete();
 		if (message.member.voiceChannel) {
-			var redstar = message.guild.emojis.find("name", "redstar");
+			var redstar = message.guild.emojis.find("name", "redpower");
 			message.channel.send(redstar + "Special kalinka session by **" + name + "**" + redstar);
 			playVideo( "4xJoVCjBUco", message.member.voiceChannel );
 		}
