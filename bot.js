@@ -22,6 +22,17 @@ const capitalistWords = [
 	"bought"
 ];
 
+const replies = [
+	"Marvelous",
+	"S U C C",
+	"Boo",
+	"kys",
+	"Bang Approves",
+	"Good job",
+	"confusement",
+	"Tactial dot ."
+];
+
 
 function get_video_id(string) {
 	var regex = "/(?:\?v=|&v=|youtu\.be\/)(.*?)(?:\?|&|$)/";
@@ -88,7 +99,8 @@ function playVideo( video, channel ) {
 function doAFKBot() {
 	for (var i in afk_users) {
 		var user = afk_users[i];
-		hook.send("am " + user.name + " Bot gib data, beep", {
+		var reply = replies[Math.floor(Math.random()*replies.length)];
+		hook.send(reply, {
 			username: user.name,
 			avatarURL: user.avatar,
 		});
@@ -100,7 +112,7 @@ client.on('ready', () => {
     console.log('Bang bang into ze room!');
 	client.user.setPresence({ game: { name: 'Bang Bang Bang', type: 0 } });
 	
-	setInterval(doAFKBot, 60000);
+	// setInterval(doAFKBot, 60000);
 });
 
 client.on('guildMemberAdded', (member) => {
@@ -124,6 +136,11 @@ client.on('message', message => {
 	var msg = message.content;
 	
 	if (!msg.startsWith(prefix)) {
+		if (afk_users[user.id]) {
+			message.delete();
+			return;
+		}
+		
 		var txt = msg.split(" ");
 		for (var x in txt) {
 			var word = txt[x];
@@ -134,190 +151,190 @@ client.on('message', message => {
 				return;
 			}
 		}
-	}
-	
-	if (msg.length > minLength) {
-		if (Math.random() > 0.95) {
-			message.channel.send("10+ meme points to **" + name + "**", {
-				files: ["10points.png"]
-			});
-		}
-	}
-	
-	if (!msg.startsWith(prefix)) return;
-	
-	var command = msg.split(" ")[0];
-	command = command.slice(prefix.length).toLowerCase();
-	var args = msg.split(" ").slice(1);
-	
-	message.delete();
-	
-	if (command == "help") {
-		message.channel.send("**Kommandoer** for **" + name + "**" +
-		"\n  **" + prefix + "memelist** : Få en liste over meehm templates" +
-		"\n  **" + prefix + "meme** `<template>` `<top;bottom>` : Lav en dank mehmay" +
-		"\n  **" + prefix + "mimic** `<tekst>`: Bot kontrol" +
-		"\n  **" + prefix + "banned** : Konfiskeret kapitalistisk propaganda" +
-		"\n  **" + prefix + "lectio** `<matfys|komit>`: Få en persons skema" +
-		"\n**Voice Channel**" +
-		"\n  **" + prefix + "communism** : Find da wey brudda" +
-		"\n  **" + prefix + "kalinka** : Start kalinka session" +
-		"\n  **" + prefix + "thot** : Begone Thot!" +
-		"\n**Musik**" +
-		"\n  **" + prefix + "join** : Join my meinkraft server" +
-		"\n  **" + prefix + "leave** : Unsubscribble to my channel" +
-		"\n  **" + prefix + "play** : Lyt til ulovlige youtube videoer!");
-	}
-	
-	// Commands
-	
-	if (command == "afk") {
-		if (afk_users[user.id]) {
-			delete afk_users[user.id];
-		} else {
-			afk_users[user.id] = {
-				name: name,
-				avatar: user.avatarURL
-			};
-		}
-	}
-	
-	if (command == "memelist") {
-		request('http://thefern.netau.net/api/meme/list', { json: true }, (err, res, body) => {
-			if (err) { return console.log(err); }
-			var txt = "**Holy list of meme templates**";
-			for (i = 0; i < body.length; i++) {
-				txt += "\n  " + body[i];
+		
+		if (msg.length > minLength) {
+			if (Math.random() > 0.95) {
+				message.channel.send("10+ meme points to **" + name + "**", {
+					files: ["10points.png"]
+				});
 			}
-			
-			message.channel.send(txt);
-		});
-	}
-	
-	if (command == "meme") {
+		}
+		
+		setTimeout(doAFKBot, 1000);
+	} else {
+		var command = msg.split(" ")[0];
+		command = command.slice(prefix.length).toLowerCase();
+		var args = msg.split(" ").slice(1);
+		
 		message.delete();
-		var meme = args[0];
-		var txt = args.slice(1).join(" ");
-		var tbl = txt.split(";");
 		
-		var url = "http://thefern.netau.net/api/meme/generator?meme=" + meme;
-		
-		if (tbl[1] != null) {
-			url += "&top=" + tbl[0] + "&bottom=" + tbl[1];
-		} else {
-			url += "&top=" + tbl[0];
+		if (command == "help") {
+			message.channel.send("**Kommandoer** for **" + name + "**" +
+			"\n  **" + prefix + "memelist** : Få en liste over meehm templates" +
+			"\n  **" + prefix + "meme** `<template>` `<top;bottom>` : Lav en dank mehmay" +
+			"\n  **" + prefix + "mimic** `<tekst>`: Bot kontrol" +
+			"\n  **" + prefix + "banned** : Konfiskeret kapitalistisk propaganda" +
+			"\n  **" + prefix + "lectio** `<matfys|komit>`: Få en persons skema" +
+			"\n**Voice Channel**" +
+			"\n  **" + prefix + "communism** : Find da wey brudda" +
+			"\n  **" + prefix + "kalinka** : Start kalinka session" +
+			"\n  **" + prefix + "thot** : Begone Thot!" +
+			"\n**Musik**" +
+			"\n  **" + prefix + "join** : Join my meinkraft server" +
+			"\n  **" + prefix + "leave** : Unsubscribble to my channel" +
+			"\n  **" + prefix + "play** : Lyt til ulovlige youtube videoer!");
 		}
 		
-		message.channel.send("Meme Copyright by **" + name + "**", {
-			files: [url + "&type=.jpg"]
-		});
-	}
-	
-	if (command == "mimic") {
-		hook.send(args.join(" "), {
-			username: name,
-			avatarURL: user.avatarURL,
-		});
-	}
-	
-	if (command == "banned") {
-		txt = "**Baned capitalist words**";
-		for (var x in capitalistWords) {
-			 txt += "\n  " + capitalistWords[x];
+		// Commands
+		
+		if (command == "afk") {
+			if (afk_users[user.id]) {
+				delete afk_users[user.id];
+			} else {
+				afk_users[user.id] = {
+					name: name,
+					avatar: user.avatarURL
+				};
+			}
 		}
-		message.channel.send(txt);
-	}
-	
-	if (command == "lectio") {
-		message.delete();
-		var arg = args[0];
-		var id = '';
-		var name = '';
-		if (arg == "matfys") {
-			id = '22303833699';
-			name = '1.6';
-		} else if(arg == "komit") {
-			id = '22352172603';
-			name = '1.4';
-		}
-		if (id == '') {
-			message.channel.send("**-lectio** `matfys` eller `komit`");
-		} else {
-			request('http://thefern.netau.net/api/lectio/schedule?school=523&student=' + id, { json: true }, (err, res, body) => {
+		
+		if (command == "memelist") {
+			request('http://thefern.netau.net/api/meme/list', { json: true }, (err, res, body) => {
 				if (err) { return console.log(err); }
-				var noter = body['dayschedule']['notes'];
-				var fag = body['dayschedule']['lessons'];
-				var txt = "```glsl\n#" + body['day'] + " " + name;
-				
-				for (i = 0; i < fag.length; i++) {
-					txt += "\n[" + fag[i].time + '] ' + fag[i].title + ' ' + fag[i].classroom;
+				var txt = "**Holy list of meme templates**";
+				for (i = 0; i < body.length; i++) {
+					txt += "\n  " + body[i];
 				}
-				
-				txt += "\n#Noter";
-				
-				for (i = 0; i < noter.length; i++) {
-					txt += "\n" + noter[i];
-				}
-				
-				txt += "```";
 				
 				message.channel.send(txt);
 			});
 		}
-	}
-	
-	// Voice
-	
-	if (command == "communism") {
-		message.delete();
-		var redstar = message.guild.emojis.find("name", "redstar");
-		var marx = message.guild.emojis.find("name", "marx");
-		var stalin = message.guild.emojis.find("name", "stalin");
-		message.channel.send(redstar + "Special tribute to " + marx + "**Marx**, " + stalin + "**Stalin** and **Lenin** from **" + name + "**" + redstar, {
-			files: ["communism.gif"]
-		});
-		if (member.voiceChannel) {
-			playVideo( "U06jlgpMtQs", member.voiceChannel );
+		
+		if (command == "meme") {
+			message.delete();
+			var meme = args[0];
+			var txt = args.slice(1).join(" ");
+			var tbl = txt.split(";");
+			
+			var url = "http://thefern.netau.net/api/meme/generator?meme=" + meme;
+			
+			if (tbl[1] != null) {
+				url += "&top=" + tbl[0] + "&bottom=" + tbl[1];
+			} else {
+				url += "&top=" + tbl[0];
+			}
+			
+			message.channel.send("Meme Copyright by **" + name + "**", {
+				files: [url + "&type=.jpg"]
+			});
 		}
-	}
-	
-	if (command == "kalinka") {
-		message.delete();
-		if (member.voiceChannel) {
-			var redstar = message.guild.emojis.find("name", "redpower");
-			message.channel.send(redstar + "Special kalinka session by **" + name + "**" + redstar);
-			playVideo( "4xJoVCjBUco", member.voiceChannel );
+		
+		if (command == "mimic") {
+			hook.send(args.join(" "), {
+				username: name,
+				avatarURL: user.avatarURL,
+			});
 		}
-	}
-	
-	if (command == "thot") {
-		message.delete();
-		if (member.voiceChannel) {
-			playFile( "thot.mp3", member.voiceChannel );
+		
+		if (command == "banned") {
+			txt = "**Baned capitalist words**";
+			for (var x in capitalistWords) {
+				 txt += "\n  " + capitalistWords[x];
+			}
+			message.channel.send(txt);
 		}
-	}
-	
-	// Music
-	
-	if (command == "join") {
-		message.delete();
-		if (member.voiceChannel) {
-			joinChannel(member.voiceChannel);
-		} else {
-			message.channel.send(name + ", du skal være i en VoiceChannel din tard");
+		
+		if (command == "lectio") {
+			message.delete();
+			var arg = args[0];
+			var id = '';
+			var name = '';
+			if (arg == "matfys") {
+				id = '22303833699';
+				name = '1.6';
+			} else if(arg == "komit") {
+				id = '22352172603';
+				name = '1.4';
+			}
+			if (id == '') {
+				message.channel.send("**-lectio** `matfys` eller `komit`");
+			} else {
+				request('http://thefern.netau.net/api/lectio/schedule?school=523&student=' + id, { json: true }, (err, res, body) => {
+					if (err) { return console.log(err); }
+					var noter = body['dayschedule']['notes'];
+					var fag = body['dayschedule']['lessons'];
+					var txt = "```glsl\n#" + body['day'] + " " + name;
+					
+					for (i = 0; i < fag.length; i++) {
+						txt += "\n[" + fag[i].time + '] ' + fag[i].title + ' ' + fag[i].classroom;
+					}
+					
+					txt += "\n#Noter";
+					
+					for (i = 0; i < noter.length; i++) {
+						txt += "\n" + noter[i];
+					}
+					
+					txt += "```";
+					
+					message.channel.send(txt);
+				});
+			}
 		}
-	}
-	
-	if (command == "leave") {
-		message.delete();
-		leaveChannel();
-	}
-	
-	if (command == "play") {
-		message.delete();
-		if (member.voiceChannel) {
-			var id = get_video_id( args[0] );
-			playVideo( id, member.voiceChannel );
+		
+		// Voice
+		
+		if (command == "communism") {
+			message.delete();
+			var redstar = message.guild.emojis.find("name", "redstar");
+			var marx = message.guild.emojis.find("name", "marx");
+			var stalin = message.guild.emojis.find("name", "stalin");
+			message.channel.send(redstar + "Special tribute to " + marx + "**Marx**, " + stalin + "**Stalin** and **Lenin** from **" + name + "**" + redstar, {
+				files: ["communism.gif"]
+			});
+			if (member.voiceChannel) {
+				playVideo( "U06jlgpMtQs", member.voiceChannel );
+			}
+		}
+		
+		if (command == "kalinka") {
+			message.delete();
+			if (member.voiceChannel) {
+				var redstar = message.guild.emojis.find("name", "redpower");
+				message.channel.send(redstar + "Special kalinka session by **" + name + "**" + redstar);
+				playVideo( "4xJoVCjBUco", member.voiceChannel );
+			}
+		}
+		
+		if (command == "thot") {
+			message.delete();
+			if (member.voiceChannel) {
+				playFile( "thot.mp3", member.voiceChannel );
+			}
+		}
+		
+		// Music
+		
+		if (command == "join") {
+			message.delete();
+			if (member.voiceChannel) {
+				joinChannel(member.voiceChannel);
+			} else {
+				message.channel.send(name + ", du skal være i en VoiceChannel din tard");
+			}
+		}
+		
+		if (command == "leave") {
+			message.delete();
+			leaveChannel();
+		}
+		
+		if (command == "play") {
+			message.delete();
+			if (member.voiceChannel) {
+				var id = get_video_id( args[0] );
+				playVideo( id, member.voiceChannel );
+			}
 		}
 	}
 });
