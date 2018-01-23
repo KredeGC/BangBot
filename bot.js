@@ -26,6 +26,11 @@ const capitalistWords = [
 
 const testclient = new Discord.Client();
 
+testclient.on('message', (message) => {
+	if (message.author.bot) return;
+	message.channel.send('test');
+});
+
 testclient.login(process.env.BOT_TOKEN2);
 
 
