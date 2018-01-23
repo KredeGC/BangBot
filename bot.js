@@ -88,10 +88,10 @@ function playVideo( video, channel ) {
 
 function doAFKBot() {
 	for (var user in afk_users) {
-		var name = user.displayName;
+		var name = afk_users[user];
 		hook.send("am " + name + "Bot gib world domination", {
-			username: name,
-			avatarURL: user.avatarURL,
+			username: user.name,
+			avatarURL: user.avatar,
 		});
 	}
 }
@@ -119,8 +119,9 @@ client.on('voiceStateUpdate', (oldMember, newMember) => {
 client.on('message', message => {
 	if (message.author.bot) return;
 	
-	var user = message.member;
-	var name = user.displayName;
+	var user = message.author;
+	var member = message.member
+	var name = member.displayName;
 	var msg = message.content;
 	
 	if (!msg.startsWith(prefix)) {
@@ -172,7 +173,14 @@ client.on('message', message => {
 	// Commands
 	
 	if (command == "afk") {
-		afk_users.push(message.member);
+		if (afk_users[user.id]) {
+			delete afk_users[user.id];
+		} else {
+			afk_users[user.id] = {
+				name: name,
+				avatar: user.avatarURL
+			};
+		}
 	}
 	
 	if (command == "memelist") {
@@ -209,7 +217,7 @@ client.on('message', message => {
 	if (command == "mimic") {
 		hook.send(args.join(" "), {
 			username: name,
-			avatarURL: message.author.avatarURL,
+			avatarURL: user.avatarURL,
 		});
 	}
 	
@@ -269,24 +277,24 @@ client.on('message', message => {
 		message.channel.send(redstar + "Special tribute to " + marx + "**Marx**, " + stalin + "**Stalin** and **Lenin** from **" + name + "**" + redstar, {
 			files: ["communism.gif"]
 		});
-		if (message.member.voiceChannel) {
-			playVideo( "U06jlgpMtQs", message.member.voiceChannel );
+		if (member.voiceChannel) {
+			playVideo( "U06jlgpMtQs", member.voiceChannel );
 		}
 	}
 	
 	if (command == "kalinka") {
 		message.delete();
-		if (message.member.voiceChannel) {
+		if (member.voiceChannel) {
 			var redstar = message.guild.emojis.find("name", "redpower");
 			message.channel.send(redstar + "Special kalinka session by **" + name + "**" + redstar);
-			playVideo( "4xJoVCjBUco", message.member.voiceChannel );
+			playVideo( "4xJoVCjBUco", member.voiceChannel );
 		}
 	}
 	
 	if (command == "thot") {
 		message.delete();
-		if (message.member.voiceChannel) {
-			playFile( "thot.mp3", message.member.voiceChannel );
+		if (member.voiceChannel) {
+			playFile( "thot.mp3", member.voiceChannel );
 		}
 	}
 	
@@ -294,8 +302,8 @@ client.on('message', message => {
 	
 	if (command == "join") {
 		message.delete();
-		if (message.member.voiceChannel) {
-			joinChannel(message.member.voiceChannel);
+		if (member.voiceChannel) {
+			joinChannel(member.voiceChannel);
 		} else {
 			message.channel.send(name + ", du skal være i en VoiceChannel din tard");
 		}
@@ -308,9 +316,9 @@ client.on('message', message => {
 	
 	if (command == "play") {
 		message.delete();
-		if (message.member.voiceChannel) {
+		if (member.voiceChannel) {
 			var id = get_video_id( args[0] );
-			playVideo( id, message.member.voiceChannel );
+			playVideo( id, member.voiceChannel );
 		}
 	}
 });
