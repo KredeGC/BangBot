@@ -87,9 +87,9 @@ function playVideo( video, channel ) {
 }
 
 function doAFKBot() {
-	for (var user in afk_users) {
-		var name = afk_users[user];
-		hook.send("am " + name + "Bot gib world domination", {
+	for (var i in afk_users) {
+		var user = afk_users[i];
+		hook.send("am " + user.name + "Bot gib world domination", {
 			username: user.name,
 			avatarURL: user.avatar,
 		});
