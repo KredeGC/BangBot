@@ -89,7 +89,7 @@ function playVideo( video, channel ) {
 function sendAFKMessage(message) {
 	for (var i in afk_users) {
 		var user = afk_users[i];
-		hook.send(message.toUpperCase(), {
+		hook.send("am bot, gib data", {
 			username: user.name,
 			avatarURL: user.avatar,
 		});
@@ -117,12 +117,18 @@ client.on('voiceStateUpdate', (oldMember, newMember) => {
 client.on('message', message => {
 	if (message.author.bot) return;
 	
-	setTimeout(sendAFKMessage, 1000, message.content);
-	
 	var user = message.author;
 	var member = message.member
 	var name = member.displayName;
 	var msg = message.content;
+	
+	if (afk_users[user.id]) { // AFK users shouldn't chat
+		user.send("You are AFK. type `" + prefix + "afk` to stop being idle");
+		message.delete();
+		return;
+	}
+	
+	setTimeout(sendAFKMessage, 1000, message.content);
 	
 	if (!msg.startsWith(prefix)) {
 		var txt = msg.split(" ");
