@@ -125,9 +125,13 @@ function doAFKBot() {
 
 client.on('ready', () => {
     console.log('Bang bang into the room!');
-	client.user.setPresence({ game: { name: 'Roblox', type: 0 } });
+	client.user.setPresence({ game: { name: '-help', type: 0 } });
 	
 	// setInterval(doAFKBot, 60000);
+});
+
+client.on('messageReactionAdd', (react, user) => {
+	react.remove(user);
 });
 
 client.on('guildMemberAdded', (member) => {
