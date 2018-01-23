@@ -22,25 +22,23 @@ const capitalistWords = [
 	"bought"
 ];
 
-const answers = [
+const replies = [
+	"Bang Approves",
+	"Beep",
+	"Boo",
+	"confusement",
+	"Doubt",
+	"Good job",
+	"kys",
+	"Marvelous",
 	"No",
 	"Perhaps",
 	"Possibly",
-	"Undoubtedly",
-	"Yeah boii"
-];
-
-const replies = [
-	"Marvelous",
 	"S U C C",
-	"Boo",
-	"kys",
-	"Bang Approves",
-	"Doubt",
-	"Good job",
-	"confusement",
 	"Tactial dot .",
-	"Well done"
+	"Undoubtedly",
+	"Well done",
+	"Yeah boii"
 ];
 
 
