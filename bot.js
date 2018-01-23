@@ -9,6 +9,7 @@ const hook = new Discord.WebhookClient(process.env.WEBHOOK_ID, process.env.WEBHO
 var voice_connection = null;
 var stream_handler = null;
 var afk_users = [];
+var afk_timer = null;
 
 const prefix = "-";
 const minLength = 8;
@@ -26,19 +27,23 @@ const replies = [
 	"Bang Approves",
 	"Beep",
 	"Boo",
+	"Boop",
 	"Communism will rise",
 	"confusement",
 	"Doubt",
 	"Good job",
+	"Impossible",
 	"kys",
-	"Marvelous",
+	"Magnificent",
+	"Marvellous",
 	"No",
 	"Perhaps",
 	"Possibly",
 	"S U C C",
-	"Tactial dot .",
+	"Leaving a dot here .",
 	"Undoubtedly",
 	"Well done",
+	"Press X to Doubt",
 	"Yeah boii"
 ];
 
@@ -106,6 +111,7 @@ function playVideo( video, channel ) {
 }
 
 function doAFKBot() {
+	afk_timer = null;
 	for (var i in afk_users) {
 		var user = afk_users[i];
 		var reply = replies[Math.floor(Math.random()*replies.length)];
@@ -170,7 +176,11 @@ client.on('message', message => {
 			}
 		}
 		
-		setTimeout(doAFKBot, 1000);
+		if (afk_timer != null) {
+			clearTimeout(afk_timer);
+		}
+		
+		afk_timer = setTimeout(doAFKBot, 1000 + Math.random()*1000);
 	} else {
 		var command = msg.split(" ")[0];
 		command = command.slice(prefix.length).toLowerCase();
@@ -182,7 +192,7 @@ client.on('message', message => {
 			message.channel.send("**Kommandoer** for **" + name + "**" +
 			"\n  **" + prefix + "memelist** : Få en liste over meehm templates" +
 			"\n  **" + prefix + "meme** `<template>` `<top;bottom>` : Lav en dank mehmay" +
-			"\n  **" + prefix + "mimic** `<tekst>`: Bot kontrol" +
+			"\n  **" + prefix + "afk**: Become a bot" +
 			"\n  **" + prefix + "banned** : Konfiskeret kapitalistisk propaganda" +
 			"\n  **" + prefix + "lectio** `<matfys|komit>`: Få en persons skema" +
 			"\n**Voice Channel**" +
@@ -225,7 +235,6 @@ client.on('message', message => {
 		}
 		
 		if (command == "meme") {
-			message.delete();
 			var meme = args[0];
 			var txt = args.slice(1).join(" ");
 			var tbl = txt.split(";");
@@ -243,13 +252,6 @@ client.on('message', message => {
 			});
 		}
 		
-		if (command == "mimic") {
-			hook.send(args.join(" "), {
-				username: name,
-				avatarURL: user.avatarURL,
-			});
-		}
-		
 		if (command == "banned") {
 			txt = "**Baned capitalist words**";
 			for (var x in capitalistWords) {
@@ -259,7 +261,6 @@ client.on('message', message => {
 		}
 		
 		if (command == "lectio") {
-			message.delete();
 			var arg = args[0];
 			var id = '';
 			var name = '';
@@ -299,7 +300,6 @@ client.on('message', message => {
 		// Voice
 		
 		if (command == "communism") {
-			message.delete();
 			var redstar = message.guild.emojis.find("name", "redstar");
 			var marx = message.guild.emojis.find("name", "marx");
 			var stalin = message.guild.emojis.find("name", "stalin");
@@ -312,16 +312,14 @@ client.on('message', message => {
 		}
 		
 		if (command == "kalinka") {
-			message.delete();
 			if (member.voiceChannel) {
-				var redstar = message.guild.emojis.find("name", "redpower");
-				message.channel.send(redstar + "Special kalinka session by **" + name + "**" + redstar);
+				var redpower = message.guild.emojis.find("name", "redpower");
+				message.channel.send(redpower + "Special kalinka session by **" + name + "**" + redpower);
 				playVideo( "4xJoVCjBUco", member.voiceChannel );
 			}
 		}
 		
 		if (command == "thot") {
-			message.delete();
 			if (member.voiceChannel) {
 				playFile( "thot.mp3", member.voiceChannel );
 			}
@@ -330,7 +328,6 @@ client.on('message', message => {
 		// Music
 		
 		if (command == "join") {
-			message.delete();
 			if (member.voiceChannel) {
 				joinChannel(member.voiceChannel);
 			} else {
@@ -339,12 +336,10 @@ client.on('message', message => {
 		}
 		
 		if (command == "leave") {
-			message.delete();
 			leaveChannel();
 		}
 		
 		if (command == "play") {
-			message.delete();
 			if (member.voiceChannel) {
 				var id = get_video_id( args[0] );
 				playVideo( id, member.voiceChannel );
