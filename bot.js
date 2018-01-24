@@ -308,10 +308,11 @@ client.on('message', message => {
 					var inv = body['descriptions'];
 					if (inv[pos]) {
 						var item = inv[pos];
-						var name = item['name'];
+						var name = item['name'] || 'Unknown';
 						var desc = '';
 						var type = item['type'];
-						var color = '#' + item['name_color'];
+						var color = '#' + (item['name_color'] || 'FFFFFF');
+						var tradable = (item['tradable'] || '0') == 1;
 						var img = 'http://community.edgecast.steamstatic.com/economy/image/' + item['icon_url_large'];
 						
 						for (var i in item['descriptions']) {
@@ -323,8 +324,12 @@ client.on('message', message => {
 							.setDescription(desc)
 							.setImage(img)
 							.setColor(color)
-							.addField('Type', type)
+							.addField('Tradable', tradable)
 							.setFooter('Taken from Steam');
+						
+						if (type) {
+							embed.addField('Type', type);
+						}
 						
 						message.channel.send({embed});
 					}
