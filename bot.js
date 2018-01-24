@@ -183,7 +183,7 @@ client.on('message', message => {
 	var name = member.displayName;
 	var msg = message.content;
 	
-	if (!msg.startsWith(prefix)) {
+	if (!msg.startsWith(prefix) && !msg.startsWith(client.user.toString())) {
 		if (isAFK(user)) {
 			message.delete();
 			user.send("Du er inaktiv. Skriv `" + prefix + "afk` for at blive aktiv");
@@ -219,7 +219,11 @@ client.on('message', message => {
 		});
 	} else {
 		var command = msg.split(" ")[0];
-		command = command.slice(prefix.length).toLowerCase();
+		if (msg.startsWith(prefix)) {
+			command = command.slice(prefix.length).toLowerCase();
+		} else {
+			command = command.slice(client.user.length).toLowerCase();
+		}
 		var args = msg.split(" ").slice(1);
 		
 		message.delete();
