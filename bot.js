@@ -112,7 +112,7 @@ function playVideo( video, channel ) {
 	}
 }
 
-function doAFKBot() {
+function sendAFKMessages() {
 	for (var i in afk_users) {
 		var id = afk_users[i];
 		client.fetchUser(id).then(user => {
@@ -154,8 +154,7 @@ function begoneAFK(user) {
 
 client.on('ready', () => {
     console.log('Bang bang into the room!');
-	var amount = client.guilds.array.length;
-	client.user.setPresence({ game: { name: 'in ' + amount + ' guilds', type: 0 } });
+	client.user.setPresence({ game: { name: '-help', type: 0 } });
 });
 
 client.on('messageReactionAdd', (react, user) => {
@@ -164,11 +163,6 @@ client.on('messageReactionAdd', (react, user) => {
 		var name = react.emoji.name;
 		react.remove(user);
 	}
-});
-
-client.on('guildCreate', (guild) => {
-	var amount = client.guilds.array.length;
-	client.user.setPresence({ game: { name: 'in ' + amount + ' guilds', type: 0 } });
 });
 
 client.on('guildMemberAdd', (member) => {
@@ -183,7 +177,7 @@ client.on('message', message => {
 	var name = member.displayName;
 	var msg = message.content;
 	
-	if (!msg.startsWith(prefix) && !msg.startsWith(client.user.toString())) {
+	if (!msg.startsWith(prefix)) {
 		if (isAFK(user)) {
 			message.delete();
 			user.send("Du er inaktiv. Skriv `" + prefix + "afk` for at blive aktiv");
@@ -215,15 +209,11 @@ client.on('message', message => {
 		
 		message.channel.createWebhook("AFK Webhook").then(hook => {
 			afk_hook = hook;
-			afk_timer = setTimeout(doAFKBot, 1000 + Math.random()*1000);
+			afk_timer = setTimeout(sendAFKMessages, 1000 + Math.random()*1000);
 		});
 	} else {
 		var command = msg.split(" ")[0];
-		if (msg.startsWith(prefix)) {
-			command = command.slice(prefix.length).toLowerCase();
-		} else {
-			command = command.slice(client.user.length).toLowerCase();
-		}
+		command = command.slice(prefix.length).toLowerCase();
 		var args = msg.split(" ").slice(1);
 		
 		message.delete();
@@ -248,7 +238,7 @@ client.on('message', message => {
 		// Commands
 		
 		if (command == "afk") {
-			if (afk_users[user.id]) {
+			if (isAFK(user)) {
 				begoneAFK(user);
 			} else {
 				becomeAFK(user);
