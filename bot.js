@@ -119,14 +119,12 @@ function doAFKBot(channel) {
 			console.log(i-afk_users.length+1);
 			if (i == afk_users.length-1) {
 				afk_hook.send(reply, {
-					username: user.usernamename,
+					username: user.username,
 					avatarURL: user.avatarURL,
 				}).then(message => {
-					setTimeout(() => {
-						afk_hook.delete();
-						afk_hook = null;
-						afk_timer = null;
-					}, 1000);
+					afk_hook.delete();
+					afk_hook = null;
+					afk_timer = null;
 				});
 			} else {
 				afk_hook.send(reply, {
