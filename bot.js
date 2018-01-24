@@ -24,6 +24,7 @@ const capitalistWords = [
 ];
 
 const replies = [
+	"Absolutely",
 	"Bang Approves",
 	"Beep",
 	"Boop",
@@ -44,7 +45,8 @@ const replies = [
 	"Undoubtedly",
 	"Well done",
 	"Yee",
-	"Yeah boii"
+	"Yeah boii",
+	"You do not no de wey"
 ];
 
 
@@ -137,19 +139,23 @@ function isAFK(user) {
 function becomeAFK(user) {
 	if (isAFK(user)) return false;
 	afk_users.push( user.id );
+	return true;
 }
 
 function begoneAFK(user) {
 	var pos = afk_users.indexOf(user.id);
 	if (pos > -1) {
 		afk_users.slice(pos);
+		return true;
 	}
+	return false;
 }
 
 
 client.on('ready', () => {
     console.log('Bang bang into the room!');
-	client.user.setPresence({ game: { name: 'bobs and vagene', type: 0 } });
+	var amount = client.guilds.array.length;
+	client.user.setPresence({ game: { name: 'in ' + amount + ' guilds', type: 0 } });
 });
 
 client.on('messageReactionAdd', (react, user) => {
@@ -158,6 +164,11 @@ client.on('messageReactionAdd', (react, user) => {
 		var name = react.emoji.name;
 		react.remove(user);
 	}
+});
+
+client.on('guildCreate', (guild) => {
+	var amount = client.guilds.array.length;
+	client.user.setPresence({ game: { name: 'in ' + amount + ' guilds', type: 0 } });
 });
 
 client.on('guildMemberAdd', (member) => {
@@ -202,8 +213,8 @@ client.on('message', message => {
 			clearTimeout(afk_timer);
 		}
 		
-		message.channel.createWebhook("AFK Webhook").then(wb => {
-			afk_hook = wb;
+		message.channel.createWebhook("AFK Webhook").then(hook => {
+			afk_hook = hook;
 			afk_timer = setTimeout(doAFKBot, 1000 + Math.random()*1000);
 		});
 	} else {
@@ -237,12 +248,12 @@ client.on('message', message => {
 				begoneAFK(user);
 			} else {
 				becomeAFK(user);
-				message.channel.createWebhook("AFK Webhook").then(wb => {
-					wb.send("am bot gib data, beep", {
+				message.channel.createWebhook("AFK Webhook").then(hook => {
+					hook.send("am bot gib data, beep", {
 						username: user.username,
 						avatarURL: user.avatarURL,
 					}).then(message => {
-						wb.delete();
+						hook.delete();
 					});
 				});
 			}
@@ -348,6 +359,7 @@ client.on('message', message => {
 		if (command == "thot") {
 			if (member.voiceChannel) {
 				playFile( "thot.mp3", member.voiceChannel );
+				message.channel.send("**BEGONE THOT!**");
 			}
 		}
 		
