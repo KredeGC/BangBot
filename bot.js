@@ -116,6 +116,7 @@ function doAFKBot() {
 	for (var i in afk_users) {
 		var user = afk_users[i];
 		var reply = replies[Math.floor(Math.random()*replies.length)];
+		console.log(i-afk_users.length-1);
 		if (i == afk_users.length) {
 			afk_hook.send(reply, {
 				username: user.name,
