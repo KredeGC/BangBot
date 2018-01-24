@@ -111,28 +111,28 @@ function playVideo( video, channel ) {
 	}
 }
 
-function doAFKBot() {
+function doAFKBot(channel) {
 	for (var i in afk_users) {
-		var user = afk_users[i];
-		var reply = replies[Math.floor(Math.random()*replies.length)];
-		console.log(i-afk_users.length+1);
-		if (i == afk_users.length-1) {
-			afk_hook.send(reply, {
-				username: user.name,
-				avatarURL: user.avatar,
-			}).then(message => {
-				setTimeout(() => {
+		var id = afk_users[i];
+		client.fetchUser(id).then(user => {
+			var reply = replies[Math.floor(Math.random()*replies.length)];
+			console.log(i-afk_users.length+1);
+			if (i == afk_users.length-1) {
+				afk_hook.send(reply, {
+					username: user.usernamename,
+					avatarURL: user.avatarURL,
+				}).then(message => {
 					afk_hook.delete();
 					afk_hook = null;
 					afk_timer = null;
-				}, 1000);
-			});
-		} else {
-			afk_hook.send(reply, {
-				username: user.name,
-				avatarURL: user.avatar,
-			});
-		}
+				});
+			} else {
+				afk_hook.send(reply, {
+					username: user.username,
+					avatarURL: user.avatarURL,
+				});
+			}
+		});
 	}
 }
 
@@ -211,7 +211,7 @@ client.on('message', message => {
 		
 		message.channel.createWebhook("AFK Webhook").then(wb => {
 			afk_hook = wb;
-			afk_timer = setTimeout(doAFKBot, 1000 + Math.random()*1000);
+			afk_timer = setTimeout(doAFKBot, 1000 + Math.random()*1000, message.channel);
 		});
 	} else {
 		var command = msg.split(" ")[0];
