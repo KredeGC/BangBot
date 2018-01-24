@@ -300,14 +300,21 @@ client.on('message', message => {
 		
 		if (command == "item") {
 			var id = '76561198077944666';
-			var pos = args[0];
-			if (pos != null) {
+			var search = args.join(" ").toLowerCase();
+			if (search != null) {
 				request('http://steamcommunity.com/inventory/' + id + '/440/2?l=english&count=5000', { json: true }, (err, res, body) => {
 					if (err) { return console.log(err); }
 					if (!body['descriptions']) return;
 					var inv = body['descriptions'];
-					if (inv[pos]) {
-						var item = inv[pos];
+					var item = null;
+					for (var i in inv) {
+						var name = inv[i]['name'].toLowerCase();
+						if (name.indexOf(search)) {
+							item = inv[i];
+							break;
+						}
+					}
+					if (item != null) {
 						var name = item['name'] || 'Unknown';
 						var desc = '';
 						var type = item['type'];
@@ -342,6 +349,8 @@ client.on('message', message => {
 						}
 						
 						message.channel.send({embed});
+					} else {
+						message.channel.send('Could not find item');
 					}
 				});
 			}
