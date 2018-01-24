@@ -238,9 +238,11 @@ client.on('message', message => {
 			} else {
 				becomeAFK(user);
 				message.channel.createWebhook("AFK Webhook").then(wb => {
-					hook.send("am bot gib data, beep", {
+					wb.send("am bot gib data, beep", {
 						username: user.username,
 						avatarURL: user.avatarURL,
+					}).then(message => {
+						wb.delete();
 					});
 				});
 			}
