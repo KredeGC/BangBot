@@ -112,18 +112,18 @@ function playVideo( video, channel ) {
 }
 
 function doAFKBot() {
-	afk_timer = null;
+	var num = 0;
 	for (var i in afk_users) {
 		var user = afk_users[i];
 		var reply = replies[Math.floor(Math.random()*replies.length)];
-		console.log(i-afk_users.length-1);
-		if (i == afk_users.length) {
+		if (num == afk_users.length-1) {
 			afk_hook.send(reply, {
 				username: user.name,
 				avatarURL: user.avatar,
 			}).then(message => {
 				afk_hook.delete();
 				afk_hook = null;
+				afk_timer = null;
 			});
 		} else {
 			afk_hook.send(reply, {
@@ -131,6 +131,7 @@ function doAFKBot() {
 				avatarURL: user.avatar,
 			});
 		}
+		num++;
 	}
 }
 
