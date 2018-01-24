@@ -309,7 +309,7 @@ client.on('message', message => {
 					var item = null;
 					for (var i in inv) {
 						var name = inv[i]['name'].toLowerCase();
-						if (name.indexOf(search)) {
+						if (name.indexOf(search) > -1) {
 							item = inv[i];
 							break;
 						}
