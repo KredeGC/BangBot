@@ -8,7 +8,7 @@ const hook = new Discord.WebhookClient(process.env.WEBHOOK_ID, process.env.WEBHO
 
 var voice_connection = null;
 var stream_handler = null;
-var afk_users = {};
+var afk_users = [];
 var afk_timer = null;
 var afk_hook = null;
 
@@ -112,12 +112,11 @@ function playVideo( video, channel ) {
 }
 
 function doAFKBot() {
-	var num = 0;
 	for (var i in afk_users) {
 		var user = afk_users[i];
 		var reply = replies[Math.floor(Math.random()*replies.length)];
-		console.log(num-afk_users.length+1);
-		if (num == afk_users.length-1) {
+		console.log(i-afk_users.length+1);
+		if (i == afk_users.length-1) {
 			afk_hook.send(reply, {
 				username: user.name,
 				avatarURL: user.avatar,
@@ -132,7 +131,23 @@ function doAFKBot() {
 				avatarURL: user.avatar,
 			});
 		}
-		num++;
+	}
+}
+
+function isAFK(user) {
+	if (afk_users.indexOf(user.id) > -1) return true;
+	return false
+}
+
+function becomeAFK(user) {
+	if (isAFK(user)) return false;
+	afk_users.push( user.id );
+}
+
+function begoneAFK(user) {
+	var pos = afk_users.indexOf(user.id);
+	if (pos > -1) {
+		afk_users.slice(pos);
 	}
 }
 
@@ -144,7 +159,7 @@ client.on('ready', () => {
 
 client.on('messageReactionAdd', (react, user) => {
 	if (user.bot) return;
-	if (afk_users[user.id]) {
+	if (isAFK(user)) {
 		var name = react.emoji.name;
 		react.remove(user);
 	}
@@ -163,7 +178,7 @@ client.on('message', message => {
 	var msg = message.content;
 	
 	if (!msg.startsWith(prefix)) {
-		/*if (afk_users[user.id]) {
+		/*if (isAFK(user)) {
 			message.delete();
 			user.send("Du er inaktiv. Skriv `" + prefix + "afk` for at blive aktiv");
 			return;
@@ -224,16 +239,13 @@ client.on('message', message => {
 		
 		if (command == "afk") {
 			if (afk_users[user.id]) {
-				delete afk_users[user.id];
+				begoneAFK(user);
 			} else {
-				afk_users[user.id] = {
-					name: name,
-					avatar: user.avatarURL
-				};
-				hook.send("am bot gib data, beep", {
+				becomeAFK(user);
+				/*hook.send("am bot gib data, beep", {
 					username: name,
 					avatarURL: user.avatarURL,
-				});
+				});*/
 			}
 		}
 		
