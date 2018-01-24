@@ -312,7 +312,6 @@ client.on('message', message => {
 						var desc = '';
 						var type = item['type'];
 						var color = '#' + (item['name_color'] || 'FFFFFF');
-						var tradable = (item['tradable'] || '0') == 1;
 						var img = 'http://community.edgecast.steamstatic.com/economy/image/' + item['icon_url_large'];
 						
 						for (var i in item['descriptions']) {
@@ -322,13 +321,24 @@ client.on('message', message => {
 						var embed = new Discord.RichEmbed()
 							.setTitle(name)
 							.setDescription(desc)
-							.setImage(img)
+							.setThumbnail(img)
 							.setColor(color)
-							.addField('Tradable', tradable)
 							.setFooter('Taken from Steam');
 						
 						if (type) {
 							embed.addField('Type', type);
+						}
+						
+						if (item['tradable'] && item['tradable'] == '1') {
+							embed.addField('Tradable', 'Yes');
+						} else {
+							embed.addField('Tradable', 'No');
+						}
+						
+						if (item['marketable'] && item['marketable'] == '1') {
+							embed.addField('Marketable', 'Yes');
+						} else {
+							embed.addField('Marketable', 'No');
 						}
 						
 						message.channel.send({embed});
