@@ -148,6 +148,8 @@ client.on('message', message => {
 	var name = member.displayName;
 	var msg = message.content;
 	
+	hook.channelID = message.channel.id;
+	
 	if (!msg.startsWith(prefix)) {
 		if (afk_users[user.id]) {
 			message.delete();
@@ -178,7 +180,7 @@ client.on('message', message => {
 			clearTimeout(afk_timer);
 		}
 		
-		hook.channelID = message.channel.id;
+		// hook.channelID = message.channel.id;
 		
 		afk_timer = setTimeout(doAFKBot, 1000 + Math.random()*1000);
 	} else {
