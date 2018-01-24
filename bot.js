@@ -121,9 +121,11 @@ function doAFKBot() {
 				username: user.name,
 				avatarURL: user.avatar,
 			}).then(message => {
-				afk_hook.delete();
-				afk_hook = null;
-				afk_timer = null;
+				setTimeout(() => {
+					afk_hook.delete();
+					afk_hook = null;
+					afk_timer = null;
+				}, 1000);
 			});
 		} else {
 			afk_hook.send(reply, {
