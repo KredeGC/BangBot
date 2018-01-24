@@ -160,7 +160,7 @@ client.on('message', message => {
 	var msg = message.content;
 	
 	if (!msg.startsWith(prefix)) {
-		if (afk_users[user.id]) {
+		/*if (afk_users[user.id]) {
 			message.delete();
 			user.send("Du er inaktiv. Skriv `" + prefix + "afk` for at blive aktiv");
 			return;
@@ -183,7 +183,7 @@ client.on('message', message => {
 					files: ["10points.png"]
 				});
 			}
-		}
+		}*/
 		
 		if (afk_timer != null) {
 			clearTimeout(afk_timer);
