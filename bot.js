@@ -298,6 +298,40 @@ client.on('message', message => {
 			message.channel.send(txt);
 		}
 		
+		if (command == "item") {
+			var id = '76561198077944666';
+			var pos = args[0];
+			if (pos != null) {
+				request('http://steamcommunity.com/inventory/' + id + '/440/2?l=english&count=5000', { json: true }, (err, res, body) => {
+					if (err) { return console.log(err); }
+					if (!body['descriptions']) return;
+					var inv = body['descriptions'];
+					if (inv[pos]) {
+						var item = inv[pos];
+						var name = item['name'];
+						var desc = '';
+						var type = item['type'];
+						var color = '#' + item['name_color'];
+						var img = 'http://community.edgecast.steamstatic.com/economy/image/' + item['icon_url_large'];
+						
+						for (var i in item['descriptions']) {
+							desc += '\n' + item['descriptions'][i]['value'];
+						}
+						
+						var embed = new Discord.RichEmbed()
+							.setTitle(name)
+							.setDescription(desc)
+							.setImage(img)
+							.setColor(color)
+							.addField('Type', type)
+							.setFooter('Taken from Steam');
+						
+						message.channel.send({embed});
+					}
+				});
+			}
+		}
+		
 		if (command == "lectio") {
 			var arg = args[0];
 			var id = '';
