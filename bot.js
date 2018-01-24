@@ -8,7 +8,7 @@ const hook = new Discord.WebhookClient(process.env.WEBHOOK_ID, process.env.WEBHO
 
 var voice_connection = null;
 var stream_handler = null;
-var afk_users = [];
+var afk_users = {};
 var afk_timer = null;
 
 const prefix = "-";
@@ -64,12 +64,12 @@ function joinChannel( channel, run ) {
 	channel.join().then(connection => {
 		voice_connection = connection;
 		if (run != null) {
-			run();
+			run( connection );
 		}
 	}).catch(console.error);
 }
 
-function leaveChannel() {
+function leaveChannel( guild ) {
 	if (voice_connection != null) {
 		voice_connection.channel.leave();
 		voice_connection = null;
@@ -80,11 +80,11 @@ function leaveChannel() {
 function playFile( file, channel ) {
 	if (stream_handler != null) return;
 	if (channel != null) {
-		leaveChannel();
-		joinChannel( channel, () => {
-			stream_handler = voice_connection.playFile(file, { seek: 0, volume: 1 });
+		leaveChannel( channel.guild );
+		joinChannel( channel, (connection) => {
+			stream_handler = connection.playFile(file, { seek: 0, volume: 1 });
 			
-			stream_handler.once("end", reason => {
+			stream_handler.once("end", (reason) => {
 				voice_connection.channel.leave();
 				voice_connection = null;
 				stream_handler = null;
@@ -96,10 +96,10 @@ function playFile( file, channel ) {
 function playVideo( video, channel ) {
 	if (stream_handler != null) return;
 	if (channel != null) {
-		leaveChannel();
-		joinChannel( channel, () => {
+		leaveChannel( channel.guild );
+		joinChannel( channel, (connection) => {
 			var audio_stream = ytdl("https://www.youtube.com/watch?v=" + video, { filter : 'audioonly' });
-			stream_handler = voice_connection.playStream(audio_stream, { seek: 0, volume: 1 });
+			stream_handler = connection.playStream(audio_stream, { seek: 0, volume: 1 });
 			
 			stream_handler.once("end", reason => {
 				voice_connection.channel.leave();
@@ -125,28 +125,19 @@ function doAFKBot() {
 
 client.on('ready', () => {
     console.log('Bang bang into the room!');
-	client.user.setPresence({ game: { name: '-help', type: 0 } });
-	
-	// setInterval(doAFKBot, 60000);
+	client.user.setPresence({ game: { name: 'bobs and vagene', type: 0 } });
 });
 
 client.on('messageReactionAdd', (react, user) => {
-	/*if (game_users[user.id]) {
+	if (user.bot) return;
+	if (afk_users[user.id]) {
 		var name = react.emoji.name;
 		react.remove(user);
-	}*/
+	}
 });
 
 client.on('guildMemberAdd', (member) => {
 	member.guild.defaultChannel.send("Velkommen " + member.guild.name + " til " + member.guild.name);
-});
-
-client.on('voiceStateUpdate', (oldMember, newMember) => {
-	if (voice_connection == null) return;
-	var members = voice_connection.channel.members.array();
-	if (members.length == 0) {
-		leaveChannel();
-	}
 });
 
 client.on('message', message => {
@@ -186,6 +177,8 @@ client.on('message', message => {
 		if (afk_timer != null) {
 			clearTimeout(afk_timer);
 		}
+		
+		hook.channelID = message.channel.id;
 		
 		afk_timer = setTimeout(doAFKBot, 1000 + Math.random()*1000);
 	} else {
@@ -343,7 +336,7 @@ client.on('message', message => {
 		}
 		
 		if (command == "leave") {
-			leaveChannel();
+			leaveChannel( message.guild );
 		}
 		
 		if (command == "play") {
