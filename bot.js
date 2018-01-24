@@ -56,7 +56,7 @@ const replies = [
 
 
 function get_video_id(string) {
-	var regex = "/(?:\?v=|&v=|youtu\.be\/)(.*?)(?:\?|&|$)/";
+	var regex = /(?:\?v=|&v=|youtu\.be\/)(.*?)(?:\?|&|$)/;
 	var matches = string.match(regex);
 
 	if (matches) {
@@ -156,6 +156,8 @@ function begoneAFK(user) {
 	return false;
 }
 
+// Inv Pics - http://community.edgecast.steamstatic.com/economy/image/[PIC]
+// http://steamcommunity.com/inventory/76561198077944666/440/2?l=english&count=5000
 
 client.on('ready', () => {
     console.log('Bang bang into the room!');
