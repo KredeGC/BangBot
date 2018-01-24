@@ -20,11 +20,15 @@ const capitalistWords = [
 	"me",
 	"mine",
 	"buy",
-	"bought"
+	"bought",
+	"jeg",
+	"mig",
+	"min"
 ];
 
 const replies = [
 	"Absolutely",
+	"Absolutely Haram",
 	"Bang Approves",
 	"Beep",
 	"Boop",
@@ -32,6 +36,7 @@ const replies = [
 	"confusement",
 	"Doubt",
 	"Good job",
+	"Haram",
 	"Impossible",
 	"kys",
 	"Magnificent",
@@ -145,7 +150,7 @@ function becomeAFK(user) {
 function begoneAFK(user) {
 	var pos = afk_users.indexOf(user.id);
 	if (pos > -1) {
-		afk_users.slice(pos);
+		afk_users.splice(pos, 1);
 		return true;
 	}
 	return false;
