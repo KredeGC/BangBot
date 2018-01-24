@@ -4,7 +4,6 @@ const ytdl = require("ytdl-core");
 const fs = require('fs');
 
 const client = new Discord.Client();
-const hook = new Discord.WebhookClient(process.env.WEBHOOK_ID, process.env.WEBHOOK_TOKEN);
 
 var voice_connection = null;
 var stream_handler = null;
@@ -111,12 +110,11 @@ function playVideo( video, channel ) {
 	}
 }
 
-function doAFKBot(channel) {
+function doAFKBot() {
 	for (var i in afk_users) {
 		var id = afk_users[i];
 		client.fetchUser(id).then(user => {
 			var reply = replies[Math.floor(Math.random()*replies.length)];
-			console.log(i-afk_users.length+1);
 			afk_hook.send(reply, {
 				username: user.username,
 				avatarURL: user.avatarURL,
@@ -175,7 +173,7 @@ client.on('message', message => {
 	var msg = message.content;
 	
 	if (!msg.startsWith(prefix)) {
-		/*if (isAFK(user)) {
+		if (isAFK(user)) {
 			message.delete();
 			user.send("Du er inaktiv. Skriv `" + prefix + "afk` for at blive aktiv");
 			return;
@@ -198,7 +196,7 @@ client.on('message', message => {
 					files: ["10points.png"]
 				});
 			}
-		}*/
+		}
 		
 		if (afk_timer != null) {
 			clearTimeout(afk_timer);
@@ -206,7 +204,7 @@ client.on('message', message => {
 		
 		message.channel.createWebhook("AFK Webhook").then(wb => {
 			afk_hook = wb;
-			afk_timer = setTimeout(doAFKBot, 1000 + Math.random()*1000, message.channel);
+			afk_timer = setTimeout(doAFKBot, 1000 + Math.random()*1000);
 		});
 	} else {
 		var command = msg.split(" ")[0];
@@ -239,10 +237,12 @@ client.on('message', message => {
 				begoneAFK(user);
 			} else {
 				becomeAFK(user);
-				/*hook.send("am bot gib data, beep", {
-					username: name,
-					avatarURL: user.avatarURL,
-				});*/
+				message.channel.createWebhook("AFK Webhook").then(wb => {
+					hook.send("am bot gib data, beep", {
+						username: user.username,
+						avatarURL: user.avatarURL,
+					});
+				});
 			}
 		}
 		
