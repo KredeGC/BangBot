@@ -117,21 +117,16 @@ function doAFKBot(channel) {
 		client.fetchUser(id).then(user => {
 			var reply = replies[Math.floor(Math.random()*replies.length)];
 			console.log(i-afk_users.length+1);
-			if (i == afk_users.length-1) {
-				afk_hook.send(reply, {
-					username: user.username,
-					avatarURL: user.avatarURL,
-				}).then(message => {
+			afk_hook.send(reply, {
+				username: user.username,
+				avatarURL: user.avatarURL,
+			}).then(message => {
+				if (i == afk_users.length-1) {
 					afk_hook.delete();
 					afk_hook = null;
 					afk_timer = null;
-				});
-			} else {
-				afk_hook.send(reply, {
-					username: user.username,
-					avatarURL: user.avatarURL,
-				});
-			}
+				}
+			});
 		});
 	}
 }
