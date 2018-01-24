@@ -10,6 +10,7 @@ var voice_connection = null;
 var stream_handler = null;
 var afk_users = {};
 var afk_timer = null;
+var afk_hook = null;
 
 const prefix = "-";
 const minLength = 8;
@@ -115,10 +116,20 @@ function doAFKBot() {
 	for (var i in afk_users) {
 		var user = afk_users[i];
 		var reply = replies[Math.floor(Math.random()*replies.length)];
-		hook.send(reply, {
-			username: user.name,
-			avatarURL: user.avatar,
-		});
+		if (i == afk_users.length-1) {
+			afk_hook.send(reply, {
+				username: user.name,
+				avatarURL: user.avatar,
+			}).then(message => {
+				afk_hook.delete();
+				afk_hook = null;
+			});
+		} else {
+			afk_hook.send(reply, {
+				username: user.name,
+				avatarURL: user.avatar,
+			});
+		}
 	}
 }
 
@@ -147,8 +158,6 @@ client.on('message', message => {
 	var member = message.member
 	var name = member.displayName;
 	var msg = message.content;
-	
-	hook.channelID = message.channel.id;
 	
 	if (!msg.startsWith(prefix)) {
 		if (afk_users[user.id]) {
@@ -180,9 +189,10 @@ client.on('message', message => {
 			clearTimeout(afk_timer);
 		}
 		
-		// hook.channelID = message.channel.id;
-		
-		afk_timer = setTimeout(doAFKBot, 1000 + Math.random()*1000);
+		message.channel.createWebhook("AFK Webhook").then(wb => {
+			afk_hook = wb;
+			afk_timer = setTimeout(doAFKBot, 1000 + Math.random()*1000);
+		});
 	} else {
 		var command = msg.split(" ")[0];
 		command = command.slice(prefix.length).toLowerCase();
