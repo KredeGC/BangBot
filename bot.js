@@ -214,6 +214,7 @@ client.on('message', message => {
 			clearTimeout(afk_timer);
 		} else {
 			var fetched = message.guild.fetchWebhooks();
+			console.log(fetched);
 			var hooks = fetched.findAll(x => x.name == "AFK Webhook");
 			for (var i in hooks) {
 				hooks[i].delete();
