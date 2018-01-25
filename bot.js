@@ -214,10 +214,12 @@ client.on('message', message => {
 			clearTimeout(afk_timer);
 		} else {
 			message.guild.fetchWebhooks().then(collection => {
-				var hooks = collection.aray();
-				for (var i in hooks) {
-					if (hooks[i] == "AFK Webhook") {
-						hooks[i].delete();
+				var hooks = collection.array();
+				if (hooks) {
+					for (var i in hooks) {
+						if (hooks[i] == "AFK Webhook") {
+							hooks[i].delete();
+						}
 					}
 				}
 			});
