@@ -185,11 +185,11 @@ client.on('message', message => {
 	var msg = message.content;
 	
 	if (!msg.startsWith(prefix)) {
-		if (isAFK(user)) {
+		/*if (isAFK(user)) {
 			message.delete();
 			user.send("Du er inaktiv. Skriv `" + prefix + "afk` for at blive aktiv");
 			return;
-		}
+		}*/
 		
 		var txt = msg.split(" ");
 		for (var x in txt) {
@@ -212,6 +212,13 @@ client.on('message', message => {
 		
 		if (afk_timer != null) {
 			clearTimeout(afk_timer);
+		} else {
+			var hooks = message.guild.fetchWebhooks().array();
+			for (var i in hooks) {
+				if (hooks[i].name == "AFK Webhook") {
+					hooks[i].delete();
+				}
+			}
 		}
 		
 		message.channel.createWebhook("AFK Webhook").then(hook => {
@@ -299,9 +306,9 @@ client.on('message', message => {
 		}
 		
 		if (command == "item") {
-			var id = '76561198077944666';
-			var search = args.join(" ").toLowerCase();
-			if (search != null) {
+			var id =  args[0]; // 76561198077944666
+			var search = args.slice(1).join(" ").toLowerCase();
+			if (id != null && search != null) {
 				request('http://steamcommunity.com/inventory/' + id + '/440/2?l=english&count=5000', { json: true }, (err, res, body) => {
 					if (err) { return console.log(err); }
 					if (!body['descriptions']) return;
@@ -350,9 +357,11 @@ client.on('message', message => {
 						
 						message.channel.send({embed});
 					} else {
-						message.channel.send('Could not find item');
+						message.channel.send('Could not find any item `' + search + '`');
 					}
 				});
+			} else {
+				message.channel.send('A Steam-ID is required');
 			}
 		}
 		
