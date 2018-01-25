@@ -217,6 +217,7 @@ client.on('message', message => {
 				var hooks = collection.array();
 				if (hooks) {
 					for (var i in hooks) {
+						console.log(hooks[i]);
 						if (hooks[i] == "AFK Webhook") {
 							hooks[i].delete();
 						}
