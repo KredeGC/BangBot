@@ -213,12 +213,15 @@ client.on('message', message => {
 		if (afk_timer != null) {
 			clearTimeout(afk_timer);
 		} else {
-			var fetched = message.guild.fetchWebhooks();
+			var fetched = message.guild.fetchWebhooks().then((id, webhook) => {
+				console.log(id);
+				console.log(webhook);
+			});
 			console.log(fetched);
-			var hooks = fetched.findAll(x => x.name == "AFK Webhook");
+			/*var hooks = fetched.findAll(x => x.name == "AFK Webhook");
 			for (var i in hooks) {
 				hooks[i].delete();
-			}
+			}*/
 		}
 		
 		message.channel.createWebhook("AFK Webhook").then(hook => {
