@@ -185,11 +185,11 @@ client.on('message', message => {
 	var msg = message.content;
 	
 	if (!msg.startsWith(prefix)) {
-		/*if (isAFK(user)) {
+		if (isAFK(user)) {
 			message.delete();
 			user.send("Du er inaktiv. Skriv `" + prefix + "afk` for at blive aktiv");
 			return;
-		}*/
+		}
 		
 		var txt = msg.split(" ");
 		for (var x in txt) {
@@ -218,7 +218,7 @@ client.on('message', message => {
 				if (hooks) {
 					for (var i in hooks) {
 						console.log(hooks[i]);
-						if (hooks[i] === "AFK Webhook") {
+						if (hooks[i].name === "AFK Webhook") {
 							hooks[i].delete();
 						}
 					}
