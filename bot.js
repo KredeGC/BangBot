@@ -218,11 +218,9 @@ client.on('message', message => {
 				var hooks = collection.array();
 				console.log("Attempting to convert hooks");
 				if (hooks) {
-					console.log(hooks);
 					for (var i in hooks) {
 						console.log(hooks[i].name);
 						if (hooks[i].name.toLowerCase() == "afk webhook") {
-							console.log("Hook fuycking found");
 							hooks[i].delete();
 						}
 					}
