@@ -14,6 +14,14 @@ var afk_hook = null;
 const prefix = "-";
 const minLength = 8;
 
+const lies = [
+	"lies",
+	"deceit",
+	"deception",
+	"lying",
+	"lie"
+]
+
 const capitalistWords = [
 	"i",
 	"my",
@@ -196,16 +204,20 @@ client.on('message', message => {
 			var word = txt[x];
 			if (capitalistWords.indexOf(word) > -1) {
 				message.channel.send("'**" + word.toUpperCase() + "**' is __CAPITALIST__ word. now off to *GULAG*", {
-					files: ["server.jpg"]
+					files: ["http://thefern.netau.net/img/server.jpg"]
 				});
 				return;
+			} else if (lies.indexOf(word) > -1) {
+				message.channel.send("", {
+					files: ["http://thefern.netau.net/img/deception.png"]
+				});
 			}
 		}
 		
 		if (msg.length > minLength) {
 			if (Math.random() > 0.95) {
 				message.channel.send("10+ meme points to **" + name + "**", {
-					files: ["10points.png"]
+					files: ["http://thefern.netau.net/img/10points.png"]
 				});
 			}
 		}
@@ -415,7 +427,7 @@ client.on('message', message => {
 			var marx = message.guild.emojis.find("name", "marx");
 			var stalin = message.guild.emojis.find("name", "stalin");
 			message.channel.send(redstar + "Special tribute to " + marx + "**Marx**, " + stalin + "**Stalin** and **Lenin** from **" + name + "**" + redstar, {
-				files: ["communism.gif"]
+				files: ["http://thefern.netau.net/img/communism.gif"]
 			});
 			if (member.voiceChannel) {
 				playVideo( "U06jlgpMtQs", member.voiceChannel );
@@ -433,7 +445,7 @@ client.on('message', message => {
 		if (command == "thot") {
 			if (member.voiceChannel) {
 				playFile( "thot.mp3", member.voiceChannel );
-				message.channel.send("**BEGONE THOT!**");
+				message.channel.send("**BEGONE __THOT!__**");
 			}
 		}
 		
