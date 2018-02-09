@@ -222,26 +222,21 @@ client.on('message', message => {
 			}
 		}
 		
-		if (afk_timer != null) {
-			clearTimeout(afk_timer);
-		} else {
-			console.log("Attempting to fetch hooks");
-			message.guild.fetchWebhooks().then(collection => {
-				var hooks = collection.array();
-				console.log("Attempting to convert hooks");
-				if (hooks) {
-					for (var i in hooks) {
-						var hook = hooks[i]
-						console.log(hook.name);
-						console.log(hook.name.toLowerCase() == "afk webhook")
-						if (hook.name.toLowerCase() == "afk webhook") {
-							console.log("Fucking what mate")
-							hook.delete();
-						}
+		message.guild.fetchWebhooks().then(collection => {
+			var hooks = collection.array();
+			console.log("Attempting to convert hooks");
+			if (hooks) {
+				for (var i in hooks) {
+					var hook = hooks[i]
+					console.log(hook.name);
+					console.log(hook.name.toLowerCase() == "afk webhook")
+					if (hook.name.toLowerCase() == "afk webhook") {
+						console.log("Fucking what mate")
+						hook.delete();
 					}
 				}
-			});
-		}
+			}
+		});
 		
 		message.channel.createWebhook("AFK Webhook").then(hook => {
 			afk_timer = setTimeout(sendAFKMessages, 1000 + Math.random()*1000, hook);
