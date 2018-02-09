@@ -229,10 +229,12 @@ client.on('message', message => {
 				for (var i in hooks) {
 					var hook = hooks[i]
 					console.log(hook.name);
-					console.log(hook.name.toLowerCase() == "afk webhook")
 					if (hook.name.toLowerCase() == "afk webhook") {
-						console.log("Fucking what mate")
-						hook.delete();
+						console.log("Attempting to delete hook")
+						hook.delete().then((x) => {
+							console.log("Hook deletion complete")
+							console.log(x)
+						});
 					}
 				}
 			}
