@@ -264,17 +264,17 @@ client.on('message', message => {
 			"\n  **" + prefix + "memelist** : Få en liste over meehm templates" +
 			"\n  **" + prefix + "meme** `<template>` `<top;bottom>` : Lav en dank mehmay" +
 			"\n  **" + prefix + "afk**: Become a bot" +
-			"\n  **" + prefix + "banned** : Konfiskeret kapitalistisk propaganda" +
+			"\n  **" + prefix + "banned** : Ulovlig kapitalistisk propaganda" +
 			"\n  **" + prefix + "lectio** `<1.6|1.4>`: Få en persons skema" +
 			"\n**Voice Channel**" +
-			"\n  **" + prefix + "communism** : Find da wey brudda" +
+			"\n  **" + prefix + "communism** : Comrade Stalin approves" +
 			"\n  **" + prefix + "kalinka** : Start kalinka session" +
-			"\n  **" + prefix + "skadoo** : Skadoo skadae" +
-			"\n  **" + prefix + "thot** : Begone Thot!" +
+			"\n  **" + prefix + "skadoo** : Do u no de wey" +
+			"\n  **" + prefix + "sound** `<sound>` : Soundboard" +
 			"\n**Musik**" +
 			"\n  **" + prefix + "join** : Join my meinkraft server" +
 			"\n  **" + prefix + "leave** : Unsubscribble to my channel" +
-			"\n  **" + prefix + "play** : Lyt til ulovlige youtube videoer!");
+			"\n  **" + prefix + "play** : Lyt til ulovlige youtube videoer");
 		}
 		
 		// Commands
@@ -464,19 +464,6 @@ client.on('message', message => {
 			}
 		}
 		
-		if (command == "noice") {
-			if (member.voiceChannel) {
-				playVideo( "a8c5wmeOL9o", member.voiceChannel );
-			}
-		}
-		
-		if (command == "thot") {
-			if (member.voiceChannel) {
-				playFile( "sound/thot.mp3", member.voiceChannel );
-				message.channel.send("**BEGONE __THOT!__**");
-			}
-		}
-		
 		if (command == "sound") {
 			if (member.voiceChannel) {
 				var arg = args[0];
@@ -485,8 +472,7 @@ client.on('message', message => {
 				} else {
 					var txt = "**" + prefix + "sound**";
 					for (var x in sound_files) {
-						var snd = sound_files[x].replace(/\.[^/.]+$/, "");
-						txt += "\n  " + snd;
+						txt += "\n  " + sound_files[x];
 					}
 					message.channel.send(txt);
 				}
