@@ -485,8 +485,8 @@ client.on('message', message => {
 				} else {
 					var txt = "**" + prefix + "sound**";
 					for (var x in sound_files) {
-						var snd = sound_files[x]
-						txt += "\n  " + snd.substr(0, snd.lastIndexOf('.')) || snd;
+						var snd = sound_files[x].replace(/\.[^/.]+$/, "");
+						txt += "\n  " + snd;
 					}
 					message.channel.send(txt);
 				}
