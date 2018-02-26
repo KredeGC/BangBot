@@ -482,7 +482,7 @@ client.on('message', message => {
 				console.log(arg)
 				if (sound_files[arg]) {
 					var snd = sound_files[arg];
-					playFile( snd );
+					playFile( snd, member.voiceChannel );
 				}
 			}
 		}
