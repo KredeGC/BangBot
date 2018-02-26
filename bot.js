@@ -9,7 +9,6 @@ var voice_connection = null;
 var stream_handler = null;
 var afk_users = [];
 var afk_timer = null;
-var afk_hook = null;
 
 const prefix = "-";
 const minLength = 8;
@@ -63,7 +62,7 @@ const replies = [
 ];
 
 
-function get_video_id(string) {
+function getVideoId(string) {
 	var regex = /(?:\?v=|&v=|youtu\.be\/)(.*?)(?:\?|&|$)/;
 	var matches = string.match(regex);
 
@@ -129,12 +128,12 @@ function sendAFKMessages(hook) {
 	for (var i in afk_users) {
 		var id = afk_users[i];
 		client.fetchUser(id).then(user => {
-			var reply = replies[Math.floor(Math.random()*replies.length)];
+			var reply = replies[Math.floor(Math.random() * replies.length)];
 			hook.send(reply, {
 				username: user.username,
 				avatarURL: user.avatarURL,
 			}).then(message => {
-				if (i == afk_users.length-1) {
+				if (i == afk_users.length - 1) {
 					hook.delete();
 					hook = null;
 					afk_timer = null;
@@ -201,7 +200,7 @@ client.on('message', message => {
 		
 		var txt = msg.split(" ");
 		for (var x in txt) {
-			var word = txt[x];
+			var word = txt[x].toLowerCase();
 			if (capitalistWords.indexOf(word) > -1) {
 				message.channel.send("'**" + word.toUpperCase() + "**' is __CAPITALIST__ word. now off to *GULAG*", {
 					files: ["http://thefern.netau.net/img/server.jpg"]
@@ -211,6 +210,7 @@ client.on('message', message => {
 				message.channel.send("", {
 					files: ["http://thefern.netau.net/img/deception.png"]
 				});
+				return;
 			}
 		}
 		
@@ -256,7 +256,7 @@ client.on('message', message => {
 			"\n  **" + prefix + "meme** `<template>` `<top;bottom>` : Lav en dank mehmay" +
 			"\n  **" + prefix + "afk**: Become a bot" +
 			"\n  **" + prefix + "banned** : Konfiskeret kapitalistisk propaganda" +
-			"\n  **" + prefix + "lectio** `<matfys|komit>`: Få en persons skema" +
+			"\n  **" + prefix + "lectio** `<1.6|1.4>`: Få en persons skema" +
 			"\n**Voice Channel**" +
 			"\n  **" + prefix + "communism** : Find da wey brudda" +
 			"\n  **" + prefix + "kalinka** : Start kalinka session" +
@@ -387,15 +387,15 @@ client.on('message', message => {
 			var arg = args[0];
 			var id = '';
 			var name = '';
-			if (arg == "matfys") {
+			if (arg == "1.6") {
 				id = '22303833699';
-				name = '1.6';
-			} else if(arg == "komit") {
+				name = arg;
+			} else if(arg == "1.4") {
 				id = '22352172603';
-				name = '1.4';
+				name = arg;
 			}
 			if (id == '') {
-				message.channel.send("**-lectio** `matfys` eller `komit`");
+				message.channel.send("**-lectio** `1.6` eller `1.4`");
 			} else {
 				request('http://thefern.netau.net/api/lectio/schedule?school=523&student=' + id, { json: true }, (err, res, body) => {
 					if (err) { return console.log(err); }
@@ -442,6 +442,12 @@ client.on('message', message => {
 			}
 		}
 		
+		if (command == "skadoo") {
+			if (member.voiceChannel) {
+				playVideo( "ZUODMHX7ZuU", member.voiceChannel )
+			}
+		}
+		
 		if (command == "thot") {
 			if (member.voiceChannel) {
 				playFile( "thot.mp3", member.voiceChannel );
@@ -465,7 +471,7 @@ client.on('message', message => {
 		
 		if (command == "play") {
 			if (member.voiceChannel) {
-				var id = get_video_id( args[0] );
+				var id = getVideoId( args[0] );
 				playVideo( id, member.voiceChannel );
 			}
 		}
