@@ -260,6 +260,7 @@ client.on('message', message => {
 			"\n**Voice Channel**" +
 			"\n  **" + prefix + "communism** : Find da wey brudda" +
 			"\n  **" + prefix + "kalinka** : Start kalinka session" +
+			"\n  **" + prefix + "skadoo** : Skadoo skadae" +
 			"\n  **" + prefix + "thot** : Begone Thot!" +
 			"\n**Musik**" +
 			"\n  **" + prefix + "join** : Join my meinkraft server" +
@@ -445,6 +446,18 @@ client.on('message', message => {
 		if (command == "skadoo") {
 			if (member.voiceChannel) {
 				playVideo( "ZUODMHX7ZuU", member.voiceChannel );
+			}
+		}
+		
+		if (command == "fine") {
+			if (member.voiceChannel) {
+				playVideo( "5PdXIHGvMpk", member.voiceChannel );
+			}
+		}
+		
+		if (command == "noice") {
+			if (member,voiceChannel) {
+				playVideo( "a8c5wmeOL9o", member.voiceChannel )
 			}
 		}
 		
