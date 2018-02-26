@@ -13,6 +13,13 @@ var afk_timer = null;
 const prefix = "-";
 const minLength = 8;
 
+var sound_files = [];
+fs.readdir('./sound/', (err, files) => {
+	files.forEach(file => {
+		sound_files.push(file);
+	});
+})
+
 const lies = [
 	"lies",
 	"deceit",
@@ -463,8 +470,18 @@ client.on('message', message => {
 		
 		if (command == "thot") {
 			if (member.voiceChannel) {
-				playFile( "thot.mp3", member.voiceChannel );
+				playFile( "sound/thot.mp3", member.voiceChannel );
 				message.channel.send("**BEGONE __THOT!__**");
+			}
+		}
+		
+		if (command == "bitconnect") {
+			if (member.voiceChannel) {
+				var arg = args[0];
+				if (sound_files[arg]) {
+					var snd = sound_files[arg];
+					playFile( snd );
+				}
 			}
 		}
 		
