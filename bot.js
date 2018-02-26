@@ -444,7 +444,7 @@ client.on('message', message => {
 		
 		if (command == "skadoo") {
 			if (member.voiceChannel) {
-				playVideo( "ZUODMHX7ZuU", member.voiceChannel )
+				playVideo( "ZUODMHX7ZuU", member.voiceChannel );
 			}
 		}
 		
