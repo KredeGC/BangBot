@@ -16,7 +16,8 @@ const minLength = 8;
 var sound_files = [];
 fs.readdir('./sound/', (err, files) => {
 	files.forEach(file => {
-		sound_files.push(file);
+		var snd = file.substr(0, file.lastIndexOf('.')) || file;
+		sound_files.push(snd);
 	});
 })
 
@@ -479,8 +480,7 @@ client.on('message', message => {
 			if (member.voiceChannel) {
 				var arg = args[0];
 				if (sound_files.indexOf(arg) > -1) {
-					var snd = arg.substr(0, arg.lastIndexOf('.')) || arg;
-					playFile( "sound/" + snd, member.voiceChannel );
+					playFile( "sound/" + snd + ".mp3", member.voiceChannel );
 				} else {
 					var txt = "**" + prefix + "sound**";
 					for (var x in sound_files) {
