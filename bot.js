@@ -478,9 +478,8 @@ client.on('message', message => {
 		if (command == "bitconnect") {
 			if (member.voiceChannel) {
 				var arg = args[0];
-				if (sound_files[arg]) {
-					var snd = sound_files[arg];
-					playFile( "sound/" + snd, member.voiceChannel );
+				if (sound_files.indexOf(arg) > -1) {
+					playFile( "sound/" + arg, member.voiceChannel );
 				}
 			}
 		}
