@@ -16,7 +16,8 @@ const minLength = 8;
 var sound_files = [];
 fs.readdir('./sound/', (err, files) => {
 	files.forEach(file => {
-		var snd = file.substr(0, file.lastIndexOf('.')) || file;
+		var snd = file.replace(/\.[^/.]+$/, "");
+		console.log(snd);
 		sound_files.push(snd);
 	});
 })
