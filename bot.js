@@ -481,7 +481,7 @@ client.on('message', message => {
 			if (member.voiceChannel) {
 				var arg = args[0];
 				if (sound_files.indexOf(arg) > -1) {
-					playFile( "sound/" + snd + ".mp3", member.voiceChannel );
+					playFile( "sound/" + arg + ".mp3", member.voiceChannel );
 				} else {
 					var txt = "**" + prefix + "sound**";
 					for (var x in sound_files) {
