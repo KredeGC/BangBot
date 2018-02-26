@@ -457,7 +457,7 @@ client.on('message', message => {
 		
 		if (command == "noice") {
 			if (member,voiceChannel) {
-				playVideo( "a8c5wmeOL9o", member.voiceChannel )
+				playVideo( "a8c5wmeOL9o", member.voiceChannel );
 			}
 		}
 		
