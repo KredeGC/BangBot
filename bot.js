@@ -475,11 +475,19 @@ client.on('message', message => {
 			}
 		}
 		
-		if (command == "bitconnect") {
+		if (command == "sound") {
 			if (member.voiceChannel) {
 				var arg = args[0];
 				if (sound_files.indexOf(arg) > -1) {
-					playFile( "sound/" + arg, member.voiceChannel );
+					var snd = arg.substr(0, arg.lastIndexOf('.')) || arg;
+					playFile( "sound/" + snd, member.voiceChannel );
+				} else {
+					var txt = "**" + prefix + "sound**";
+					for (var x in sound_files) {
+						var snd = sound_files[x]
+						txt += "\n  " + snd.substr(0, snd.lastIndexOf('.')) || snd;
+					}
+					message.channel.send(txt);
 				}
 			}
 		}
