@@ -410,11 +410,12 @@ client.on('message', message => {
 				request('http://thefern.netau.net/api/lectio/schedule?school=523&student=' + id, { json: true }, (err, res, body) => {
 					if (err) { return console.log(err); }
 					var noter = body['dayschedule']['notes'];
-					var fag = body['dayschedule']['lessons'];
+					var lessons = body['dayschedule']['lessons'];
 					var txt = "```glsl\n#" + body['day'] + " " + name;
 					
-					for (i = 0; i < fag.length; i++) {
-						txt += "\n[" + fag[i].time + '] ' + fag[i].title + ' ' + fag[i].classroom;
+					for (time in lessons) {
+						var lesson = lessons[time];
+						txt += "\n[" + time + '] ' + lesson.title + ' ' + lesson.classroom.join(", ");
 					}
 					
 					txt += "\n#Noter";
