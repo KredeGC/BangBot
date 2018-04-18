@@ -7,8 +7,6 @@ const client = new Discord.Client();
 
 var voice_connection = null;
 var stream_handler = null;
-var afk_users = [];
-var afk_timer = null;
 
 const prefix = "-";
 const minLength = 8;
@@ -40,34 +38,6 @@ const capitalistWords = [
 	"jeg",
 	"mig",
 	"min"
-];
-
-const replies = [
-	"Absolutely",
-	"Absolutely Haram",
-	"Bang Approves",
-	"Beep",
-	"Boop",
-	"Communism will rise",
-	"confusement",
-	"Doubt",
-	"Good job",
-	"Haram",
-	"Impossible",
-	"kys",
-	"Magnificent",
-	"Marvellous",
-	"No",
-	"Perhaps",
-	"Possibly",
-	"*spits*",
-	"S U C C",
-	"Leaving a dot here .",
-	"Undoubtedly",
-	"Well done",
-	"Yee",
-	"Yeah boii",
-	"You do not no de wey"
 ];
 
 
@@ -133,45 +103,6 @@ function playVideo( video, channel ) {
 	}
 }
 
-function sendAFKMessages(hook) {
-	for (var i in afk_users) {
-		var id = afk_users[i];
-		client.fetchUser(id).then(user => {
-			var reply = replies[Math.floor(Math.random() * replies.length)];
-			hook.send(reply, {
-				username: user.username,
-				avatarURL: user.avatarURL,
-			}).then(message => {
-				if (i == afk_users.length - 1) {
-					hook.delete();
-					hook = null;
-					afk_timer = null;
-				}
-			});
-		});
-	}
-}
-
-function isAFK(user) {
-	if (afk_users.indexOf(user.id) > -1) return true;
-	return false
-}
-
-function becomeAFK(user) {
-	if (isAFK(user)) return false;
-	afk_users.push( user.id );
-	return true;
-}
-
-function begoneAFK(user) {
-	var pos = afk_users.indexOf(user.id);
-	if (pos > -1) {
-		afk_users.splice(pos, 1);
-		return true;
-	}
-	return false;
-}
-
 // Inv Pics - http://community.edgecast.steamstatic.com/economy/image/[PIC]
 // http://steamcommunity.com/inventory/76561198077944666/440/2?l=english&count=5000
 
@@ -182,10 +113,8 @@ client.on('ready', () => {
 
 client.on('messageReactionAdd', (react, user) => {
 	if (user.bot) return;
-	if (isAFK(user)) {
-		var name = react.emoji.name;
-		react.remove(user);
-	}
+	var name = react.emoji.name;
+	react.remove(user);
 });
 
 client.on('guildMemberAdd', (member) => {
@@ -201,12 +130,6 @@ client.on('message', message => {
 	var msg = message.content;
 	
 	if (!msg.startsWith(prefix)) {
-		if (isAFK(user)) {
-			message.delete();
-			user.send("Du er inaktiv. Skriv `" + prefix + "afk` for at blive aktiv");
-			return;
-		}
-		
 		var txt = msg.split(" ");
 		for (var x in txt) {
 			var word = txt[x].toLowerCase();
@@ -230,28 +153,6 @@ client.on('message', message => {
 				});
 			}
 		}
-		
-		message.guild.fetchWebhooks().then(collection => {
-			var hooks = collection.array();
-			console.log("Attempting to convert hooks");
-			if (hooks) {
-				for (var i in hooks) {
-					var hook = hooks[i]
-					console.log(hook.name);
-					if (hook.name.toLowerCase() == "afk webhook") {
-						console.log("Attempting to delete hook")
-						hook.delete().then((x) => {
-							console.log("Hook deletion complete")
-							console.log(x)
-						});
-					}
-				}
-			}
-		});
-		
-		message.channel.createWebhook("AFK Webhook").then(hook => {
-			afk_timer = setTimeout(sendAFKMessages, 1000 + Math.random()*1000, hook);
-		});
 	} else {
 		var command = msg.split(" ")[0];
 		command = command.slice(prefix.length).toLowerCase();
@@ -261,7 +162,6 @@ client.on('message', message => {
 		
 		if (command == "help") {
 			message.channel.send("**Kommandoer** for **" + name + "**" +
-			"\n  **" + prefix + "memelist** : Få en liste over meehm templates" +
 			"\n  **" + prefix + "meme** `<template>` `<top;bottom>` : Lav en dank mehmay" +
 			"\n  **" + prefix + "afk**: Become a bot" +
 			"\n  **" + prefix + "banned** : Ulovlig kapitalistisk propaganda" +
@@ -279,54 +179,37 @@ client.on('message', message => {
 		
 		// Commands
 		
-		if (command == "afk") {
-			if (isAFK(user)) {
-				begoneAFK(user);
+		if (command == "meme") {
+			if (args[0]) {
+				var txt = args.slice(1).join(" ");
+				var tbl = txt.split(";");
+				
+				var url = "http://thefern.netau.net/api/meme/generator?meme=" + args[0];
+				
+				if (tbl[1] != null) {
+					url += "&top=" + tbl[0] + "&bottom=" + tbl[1];
+				} else {
+					url += "&top=" + tbl[0];
+				}
+				
+				message.channel.send("Meme Copyright by **" + name + "**", {
+					files: [url + "&type=.jpg"]
+				});
 			} else {
-				becomeAFK(user);
-				message.channel.createWebhook("AFK Webhook").then(hook => {
-					hook.send("am bot gib data, beep", {
-						username: user.username,
-						avatarURL: user.avatarURL,
-					}).then(message => {
-						hook.delete();
-					});
+				request('http://thefern.netau.net/api/meme/list', { json: true }, (err, res, body) => {
+					if (err) return console.log(err);
+					var txt = "**Holy list of meme templates**";
+					for (i = 0; i < body.length; i++) {
+						txt += "\n  " + body[i];
+					}
+					
+					message.channel.send(txt);
 				});
 			}
 		}
 		
-		if (command == "memelist") {
-			request('http://thefern.netau.net/api/meme/list', { json: true }, (err, res, body) => {
-				if (err) { return console.log(err); }
-				var txt = "**Holy list of meme templates**";
-				for (i = 0; i < body.length; i++) {
-					txt += "\n  " + body[i];
-				}
-				
-				message.channel.send(txt);
-			});
-		}
-		
-		if (command == "meme") {
-			var meme = args[0];
-			var txt = args.slice(1).join(" ");
-			var tbl = txt.split(";");
-			
-			var url = "http://thefern.netau.net/api/meme/generator?meme=" + meme;
-			
-			if (tbl[1] != null) {
-				url += "&top=" + tbl[0] + "&bottom=" + tbl[1];
-			} else {
-				url += "&top=" + tbl[0];
-			}
-			
-			message.channel.send("Meme Copyright by **" + name + "**", {
-				files: [url + "&type=.jpg"]
-			});
-		}
-		
 		if (command == "banned") {
-			txt = "**Baned capitalist words**";
+			txt = "**Banned capitalist words**";
 			for (var x in capitalistWords) {
 				 txt += "\n  " + capitalistWords[x];
 			}
@@ -338,7 +221,7 @@ client.on('message', message => {
 			var search = args.slice(1).join(" ").toLowerCase();
 			if (id != null && search != null) {
 				request('http://steamcommunity.com/inventory/' + id + '/440/2?l=english&count=5000', { json: true }, (err, res, body) => {
-					if (err) { return console.log(err); }
+					if (err) return console.log(err);
 					if (!body['descriptions']) return;
 					var inv = body['descriptions'];
 					var item = null;
@@ -408,7 +291,7 @@ client.on('message', message => {
 				message.channel.send("**-lectio** `1.6` eller `1.4`");
 			} else {
 				request('http://thefern.netau.net/api/lectio/schedule?school=523&student=' + id, { json: true }, (err, res, body) => {
-					if (err) { return console.log(err); }
+					if (err) return console.log(err);
 					var noter = body['dayschedule']['notes'];
 					var lessons = body['dayschedule']['lessons'];
 					var txt = "```glsl\n#" + body['day'] + " " + name;
