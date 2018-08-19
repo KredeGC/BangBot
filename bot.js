@@ -387,7 +387,7 @@ client.on('message', message => {
 			var url = "https://talk.moustacheminer.com/api/gen.wav?dectalk=";
 			var talk = args.join("%20");
 			console.log(url + talk);
-			playFile( url + talk, member.voiceChannel );
+			playStream( url + talk, member.voiceChannel );
 		}
 		
 		// Music
