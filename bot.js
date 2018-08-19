@@ -172,7 +172,7 @@ client.on('message', message => {
 	} else {
 		var command = msg.split(" ")[0];
 		command = command.slice(prefix.length).toLowerCase();
-		var args = msg.split(" ").slice(1);
+		var args = msg.replace(/\n/g, " ").split(" ").slice(1);
 		
 		message.delete();
 		
@@ -385,7 +385,7 @@ client.on('message', message => {
 		
 		if (command == "tts") {
 			var url = "https://talk.moustacheminer.com/api/gen.wav?dectalk=";
-			var talk = args.join("%20").replace(/\n/g, " ");
+			var talk = args.join("%20");
 			playStream( url + talk, member.voiceChannel );
 		}
 		
