@@ -179,6 +179,10 @@ client.on('message', message => {
 		
 		// Commands
 		
+		if (command == "role") {
+			
+		}
+		
 		if (command == "meme") {
 			if (args[0]) {
 				var txt = args.slice(1).join(" ");
@@ -361,6 +365,12 @@ client.on('message', message => {
 					message.channel.send(txt);
 				}
 			}
+		}
+		
+		if (command == "tts") {
+			var url = "https://talk.moustacheminer.com/api/gen.wav?dectalk=";
+			var talk = args.join("%20");
+			playFile( url + talk, member.voiceChannel );
 		}
 		
 		// Music
