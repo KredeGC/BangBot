@@ -385,8 +385,7 @@ client.on('message', message => {
 		
 		if (command == "tts") {
 			var url = "https://talk.moustacheminer.com/api/gen.wav?dectalk=";
-			var talk = args.join("%20");
-			console.log(url + talk);
+			var talk = args.join("%20").replace(/\n/g, " ");
 			playStream( url + talk, member.voiceChannel );
 		}
 		
