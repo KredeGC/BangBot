@@ -70,6 +70,22 @@ function leaveChannel( guild ) {
 	}
 }
 
+function playStream( url, channel ) {
+	if (stream_handler != null) return;
+	if (channel != null) {
+		leaveChannel( channel.guild );
+		joinChannel( channel, (connection) => {
+			stream_handler = connection.playStream(url, { seek: 0, volume: 1 });
+			
+			stream_handler.once("end", (reason) => {
+				voice_connection.channel.leave();
+				voice_connection = null;
+				stream_handler = null;
+			});
+		});
+	}
+}
+
 function playFile( file, channel ) {
 	if (stream_handler != null) return;
 	if (channel != null) {
@@ -370,6 +386,7 @@ client.on('message', message => {
 		if (command == "tts") {
 			var url = "https://talk.moustacheminer.com/api/gen.wav?dectalk=";
 			var talk = args.join("%20");
+			console.log(url + talk);
 			playFile( url + talk, member.voiceChannel );
 		}
 		
