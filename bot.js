@@ -50,8 +50,8 @@ const replies = [
 	"Beep",
 	"Boop",
 	"Communism will rise",
-	"confusement",
-	"Doubt",
+	"*confusement*",
+	"(X) Doubt",
 	"Good job",
 	"Haram",
 	"Impossible",
@@ -247,11 +247,11 @@ client.on('message', message => {
 	var msg = message.content;
 	
 	if (!msg.startsWith(prefix)) {
-		/*if (isAFK(user)) {
+		if (isAFK(user)) {
 			message.delete();
 			user.send("Du er AFK. Skriv `" + prefix + "afk` for at blive aktiv");
 			return;
-		}*/
+		}
 		
 		var txt = msg.split(" ");
 		for (var x in txt) {
@@ -290,9 +290,9 @@ client.on('message', message => {
 		if (command == "help") {
 			message.channel.send("**Kommandoer** for **" + name + "**" +
 			"\n  **" + prefix + "meme** `<template>` `<top;bottom>` : Lav en dank mehmay" +
-			"\n  **" + prefix + "afk**: Become a bot" +
+			"\n  **" + prefix + "afk**: Detroit: Become human" +
 			"\n  **" + prefix + "banned** : Ulovlig kapitalistisk propaganda" +
-			"\n  **" + prefix + "lectio** `<1.6|1.4>`: Få en persons skema" +
+			"\n  **" + prefix + "lectio** `<2.6|2.4>`: Få en persons skema" +
 			"\n**Voice Channel**" +
 			"\n  **" + prefix + "communism** : Comrade Stalin approves" +
 			"\n  **" + prefix + "kalinka** : Start kalinka session" +
