@@ -214,14 +214,14 @@ client.on('message', message => {
 	// if (message.author.bot) return;
 	
 	var user = message.author;
-	var member = message.member
-	var name = member.displayName || member.username;
+	var member = message.member;
+	var name = member && member.displayName || "";
 	var msg = message.content;
 	
 	if (!msg.startsWith(prefix)) {
 		if (isAFK(user)) {
 			message.delete();
-			user.send("Du er inaktiv. Skriv `" + prefix + "afk` for at blive aktiv");
+			user.send("Du er AFK. Skriv `" + prefix + "afk` for at blive aktiv");
 			return;
 		}
 		
