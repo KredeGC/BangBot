@@ -149,15 +149,19 @@ function playVideo( video, channel ) {
 	}
 }
 
+function sendMessage(hook, user, msg) {
+	return hook.send(msg, {
+		username: user.username,
+		avatarURL: user.avatarURL
+	});
+}
+
 function sendAFKMessages(hook) {
 	for (var i in afk_users) {
 		var id = afk_users[i];
 		client.fetchUser(id).then(user => {
 			var reply = replies[Math.floor(Math.random() * replies.length)];
-			hook.send(reply, {
-				username: user.username,
-				avatarURL: user.avatarURL,
-			}).then(message => {
+			sendMessage(hook, user, reply).then(message => {
 				if (i == afk_users.length - 1) {
 					hook.delete();
 					hook = null;
