@@ -165,10 +165,10 @@ function removeTemporaryWebhook(hook) { // Remove a temporary hook
 	}
 }
 
-function sendTemporaryMessage(hook, member, msg) { // Sends a message by the user via the specified hook
+function sendTemporaryMessage(hook, user, msg) { // Sends a message by the user via the specified hook
 	hook.send(msg, {
-		username: member.displayName,
-		avatarURL: member.user.avatarURL
+		username: user.username,
+		avatarURL: user.avatarURL
 	}).then(() => {
 		removeTemporaryWebhook(hook);
 	}).catch(err => {
@@ -193,14 +193,13 @@ function sendAFKMessages(channel) { // Send AFK messages to channel
 	if (afk_users.length > 0) {
 		for (var i in afk_users) {
 			var id = afk_users[i];
-			if (!id in channel.guild.members) continue;
-			var member = channel.guild.members[id];
-			console.log(member.toString());
 			createTemporaryWebhook(channel).then(hook => {
-				var reply = replies[Math.floor(Math.random() * replies.length)];
-				setTimeout(() => {
-					sendTemporaryMessage(hook, member, reply);
-				}, 500 + Math.random()*1500);
+				client.fetchUser(id).then(user => {
+					var reply = replies[Math.floor(Math.random() * replies.length)];
+					setTimeout(() => {
+						sendTemporaryMessage(hook, user, reply);
+					}, 500 + Math.random()*1500);
+				});
 			}).catch(err => {
 				console.error(err);
 			});
@@ -318,7 +317,7 @@ client.on('message', message => {
 			} else {
 				becomeAFK(user);
 				createTemporaryWebhook(message.channel).then(hook => {
-					sendTemporaryMessage(hook, member, "am bot gib data, beep");
+					sendTemporaryMessage(hook, user, "am bot gib data, beep");
 				}).catch(err => {
 					console.error(err);
 				});
