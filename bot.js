@@ -13,7 +13,6 @@ const minLength = 8;
 
 var active_hooks = [];
 var afk_users = [];
-var afk_timer = null;
 
 var sound_files = [];
 fs.readdir('./sound/', (err, files) => {
@@ -158,7 +157,7 @@ function createTemporaryWebhook(channel) { // Returns a promise with a hook
 	});
 }
 
-function removeTemporaryWebhook(hook) {
+function removeTemporaryWebhook(hook) { // Remove a temporary hook
 	var pos = active_hooks.indexOf(hook);
 	if (pos > -1) {
 		active_hooks.splice(pos, 1);
@@ -166,7 +165,7 @@ function removeTemporaryWebhook(hook) {
 	}
 }
 
-function sendTemporaryMessage(hook, user, msg) { // Sends a message by the user via the hook
+function sendTemporaryMessage(hook, user, msg) { // Sends a message by the user via the specified hook
 	hook.send(msg, {
 		username: user.username,
 		avatarURL: user.avatarURL
@@ -178,30 +177,32 @@ function sendTemporaryMessage(hook, user, msg) { // Sends a message by the user 
 	});
 }
 
-function clearTemporaryWebhooks(guild) {
+function clearTemporaryWebhooks(guild) { // Clear all non-active hooks
 	guild.fetchWebhooks().then(collection => {
 		var hooks = collection.array();
 		for (var i in hooks) {
 			var hook = hooks[i]
 			if (hook.name != "Temporary Webhook") continue;
 			if (hook.channelID in active_hooks) continue;
-			removeTemporaryWebhook(hook);
+			hook.delete();
 		}
 	});
 }
 
-function sendAFKMessages(channel) {
+function sendAFKMessages(channel) { // Send AFK messages to channel
 	if (afk_users.length > 0) {
 		for (var i in afk_users) {
 			var id = afk_users[i];
-			createTemporaryWebhook(channel).then(hook => {
-				client.fetchUser(id).then(user => {
-					var reply = replies[Math.floor(Math.random() * replies.length)];
-					sendTemporaryMessage(hook, user, reply);
+			setTimeout(() => {
+				createTemporaryWebhook(channel).then(hook => {
+					client.fetchUser(id).then(user => {
+						var reply = replies[Math.floor(Math.random() * replies.length)];
+						sendTemporaryMessage(hook, user, reply);
+					});
+				}).catch(err => {
+					console.error(err);
 				});
-			}).catch(err => {
-				console.error(err);
-			});
+			}, 500 + Math.random()*1500);
 		}
 	}
 }
@@ -282,7 +283,7 @@ client.on('message', message => {
 		
 		clearTemporaryWebhooks(message.guild);
 		
-		afk_timer = setTimeout(sendAFKMessages, 1000 + Math.random()*1000, message.channel);
+		sendAFKMessages(message.channel);
 	} else {
 		var command = msg.split(" ")[0];
 		command = command.slice(prefix.length).toLowerCase();
