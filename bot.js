@@ -10,8 +10,9 @@ var stream_handler = null;
 
 const prefix = "-";
 const minLength = 8;
-var afk_users = {};
-var active_hooks = [];
+
+var active_hooks = {};
+var afk_users = [];
 var afk_timer = null;
 
 var sound_files = [];
