@@ -317,7 +317,7 @@ client.on('message', message => {
 				begoneAFK(user);
 			} else {
 				becomeAFK(user);
-				createTemporaryWebhook(channel).then(hook => {
+				createTemporaryWebhook(message.channel).then(hook => {
 					sendTemporaryMessage(hook, member, "am bot gib data, beep");
 				}).catch(err => {
 					console.error(err);
