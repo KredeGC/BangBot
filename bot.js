@@ -215,7 +215,7 @@ client.on('message', message => {
 	
 	var user = message.author;
 	var member = message.member
-	var name = member.displayName;
+	var name = member.displayName || member.username;
 	var msg = message.content;
 	
 	if (!msg.startsWith(prefix)) {
