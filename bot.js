@@ -11,7 +11,7 @@ var stream_handler = null;
 const prefix = "-";
 const minLength = 8;
 
-var active_hooks = {};
+var active_hooks = [];
 var afk_users = [];
 var afk_timer = null;
 
@@ -152,11 +152,18 @@ function playVideo( video, channel ) {
 }
 
 function createTemporaryWebhook(channel) { // Returns a promise with a hook
-	if (channel.id in active_hooks) return active_hooks[channel.id];
 	return channel.createWebhook("Temporary Webhook").then(hook => {
-		active_hooks[hook.channelID] = hook;
+		active_hooks.push(hook);
 		return hook;
 	});
+}
+
+function removeTemporaryWebhook(hook) {
+	var pos = active_hooks.indexOf(hook);
+	if (pos > -1) {
+		active_hooks.splice(pos, 1);
+		hook.delete();
+	}
 }
 
 function sendTemporaryMessage(hook, user, msg) { // Sends a message by the user via the hook
@@ -164,12 +171,10 @@ function sendTemporaryMessage(hook, user, msg) { // Sends a message by the user 
 		username: user.username,
 		avatarURL: user.avatarURL
 	}).then(() => {
-		delete(active_hooks[hook.channelID]);
-		hook.delete();
+		removeTemporaryWebhook(hook);
 	}).catch(err => {
 		console.error(err);
-		delete(active_hooks[hook.channelID]);
-		hook.delete();
+		removeTemporaryWebhook(hook);
 	});
 }
 
@@ -180,8 +185,7 @@ function clearTemporaryWebhooks(guild) {
 			var hook = hooks[i]
 			if (hook.name != "Temporary Webhook") continue;
 			if (hook.channelID in active_hooks) continue;
-			delete(active_hooks[hook.channelID]);
-			hook.delete();
+			removeTemporaryWebhook(hook);
 		}
 	});
 }
