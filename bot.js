@@ -10,6 +10,8 @@ var stream_handler = null;
 
 const prefix = "-";
 const minLength = 8;
+var afk_users = [];
+var afk_timer = null;
 
 var sound_files = [];
 fs.readdir('./sound/', (err, files) => {
@@ -38,6 +40,34 @@ const capitalistWords = [
 	"jeg",
 	"mig",
 	"min"
+];
+
+const replies = [
+	"Absolutely",
+	"Absolutely Haram",
+	"Bang Approves",
+	"Beep",
+	"Boop",
+	"Communism will rise",
+	"confusement",
+	"Doubt",
+	"Good job",
+	"Haram",
+	"Impossible",
+	"kys",
+	"Magnificent",
+	"Marvellous",
+	"No",
+	"Perhaps",
+	"Possibly",
+	"*spits*",
+	"S U C C",
+	"Leaving a dot here .",
+	"Undoubtedly",
+	"Well done",
+	"Yee",
+	"Yeah boii",
+	"You do not no de wey"
 ];
 
 
@@ -119,6 +149,45 @@ function playVideo( video, channel ) {
 	}
 }
 
+function sendAFKMessages(hook) {
+	for (var i in afk_users) {
+		var id = afk_users[i];
+		client.fetchUser(id).then(user => {
+			var reply = replies[Math.floor(Math.random() * replies.length)];
+			hook.send(reply, {
+				username: user.username,
+				avatarURL: user.avatarURL,
+			}).then(message => {
+				if (i == afk_users.length - 1) {
+					hook.delete();
+					hook = null;
+					afk_timer = null;
+				}
+			});
+		});
+	}
+}
+
+function isAFK(user) {
+	if (afk_users.indexOf(user.id) > -1) return true;
+	return false
+}
+
+function becomeAFK(user) {
+	if (isAFK(user)) return false;
+	afk_users.push( user.id );
+	return true;
+}
+
+function begoneAFK(user) {
+	var pos = afk_users.indexOf(user.id);
+	if (pos > -1) {
+		afk_users.splice(pos, 1);
+		return true;
+	}
+	return false;
+}
+
 // Inv Pics - http://community.edgecast.steamstatic.com/economy/image/[PIC]
 // http://steamcommunity.com/inventory/76561198077944666/440/2?l=english&count=5000
 
@@ -146,6 +215,12 @@ client.on('message', message => {
 	var msg = message.content;
 	
 	if (!msg.startsWith(prefix)) {
+		if (isAFK(user)) {
+			message.delete();
+			user.send("Du er inaktiv. Skriv `" + prefix + "afk` for at blive aktiv");
+			return;
+		}
+		
 		var txt = msg.split(" ");
 		for (var x in txt) {
 			var word = txt[x].toLowerCase();
@@ -169,6 +244,28 @@ client.on('message', message => {
 				});
 			}
 		}
+		
+		message.guild.fetchWebhooks().then(collection => {
+			var hooks = collection.array();
+			console.log("Attempting to convert hooks");
+			if (hooks) {
+				for (var i in hooks) {
+					var hook = hooks[i]
+					console.log(hook.name);
+					if (hook.name.toLowerCase() == "afk webhook") {
+						console.log("Attempting to delete hook")
+						hook.delete().then((x) => {
+							console.log("Hook deletion complete")
+							console.log(x)
+						});
+					}
+				}
+			}
+		});
+		
+		message.channel.createWebhook("AFK Webhook").then(hook => {
+			afk_timer = setTimeout(sendAFKMessages, 1000 + Math.random()*1000, hook);
+		});
 	} else {
 		var command = msg.split(" ")[0];
 		command = command.slice(prefix.length).toLowerCase();
@@ -187,6 +284,7 @@ client.on('message', message => {
 			"\n  **" + prefix + "kalinka** : Start kalinka session" +
 			"\n  **" + prefix + "skadoo** : Do u no de wey" +
 			"\n  **" + prefix + "sound** `<sound>` : Soundboard" +
+			"\n  **" + prefix + "tts** `<text>` : Text-to-speech" +
 			"\n**Musik**" +
 			"\n  **" + prefix + "join** : Join my meinkraft server" +
 			"\n  **" + prefix + "leave** : Unsubscribble to my channel" +
@@ -194,6 +292,22 @@ client.on('message', message => {
 		}
 		
 		// Commands
+		
+		if (command == "afk") {
+			if (isAFK(user)) {
+				begoneAFK(user);
+			} else {
+				becomeAFK(user);
+				message.channel.createWebhook("AFK Webhook").then(hook => {
+					hook.send("am bot gib data, beep", {
+						username: user.username,
+						avatarURL: user.avatarURL,
+					}).then(message => {
+						hook.delete();
+					});
+				});
+			}
+		}
 		
 		if (command == "role") {
 			
@@ -300,15 +414,15 @@ client.on('message', message => {
 			var arg = args[0];
 			var id = '';
 			var name = '';
-			if (arg == "1.6") {
+			if (arg == "2.6") {
 				id = '22303833699';
 				name = arg;
-			} else if(arg == "1.4") {
+			} else if(arg == "2.4") {
 				id = '22352172603';
 				name = arg;
 			}
 			if (id == '') {
-				message.channel.send("**-lectio** `1.6` eller `1.4`");
+				message.channel.send("**-lectio** `2.6` eller `2.4`");
 			} else {
 				request('http://thefern.netau.net/api/lectio/schedule?school=523&student=' + id, { json: true }, (err, res, body) => {
 					if (err) return console.log(err);
