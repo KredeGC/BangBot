@@ -105,7 +105,7 @@ function playStream( url, channel ) {
 	if (stream_handler != null) return;
 	if (channel != null) {
 		leaveChannel( channel.guild );
-		joinChannel( channel, (connection) => {
+		joinChannel( channel, connection => {
 			stream_handler = connection.playStream(url, { seek: 0, volume: 1 });
 			
 			stream_handler.once("end", (reason) => {
@@ -121,7 +121,7 @@ function playFile( file, channel ) {
 	if (stream_handler != null) return;
 	if (channel != null) {
 		leaveChannel( channel.guild );
-		joinChannel( channel, (connection) => {
+		joinChannel( channel, connection => {
 			stream_handler = connection.playFile(file, { seek: 0, volume: 1 });
 			
 			stream_handler.once("end", (reason) => {
@@ -137,7 +137,7 @@ function playVideo( video, channel ) {
 	if (stream_handler != null) return;
 	if (channel != null) {
 		leaveChannel( channel.guild );
-		joinChannel( channel, (connection) => {
+		joinChannel( channel, connection => {
 			var audio_stream = ytdl("https://www.youtube.com/watch?v=" + video, { filter : 'audioonly' });
 			stream_handler = connection.playStream(audio_stream, { seek: 0, volume: 1 });
 			
@@ -154,7 +154,7 @@ function createTemporaryWebhook(channel) { // Returns a promise with a hook
 	return channel.createWebhook("Temporary Webhook").then(hook => {
 		active_hooks.push(hook);
 		return hook;
-	});
+	}).catch(console.error);
 }
 
 function removeTemporaryWebhook(hook) { // Remove a temporary hook
@@ -171,10 +171,7 @@ function sendTemporaryMessage(hook, user, msg) { // Sends a message by the user 
 		avatarURL: user.avatarURL
 	}).then(() => {
 		removeTemporaryWebhook(hook);
-	}).catch(err => {
-		console.error(err);
-		removeTemporaryWebhook(hook);
-	});
+	}).catch(console.error);
 }
 
 function clearTemporaryWebhooks(guild) { // Clear all non-active hooks
@@ -186,7 +183,7 @@ function clearTemporaryWebhooks(guild) { // Clear all non-active hooks
 			if (hook.channelID in active_hooks) continue;
 			hook.delete();
 		}
-	});
+	}).catch(console.error);
 }
 
 function sendAFKMessages(channel) { // Send AFK messages to channel
@@ -199,10 +196,8 @@ function sendAFKMessages(channel) { // Send AFK messages to channel
 					setTimeout(() => {
 						sendTemporaryMessage(hook, user, reply);
 					}, 500 + Math.random()*1500);
-				});
-			}).catch(err => {
-				console.error(err);
-			});
+				}).catch(console.error);
+			}).catch(console.error);
 		}
 	}
 }
