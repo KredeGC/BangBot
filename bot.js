@@ -10,7 +10,8 @@ var stream_handler = null;
 
 const prefix = "-";
 const minLength = 8;
-var afk_users = [];
+var afk_users = {};
+var active_hooks = [];
 var afk_timer = null;
 
 var sound_files = [];
@@ -149,26 +150,51 @@ function playVideo( video, channel ) {
 	}
 }
 
-function sendMessage(hook, user, msg) {
-	return hook.send(msg, {
-		username: user.username,
-		avatarURL: user.avatarURL
+function createTemporaryWebhook(channel) {
+	if (channel.id in active_hooks) return active_hooks[channel.id];
+	return channel.createWebhook("Temporary Webhook").then(hook => {
+		active_hooks[channel.id] = hook;
 	});
 }
 
-function sendAFKMessages(hook) {
-	for (var i in afk_users) {
-		var id = afk_users[i];
-		client.fetchUser(id).then(user => {
-			var reply = replies[Math.floor(Math.random() * replies.length)];
-			sendMessage(hook, user, reply).then(message => {
-				if (i == afk_users.length - 1) {
-					hook.delete();
-					hook = null;
-					afk_timer = null;
-				}
+function sendTemporaryMessage(hook, user, msg) {
+	return hook.send(msg, {
+		username: user.username,
+		avatarURL: user.avatarURL
+	}).then(() => {
+		active_hooks[hook.channelID] = null;
+		hook.delete();
+	}).catch(err => {
+		console.error(err);
+		active_hooks[hook.channelID] = null;
+		hook.delete();
+	});
+}
+
+function clearTemporaryWebhooks(guild) {
+	guild.fetchWebhooks().then(collection => {
+		var hooks = collection.array();
+		for (var i in hooks) {
+			var hook = hooks[i]
+			if (hook.name != "Temporary Webhook") continue;
+			if (hook.channelID in active_hooks) continue;
+			active_hooks[hook.channelID] = null;
+			hook.delete();
+		}
+	});
+}
+
+function sendAFKMessages(channel) {
+	if (afk_users.length > 0) {
+		for (var i in afk_users) {
+			var id = afk_users[i];
+			createTemporaryWebhook(channel).then((hook) => {
+				client.fetchUser(id).then(user => {
+					var reply = replies[Math.floor(Math.random() * replies.length)];
+					sendTemporaryMessage(hook, user, reply);
+				});
 			});
-		});
+		}
 	}
 }
 
@@ -192,9 +218,6 @@ function begoneAFK(user) {
 	return false;
 }
 
-// Inv Pics - http://community.edgecast.steamstatic.com/economy/image/[PIC]
-// http://steamcommunity.com/inventory/76561198077944666/440/2?l=english&count=5000
-
 client.on('ready', () => {
     console.log('Bang bang into the room!');
 	client.user.setPresence({ game: { name: '-help', type: 0 } });
@@ -206,12 +229,12 @@ client.on('messageReactionAdd', (react, user) => {
 	react.remove(user);
 });
 
-client.on('guildMemberAdd', (member) => {
-	member.guild.defaultChannel.send("Velkommen " + member.guild.name + " til " + member.guild.name);
+client.on('guildMemberAdd', member => {
+	member.guild.defaultChannel.send("Velkommen " + member.displayName + " til " + member.guild.name);
 });
 
 client.on('message', message => {
-	// if (message.author.bot) return;
+	if (message.author.bot) return;
 	
 	var user = message.author;
 	var member = message.member;
@@ -219,11 +242,11 @@ client.on('message', message => {
 	var msg = message.content;
 	
 	if (!msg.startsWith(prefix)) {
-		if (isAFK(user)) {
+		/*if (isAFK(user)) {
 			message.delete();
 			user.send("Du er AFK. Skriv `" + prefix + "afk` for at blive aktiv");
 			return;
-		}
+		}*/
 		
 		var txt = msg.split(" ");
 		for (var x in txt) {
@@ -249,27 +272,9 @@ client.on('message', message => {
 			}
 		}
 		
-		message.guild.fetchWebhooks().then(collection => {
-			var hooks = collection.array();
-			console.log("Attempting to convert hooks");
-			if (hooks) {
-				for (var i in hooks) {
-					var hook = hooks[i]
-					console.log(hook.name);
-					if (hook.name.toLowerCase() == "afk webhook") {
-						console.log("Attempting to delete hook")
-						hook.delete().then((x) => {
-							console.log("Hook deletion complete")
-							console.log(x)
-						});
-					}
-				}
-			}
-		});
+		clearTemporaryWebhooks(message.guild);
 		
-		message.channel.createWebhook("AFK Webhook").then(hook => {
-			afk_timer = setTimeout(sendAFKMessages, 1000 + Math.random()*1000, hook);
-		});
+		afk_timer = setTimeout(sendAFKMessages, 1000 + Math.random()*1000, message.channel);
 	} else {
 		var command = msg.split(" ")[0];
 		command = command.slice(prefix.length).toLowerCase();
