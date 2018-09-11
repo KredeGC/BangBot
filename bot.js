@@ -154,7 +154,7 @@ function playVideo( video, channel ) {
 function createTemporaryWebhook(channel) { // Returns a promise with a hook
 	if (channel.id in active_hooks) return active_hooks[channel.id];
 	return channel.createWebhook("Temporary Webhook").then(hook => {
-		active_hooks[channel.id] = hook;
+		active_hooks[hook.channelID] = hook;
 		return hook;
 	});
 }
@@ -164,11 +164,11 @@ function sendTemporaryMessage(hook, user, msg) { // Sends a message by the user 
 		username: user.username,
 		avatarURL: user.avatarURL
 	}).then(() => {
-		active_hooks[hook.channelID] = null;
+		delete(active_hooks[hook.channelID]);
 		hook.delete();
 	}).catch(err => {
 		console.error(err);
-		active_hooks[hook.channelID] = null;
+		delete(active_hooks[hook.channelID]);
 		hook.delete();
 	});
 }
@@ -180,7 +180,7 @@ function clearTemporaryWebhooks(guild) {
 			var hook = hooks[i]
 			if (hook.name != "Temporary Webhook") continue;
 			if (hook.channelID in active_hooks) continue;
-			active_hooks[hook.channelID] = null;
+			delete(active_hooks[hook.channelID]);
 			hook.delete();
 		}
 	});
