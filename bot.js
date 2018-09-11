@@ -167,7 +167,7 @@ function removeTemporaryWebhook(hook) { // Remove a temporary hook
 
 function sendTemporaryMessage(hook, member, msg) { // Sends a message by the user via the specified hook
 	hook.send(msg, {
-		username: member.username,
+		username: member.displayName,
 		avatarURL: member.user.avatarURL
 	}).then(() => {
 		removeTemporaryWebhook(hook);
