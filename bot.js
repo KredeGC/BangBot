@@ -211,7 +211,7 @@ client.on('guildMemberAdd', (member) => {
 });
 
 client.on('message', message => {
-	if (message.author.bot) return;
+	// if (message.author.bot) return;
 	
 	var user = message.author;
 	var member = message.member
