@@ -190,14 +190,14 @@ function sendAFKMessages(channel) { // Send AFK messages to channel
 	if (afk_users.length > 0) {
 		for (var i in afk_users) {
 			var id = afk_users[i];
-			createTemporaryWebhook(channel).then(hook => {
-				client.fetchUser(id).then(user => {
-					var reply = replies[Math.floor(Math.random() * replies.length)];
-					setTimeout(() => {
+			setTimeout(() => {
+				createTemporaryWebhook(channel).then(hook => {
+					client.fetchUser(id).then(user => {
+						var reply = replies[Math.floor(Math.random() * replies.length)];
 						sendTemporaryMessage(hook, user, reply);
-					}, 500 + Math.random()*1500);
+					}).catch(console.error);
 				}).catch(console.error);
-			}).catch(console.error);
+			}, 500 + Math.random()*1500);
 		}
 	}
 }
@@ -239,6 +239,7 @@ client.on('guildMemberAdd', member => {
 
 client.on('message', message => {
 	if (message.author.bot) return;
+	if (!message.guild.available) return;
 	
 	var user = message.author;
 	var member = message.member;
