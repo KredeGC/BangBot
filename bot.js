@@ -158,17 +158,19 @@ function createTemporaryWebhook(channel) {
 	});
 }
 
-function sendTemporaryMessage(hook, user, msg) {
-	return hook.send(msg, {
-		username: user.username,
-		avatarURL: user.avatarURL
-	}).then(() => {
-		active_hooks[hook.channelID] = null;
-		hook.delete();
-	}).catch(err => {
-		console.error(err);
-		active_hooks[hook.channelID] = null;
-		hook.delete();
+function sendTemporaryMessage(channel, user, msg) {
+	createTemporaryWebhook(channel).then(hook => {
+		return hook.send(msg, {
+			username: user.username,
+			avatarURL: user.avatarURL
+		}).then(() => {
+			active_hooks[hook.channelID] = null;
+			hook.delete();
+		}).catch(err => {
+			console.error(err);
+			active_hooks[hook.channelID] = null;
+			hook.delete();
+		});
 	});
 }
 
@@ -189,11 +191,9 @@ function sendAFKMessages(channel) {
 	if (afk_users.length > 0) {
 		for (var i in afk_users) {
 			var id = afk_users[i];
-			createTemporaryWebhook(channel).then((hook) => {
-				client.fetchUser(id).then(user => {
-					var reply = replies[Math.floor(Math.random() * replies.length)];
-					sendTemporaryMessage(hook, user, reply);
-				});
+			client.fetchUser(id).then(user => {
+				var reply = replies[Math.floor(Math.random() * replies.length)];
+				sendTemporaryMessage(channel, user, reply);
 			});
 		}
 	}
