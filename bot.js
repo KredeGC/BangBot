@@ -151,7 +151,7 @@ function playVideo( video, channel ) {
 	}
 }
 
-function createTemporaryWebhook(channel) {
+function createTemporaryWebhook(channel) { // Returns a promise with a hook
 	if (channel.id in active_hooks) return active_hooks[channel.id];
 	return channel.createWebhook("Temporary Webhook").then(hook => {
 		active_hooks[channel.id] = hook;
@@ -159,8 +159,8 @@ function createTemporaryWebhook(channel) {
 	});
 }
 
-function sendTemporaryMessage(hook, user, msg) {
-	return hook.send(msg, {
+function sendTemporaryMessage(hook, user, msg) { // Sends a message by the user via the hook
+	hook.send(msg, {
 		username: user.username,
 		avatarURL: user.avatarURL
 	}).then(() => {
@@ -195,6 +195,8 @@ function sendAFKMessages(channel) {
 					var reply = replies[Math.floor(Math.random() * replies.length)];
 					sendTemporaryMessage(hook, user, reply);
 				});
+			}).catch(err => {
+				console.error(err);
 			});
 		}
 	}
