@@ -195,6 +195,7 @@ function sendAFKMessages(channel) { // Send AFK messages to channel
 			var id = afk_users[i];
 			if (!id in channel.guild.members) continue;
 			var member = channel.guild.members[id];
+			console.log(member.toString());
 			createTemporaryWebhook(channel).then(hook => {
 				var reply = replies[Math.floor(Math.random() * replies.length)];
 				setTimeout(() => {
@@ -316,13 +317,10 @@ client.on('message', message => {
 				begoneAFK(user);
 			} else {
 				becomeAFK(user);
-				message.channel.createWebhook("AFK Webhook").then(hook => {
-					hook.send("am bot gib data, beep", {
-						username: user.username,
-						avatarURL: user.avatarURL,
-					}).then(message => {
-						hook.delete();
-					});
+				createTemporaryWebhook(channel).then(hook => {
+					sendTemporaryMessage(hook, member, "am bot gib data, beep");
+				}).catch(err => {
+					console.error(err);
 				});
 			}
 		}
