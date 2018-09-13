@@ -230,6 +230,7 @@ client.on('ready', () => {
 client.on('messageReactionAdd', (react, user) => {
 	if (user.bot) return;
 	var name = react.emoji.name;
+	console.log(name);
 	react.remove(user);
 });
 
