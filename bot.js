@@ -227,17 +227,16 @@ client.on('ready', () => {
 	client.user.setPresence({ game: { name: '-help', type: 0 } });
 });
 
-client.on('messageReactionAdd', (react, user) => {
+/*client.on('messageReactionAdd', (react, user) => {
 	if (user.bot) return;
 	var name = react.emoji.name;
-	console.log(name);
 	if (name == "👌" || name == "⭐") {
-		react.message.channel.send("10+ meme points to **" + name + "**", {
+		react.message.channel.send("10+ meme points to **" + user.username + "**", {
 			files: ["http://thefern.netau.net/img/10points.png"]
 		});
 	}
 	react.remove(user);
-});
+});*/
 
 client.on('guildMemberAdd', member => {
 	member.guild.defaultChannel.send("Velkommen " + member.displayName + " til " + member.guild.name);
