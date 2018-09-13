@@ -266,6 +266,10 @@ client.on('message', message => {
 					files: ["http://thefern.netau.net/img/deception.png"]
 				});
 				return;
+			} else if (word == "anna") {
+				message.delete();
+				user.send("Fuck dig");
+				return;
 			}
 		}
 		
