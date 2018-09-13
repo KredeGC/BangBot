@@ -253,6 +253,7 @@ client.on('message', message => {
 			return;
 		}
 		
+		var msg = msg.replace(/[^\w\s]/gi, "");
 		var txt = msg.split(" ");
 		for (var x in txt) {
 			var word = txt[x].toLowerCase();
