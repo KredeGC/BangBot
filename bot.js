@@ -253,10 +253,10 @@ client.on('message', message => {
 			return;
 		}
 		
-		var msg = msg.replace(/[^\w\s]/gi, "");
+		var msg = msg.replace(/[^a-z]/gmi, "").toLowerCase();
 		var txt = msg.split(" ");
 		for (var x in txt) {
-			var word = txt[x].toLowerCase();
+			var word = txt[x];
 			if (capitalistWords.indexOf(word) > -1) {
 				message.channel.send("'**" + word.toUpperCase() + "**' is __CAPITALIST__ word. now off to *GULAG*", {
 					files: ["http://thefern.netau.net/img/server.jpg"]
