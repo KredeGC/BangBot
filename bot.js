@@ -231,6 +231,11 @@ client.on('messageReactionAdd', (react, user) => {
 	if (user.bot) return;
 	var name = react.emoji.name;
 	console.log(name);
+	if (name == "👌" || name == "⭐") {
+		react.message.channel.send("10+ meme points to **" + name + "**", {
+			files: ["http://thefern.netau.net/img/10points.png"]
+		});
+	}
 	react.remove(user);
 });
 
