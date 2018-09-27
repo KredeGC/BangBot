@@ -9,7 +9,8 @@
   "dependencies": {
     "discord.js": "11.3.0",
     "request": "2.83.0",
-	"node-opus": "0.2.7",
-	"ytdl-core": "0.20.1"
+    "node-opus": "0.2.7",
+    "ytdl-core": "0.20.1",
+	"bufferutil": "4.0.0"
   }
 }
