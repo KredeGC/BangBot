@@ -1,3 +1,7 @@
+/* When updating to a newer version:
+    'channel.sendMessageMessage' becomes 'channel.sendMessage'
+*/
+
 const Discord = require('discord.js');
 const request = require('request');
 const ytdl = require("ytdl-core");
@@ -223,15 +227,14 @@ function begoneAFK(user) {
 
 client.on('ready', () => {
     console.log('Bang bang into the room!');
-    // client.user.setGame('-help');
-	// client.user.setPresence({ game: { name: '-help', type: 0 } });
+	client.user.setPresence({ game: { name: '-help', type: 0 } });
 });
 
 /*client.on('messageReactionAdd', (react, user) => {
 	if (user.bot) return;
 	var name = react.emoji.name;
 	if (name == "👌" || name == "⭐") {
-		react.message.channel.send("10+ meme points to **" + user.username + "**", {
+		react.message.channel.sendMessage("10+ meme points to **" + user.username + "**", {
 			files: ["http://thefern.netau.net/img/10points.png"]
 		});
 	}
@@ -239,7 +242,7 @@ client.on('ready', () => {
 });*/
 
 client.on('guildMemberAdd', member => {
-	member.guild.defaultChannel.send("Velkommen " + member.displayName + " til " + member.guild.name);
+	member.guild.defaultchannel.sendMessage("Velkommen " + member.displayName + " til " + member.guild.name);
 });
 
 client.on('message', message => {
@@ -263,12 +266,12 @@ client.on('message', message => {
 		for (var x in txt) {
 			var word = txt[x];
 			if (capitalistWords.indexOf(word) > -1) {
-				message.channel.send("'**" + word.toUpperCase() + "**' is __CAPITALIST__ word. now off to *GULAG*", {
+				message.channel.sendMessage("'**" + word.toUpperCase() + "**' is __CAPITALIST__ word. now off to *GULAG*", {
 					files: ["http://thefern.netau.net/img/server.jpg"]
 				});
 				return;
 			} else if (lies.indexOf(word) > -1) {
-				message.channel.send("", {
+				message.channel.sendMessage("", {
 					files: ["http://thefern.netau.net/img/deception.png"]
 				});
 				return;
@@ -281,7 +284,7 @@ client.on('message', message => {
 		
 		if (msg.length > minLength) {
 			if (Math.random() > 0.95) {
-				message.channel.send("10+ meme points to **" + name + "**", {
+				message.channel.sendMessage("10+ meme points to **" + name + "**", {
 					files: ["http://thefern.netau.net/img/10points.png"]
 				});
 			}
@@ -298,7 +301,7 @@ client.on('message', message => {
 		message.delete();
 		
 		if (command == "help") {
-			message.channel.send("**Kommandoer** for **" + name + "**" +
+			message.channel.sendMessage("**Kommandoer** for **" + name + "**" +
 			"\n  **" + prefix + "meme** `<template>` `<top;bottom>` : Lav en dank mehmay" +
 			"\n  **" + prefix + "afk**: Detroit: Become human" +
 			"\n  **" + prefix + "banned** : Ulovlig kapitalistisk propaganda" +
@@ -347,7 +350,7 @@ client.on('message', message => {
 					url += "&top=" + tbl[0];
 				}
 				
-				message.channel.send("Meme Copyright by **" + name + "**", {
+				message.channel.sendMessage("Meme Copyright by **" + name + "**", {
 					files: [url + "&type=.jpg"]
 				});
 			} else {
@@ -358,7 +361,7 @@ client.on('message', message => {
 						txt += "\n  " + body[i];
 					}
 					
-					message.channel.send(txt);
+					message.channel.sendMessage(txt);
 				});
 			}
 		}
@@ -368,7 +371,7 @@ client.on('message', message => {
 			for (var x in capitalistWords) {
 				 txt += "\n  " + capitalistWords[x];
 			}
-			message.channel.send(txt);
+			message.channel.sendMessage(txt);
 		}
 		
 		if (command == "item") {
@@ -421,13 +424,13 @@ client.on('message', message => {
 							embed.addField('Marketable', 'No');
 						}
 						
-						message.channel.send({embed});
+						message.channel.sendMessage({embed});
 					} else {
-						message.channel.send('Could not find any item `' + search + '`');
+						message.channel.sendMessage('Could not find any item `' + search + '`');
 					}
 				});
 			} else {
-				message.channel.send('A Steam-ID is required');
+				message.channel.sendMessage('A Steam-ID is required');
 			}
 		}
 		
@@ -443,7 +446,7 @@ client.on('message', message => {
 				name = arg;
 			}
 			if (id == '') {
-				message.channel.send("**-lectio** `2.6` eller `2.4`");
+				message.channel.sendMessage("**-lectio** `2.6` eller `2.4`");
 			} else {
 				request('http://thefern.netau.net/api/lectio/schedule?school=523&student=' + id, { json: true }, (err, res, body) => {
 					if (err) return console.log(err);
@@ -464,7 +467,7 @@ client.on('message', message => {
 					
 					txt += "```";
 					
-					message.channel.send(txt);
+					message.channel.sendMessage(txt);
 				});
 			}
 		}
@@ -475,7 +478,7 @@ client.on('message', message => {
 			var redstar = message.guild.emojis.find("name", "redstar");
 			var marx = message.guild.emojis.find("name", "marx");
 			var stalin = message.guild.emojis.find("name", "stalin");
-			message.channel.send(redstar + "Special tribute to " + marx + "**Marx**, " + stalin + "**Stalin** and **Lenin** from **" + name + "**" + redstar, {
+			message.channel.sendMessage(redstar + "Special tribute to " + marx + "**Marx**, " + stalin + "**Stalin** and **Lenin** from **" + name + "**" + redstar, {
 				files: ["http://thefern.netau.net/img/communism.gif"]
 			});
 			if (member.voiceChannel) {
@@ -486,7 +489,7 @@ client.on('message', message => {
 		if (command == "kalinka") {
 			if (member.voiceChannel) {
 				var redpower = message.guild.emojis.find("name", "redpower");
-				message.channel.send(redpower + "Special kalinka session by **" + name + "**" + redpower);
+				message.channel.sendMessage(redpower + "Special kalinka session by **" + name + "**" + redpower);
 				playVideo( "4xJoVCjBUco", member.voiceChannel );
 			}
 		}
@@ -513,7 +516,7 @@ client.on('message', message => {
 					for (var x in sound_files) {
 						txt += "\n  " + sound_files[x];
 					}
-					message.channel.send(txt);
+					message.channel.sendMessage(txt);
 				}
 			}
 		}
@@ -530,7 +533,7 @@ client.on('message', message => {
 			if (member.voiceChannel) {
 				joinChannel(member.voiceChannel);
 			} else {
-				message.channel.send(name + ", du skal være i en VoiceChannel din tard");
+				message.channel.sendMessage(name + ", du skal være i en VoiceChannel din tard");
 			}
 		}
 		
