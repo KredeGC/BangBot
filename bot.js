@@ -124,11 +124,9 @@ function playFile( file, channel ) {
 			stream_handler = connection.playFile(file, { seek: 0, volume: 1 });
 			
 			stream_handler.once("end", (reason) => {
-                setTimeout(function(){
-                    voice_connection.channel.leave()
-                    voice_connection = null;
-                    stream_handler = null;
-                }, 2000)
+				voice_connection.channel.leave();
+				voice_connection = null;
+				stream_handler = null;
 			});
 		});
 	}
