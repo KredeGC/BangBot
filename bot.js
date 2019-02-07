@@ -18,7 +18,6 @@ var sound_files = [];
 fs.readdir('./sound/', (err, files) => {
 	files.forEach(file => {
 		var snd = file.replace(/\.[^/.]+$/, "");
-		console.log(snd);
 		sound_files.push(snd);
 	});
 })
@@ -122,7 +121,7 @@ function playFile( file, channel ) {
 	if (channel != null) {
 		leaveChannel( channel.guild );
 		joinChannel( channel, connection => {
-			stream_handler = connection.playFile(file, { seek: 0, volume: 1 });
+			stream_handler = connection.play(file, { seek: 0, volume: 1 });
 			
 			stream_handler.once("end", (reason) => {
 				voice_connection.channel.leave();
@@ -302,7 +301,7 @@ client.on('message', message => {
 			"\n  **" + prefix + "meme** `<template>` `<top;bottom>` : Lav en dank mehmay" +
 			"\n  **" + prefix + "afk**: Detroit: Become human" +
 			"\n  **" + prefix + "banned** : Ulovlig kapitalistisk propaganda" +
-			"\n  **" + prefix + "lectio** `<2.6|2.4>`: Få en persons skema" +
+			"\n  **" + prefix + "lectio** `<2.6|2.4>`: F� skemaet" +
 			"\n**Voice Channel**" +
 			"\n  **" + prefix + "communism** : Comrade Stalin approves" +
 			"\n  **" + prefix + "kalinka** : Start kalinka session" +
@@ -335,7 +334,7 @@ client.on('message', message => {
 		}
 		
 		if (command == "meme") {
-			if (args[0]) {
+			if (args[0] && args[1]) {
 				var txt = args.slice(1).join(" ");
 				var tbl = txt.split(";");
 				
