@@ -121,12 +121,14 @@ function playFile( file, channel ) {
 	if (channel != null) {
 		leaveChannel( channel.guild );
 		joinChannel( channel, connection => {
-			stream_handler = connection.play(file, { seek: 0, volume: 1 });
+			stream_handler = connection.playFile(file, { seek: 0, volume: 1 });
 			
 			stream_handler.once("end", (reason) => {
-				voice_connection.channel.leave();
-				voice_connection = null;
-				stream_handler = null;
+                setTimeout(function(){
+                    voice_connection.channel.leave()
+                    voice_connection = null;
+                    stream_handler = null;
+                }, 2000)
 			});
 		});
 	}
