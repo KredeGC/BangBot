@@ -223,8 +223,8 @@ function begoneAFK(user) {
 
 client.on('ready', () => {
     console.log('Bang bang into the room!');
-    client.user.setGame('-help');
-	// client.user.setPresence({ game: { name: '-help', type: 0 } });
+    // client.user.setGame('-help');
+	client.user.setPresence({ game: { name: '-help', type: 0 } });
 });
 
 /*client.on('messageReactionAdd', (react, user) => {
