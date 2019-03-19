@@ -9,7 +9,6 @@ const fs = require('fs');
 
 const client = new Discord.Client();
 
-var voice_channel = null;
 var voice_connection = null;
 var stream_handler = null;
 
@@ -91,7 +90,6 @@ function joinChannel( channel, run ) {
 	leaveChannel( channel.guild );
 	channel.join().then(connection => {
 		voice_connection = connection;
-		voice_channel = channel;
 		if (run != null) {
 			run( connection );
 		}
@@ -100,7 +98,9 @@ function joinChannel( channel, run ) {
 
 function leaveChannel( guild ) {
 	if (voice_connection != null) {
-        voice_connection.channel.leave();
+        if (voice_connection.channel != null) {
+            voice_connection.channel.leave();
+        }
 		voice_connection = null;
 		stream_handler = null;
 	}
@@ -114,7 +114,9 @@ function playStream( url, channel ) {
 			stream_handler = connection.playStream(url, { seek: 0, volume: 1 });
 			
 			stream_handler.once("end", (reason) => {
-				voice_connection.channel.leave();
+				if (voice_connection.channel != null) {
+					voice_connection.channel.leave();
+				}
 				voice_connection = null;
 				stream_handler = null;
 			});
@@ -130,7 +132,9 @@ function playFile( file, channel ) {
 			stream_handler = connection.playFile(file, { seek: 0, volume: 1 });
 			
 			stream_handler.once("end", (reason) => {
-				voice_connection.channel.leave();
+				if (voice_connection.channel != null) {
+					voice_connection.channel.leave();
+				}
 				voice_connection = null;
 				stream_handler = null;
 			});
@@ -147,7 +151,9 @@ function playVideo( video, channel ) {
 			stream_handler = connection.playStream(audio_stream, { seek: 0, volume: 1 });
 			
 			stream_handler.once("end", reason => {
-				voice_connection.channel.leave();
+				if (voice_connection.channel != null) {
+					voice_connection.channel.leave();
+				}
 				voice_connection = null;
 				stream_handler = null;
 			});
