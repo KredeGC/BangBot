@@ -9,6 +9,7 @@ const fs = require('fs');
 
 const client = new Discord.Client();
 
+var voice_channel = null;
 var voice_connection = null;
 var stream_handler = null;
 
@@ -90,6 +91,7 @@ function joinChannel( channel, run ) {
 	leaveChannel( channel.guild );
 	channel.join().then(connection => {
 		voice_connection = connection;
+		voice_channel = channel;
 		if (run != null) {
 			run( connection );
 		}
@@ -98,7 +100,7 @@ function joinChannel( channel, run ) {
 
 function leaveChannel( guild ) {
 	if (voice_connection != null) {
-		voice_connection.channel.leave();
+        voice_connection.channel.leave();
 		voice_connection = null;
 		stream_handler = null;
 	}
