@@ -86,7 +86,7 @@ function getVideoId(string) {
 	}
 }
 
-async function joinChannel( channel, run ) {
+function joinChannel( channel, run ) {
 	leaveChannel( channel.guild );
 	channel.join().then(connection => {
 		voice_connection = connection;
@@ -96,7 +96,7 @@ async function joinChannel( channel, run ) {
 	}).catch(console.error);
 }
 
-async function leaveChannel( guild ) {
+function leaveChannel( guild ) {
 	if (voice_connection != null) {
         if (voice_connection.channel != null) {
             voice_connection.channel.leave();
@@ -106,10 +106,9 @@ async function leaveChannel( guild ) {
 	}
 }
 
-async function playStream( url, channel ) {
+function playStream( url, channel ) {
 	if (stream_handler != null) return;
 	if (channel != null) {
-		leaveChannel( channel.guild );
 		joinChannel( channel, connection => {
 			stream_handler = connection.playStream(url, { seek: 0, volume: 1 });
 			
@@ -124,10 +123,9 @@ async function playStream( url, channel ) {
 	}
 }
 
-async function playFile( file, channel ) {
+function playFile( file, channel ) {
 	if (stream_handler != null) return;
 	if (channel != null) {
-		leaveChannel( channel.guild );
 		joinChannel( channel, connection => {
 			stream_handler = connection.playFile(file, { seek: 0, volume: 1 });
 			
@@ -142,23 +140,22 @@ async function playFile( file, channel ) {
 	}
 }
 
-async function playVideo( video, channel ) {
+function playVideo( video, channel ) {
 	if (stream_handler != null) return;
 	if (channel != null) {
-		leaveChannel( channel.guild );
 		joinChannel( channel, connection => {
             console.log(video);
 			var audio_stream = ytdl("https://www.youtube.com/watch?v=" + video, { filter : 'audioonly' });
-			stream_handler = await connection.playStream(audio_stream, { seek: 0, volume: 1 });
-			
-			stream_handler.once("end", reason => {
-                console.log(reason);
-				if (voice_connection.channel != null) {
-					voice_connection.channel.leave();
-				}
-				voice_connection = null;
-				stream_handler = null;
-			});
+			stream_handler = connection.playStream(audio_stream, { seek: 0, volume: 1 }).then(() => {
+                stream_handler.once("end", reason => {
+                    console.log(reason);
+                    if (voice_connection.channel != null) {
+                        voice_connection.channel.leave();
+                    }
+                    voice_connection = null;
+                    stream_handler = null;
+                });
+            });
 		});
 	}
 }
