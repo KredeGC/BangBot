@@ -151,6 +151,7 @@ function playVideo( video, channel ) {
 			stream_handler = connection.playStream(audio_stream, { seek: 0, volume: 1 });
 			
 			stream_handler.once("end", reason => {
+                console.log(reason);
 				if (voice_connection.channel != null) {
 					voice_connection.channel.leave();
 				}
@@ -328,7 +329,7 @@ client.on('message', message => {
 		
 		// Commands
 		
-		if (command == "afk") {
+		/*if (command == "afk") {
 			if (isAFK(user)) {
 				begoneAFK(user);
 			} else {
@@ -339,7 +340,7 @@ client.on('message', message => {
 					console.error(err);
 				});
 			}
-		}
+		}*/
 		
 		if (command == "role") {
 			
