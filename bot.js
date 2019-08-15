@@ -109,6 +109,7 @@ function leaveChannel( guild ) {
 function playStream( url, channel ) {
 	if (stream_handler != null) return;
 	if (channel != null) {
+		leaveChannel( channel.guild );
 		joinChannel( channel, connection => {
 			stream_handler = connection.playStream(url, { seek: 0, volume: 1 });
 			
@@ -126,6 +127,7 @@ function playStream( url, channel ) {
 function playFile( file, channel ) {
 	if (stream_handler != null) return;
 	if (channel != null) {
+		leaveChannel( channel.guild );
 		joinChannel( channel, connection => {
 			stream_handler = connection.playFile(file, { seek: 0, volume: 1 });
 			
@@ -143,13 +145,12 @@ function playFile( file, channel ) {
 function playVideo( video, channel ) {
 	if (stream_handler != null) return;
 	if (channel != null) {
+		leaveChannel( channel.guild );
 		joinChannel( channel, connection => {
-            console.log(video);
 			var audio_stream = ytdl("https://www.youtube.com/watch?v=" + video, { filter : 'audioonly' });
 			stream_handler = connection.playStream(audio_stream, { seek: 0, volume: 1 });
 			
 			stream_handler.once("end", reason => {
-                console.log(reason);
 				if (voice_connection.channel != null) {
 					voice_connection.channel.leave();
 				}
