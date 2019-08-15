@@ -86,7 +86,7 @@ function getVideoId(string) {
 	}
 }
 
-function joinChannel( channel, run ) {
+async function joinChannel( channel, run ) {
 	leaveChannel( channel.guild );
 	channel.join().then(connection => {
 		voice_connection = connection;
@@ -96,7 +96,7 @@ function joinChannel( channel, run ) {
 	}).catch(console.error);
 }
 
-function leaveChannel( guild ) {
+async function leaveChannel( guild ) {
 	if (voice_connection != null) {
         if (voice_connection.channel != null) {
             voice_connection.channel.leave();
@@ -106,7 +106,7 @@ function leaveChannel( guild ) {
 	}
 }
 
-function playStream( url, channel ) {
+async function playStream( url, channel ) {
 	if (stream_handler != null) return;
 	if (channel != null) {
 		leaveChannel( channel.guild );
@@ -124,7 +124,7 @@ function playStream( url, channel ) {
 	}
 }
 
-function playFile( file, channel ) {
+async function playFile( file, channel ) {
 	if (stream_handler != null) return;
 	if (channel != null) {
 		leaveChannel( channel.guild );
