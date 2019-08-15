@@ -147,6 +147,7 @@ function playVideo( video, channel ) {
 	if (channel != null) {
 		leaveChannel( channel.guild );
 		joinChannel( channel, connection => {
+            console.log(video);
 			var audio_stream = ytdl("https://www.youtube.com/watch?v=" + video, { filter : 'audioonly' });
 			stream_handler = connection.playStream(audio_stream, { seek: 0, volume: 1 });
 			
