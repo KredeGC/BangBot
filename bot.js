@@ -146,16 +146,16 @@ function playVideo( video, channel ) {
 		joinChannel( channel, connection => {
             console.log(video);
 			var audio_stream = ytdl("https://www.youtube.com/watch?v=" + video, { filter : 'audioonly' });
-			stream_handler = connection.playStream(audio_stream, { seek: 0, volume: 1 }).then(() => {
-                stream_handler.once("end", reason => {
-                    console.log(reason);
-                    if (voice_connection.channel != null) {
-                        voice_connection.channel.leave();
-                    }
-                    voice_connection = null;
-                    stream_handler = null;
-                });
-            });
+			stream_handler = connection.playStream(audio_stream, { seek: 0, volume: 1 });
+			
+			stream_handler.once("end", reason => {
+                console.log(reason);
+				if (voice_connection.channel != null) {
+					voice_connection.channel.leave();
+				}
+				voice_connection = null;
+				stream_handler = null;
+			});
 		});
 	}
 }
