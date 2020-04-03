@@ -415,36 +415,36 @@ client.on('message', message => {
 		// Voice
 		
 		if (command == "communism") {
-			if (member.voiceChannel) {
+			if (member.voice.channel) {
                 message.channel.send("*russia*");
-				playVideo( "U06jlgpMtQs", member.voiceChannel );
+				playVideo( "U06jlgpMtQs", member.voice.channel );
 			}
 		}
 		
 		if (command == "kalinka") {
-			if (member.voiceChannel) {
+			if (member.voice.channel) {
 				message.channel.send("klinke");
-				playVideo( "4xJoVCjBUco", member.voiceChannel );
+				playVideo( "4xJoVCjBUco", member.voice.channel );
 			}
 		}
 		
 		if (command == "skadoo") {
-			if (member.voiceChannel) {
-				playVideo( "ZUODMHX7ZuU", member.voiceChannel );
+			if (member.voice.channel) {
+				playVideo( "ZUODMHX7ZuU", member.voice.channel );
 			}
 		}
 		
 		if (command == "fine") {
-			if (member.voiceChannel) {
-				playVideo( "5PdXIHGvMpk", member.voiceChannel );
+			if (member.voice.channel) {
+				playVideo( "5PdXIHGvMpk", member.voice.channel );
 			}
 		}
 		
 		if (command == "sound") {
-			if (member.voiceChannel) {
+			if (member.voice.channel) {
 				var arg = args[0];
 				if (sound_files.indexOf(arg) > -1) {
-					playFile( "sound/" + arg + ".mp3", member.voiceChannel );
+					playFile( "sound/" + arg + ".mp3", member.voice.channel );
 				} else {
 					var txt = "**" + prefix + "sound**";
 					for (var x in sound_files) {
@@ -458,16 +458,16 @@ client.on('message', message => {
 		if (command == "tts") {
 			var url = "https://talk.moustacheminer.com/api/gen.wav?dectalk=";
 			var talk = args.join("%20");
-			playStream( url + talk, member.voiceChannel );
+			playStream( url + talk, member.voice.channel );
 		}
 		
 		// Music
 		
 		if (command == "join") {
-			if (member.voiceChannel) {
-				joinChannel(member.voiceChannel);
+			if (member.voice.channel) {
+				joinChannel(member.voice.channel);
 			} else {
-				message.channel.send(name + ", du skal være i en VoiceChannel din tard");
+				message.channel.send(name + ", du skal være i en voice.channel din tard");
 			}
 		}
 		
@@ -476,9 +476,9 @@ client.on('message', message => {
 		}
 		
 		if (command == "play") {
-			if (member.voiceChannel) {
+			if (member.voice.channel) {
 				var id = getVideoId( args[0] );
-				playVideo( id, member.voiceChannel );
+				playVideo( id, member.voice.channel );
 			}
 		}
 	}
