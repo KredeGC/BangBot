@@ -356,7 +356,7 @@ client.on('message', message => {
 							desc += '\n' + item['descriptions'][i]['value'];
 						}
 						
-						var embed = new Discord.RichEmbed()
+						var embed = new Discord.MessageEmbed()
 							.setTitle(name)
 							.setDescription(desc)
 							.setThumbnail(img)
