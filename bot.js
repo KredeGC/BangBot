@@ -1,5 +1,5 @@
 /* When updating to a newer version:
-    'channel.sendMessageMessage' becomes 'channel.sendMessage'
+    'channel.sendMessage' becomes 'channel.send'
 */
 
 const Discord = require('discord.js');
@@ -31,7 +31,8 @@ const lies = [
 	"deceit",
 	"deception",
 	"lying",
-	"lie"
+    "lie",
+    "liar"
 ]
 
 const capitalistWords = [
@@ -87,7 +88,7 @@ function getVideoId(string) {
 }
 
 function joinChannel( channel, run ) {
-	leaveChannel( channel.guild );
+	leaveChannel();
 	channel.join().then(connection => {
 		voice_connection = connection;
 		if (run != null) {
@@ -96,7 +97,7 @@ function joinChannel( channel, run ) {
 	}).catch(console.error);
 }
 
-function leaveChannel( guild ) {
+function leaveChannel() {
 	if (voice_connection != null) {
         if (voice_connection.channel != null) {
             voice_connection.channel.leave();
@@ -109,7 +110,7 @@ function leaveChannel( guild ) {
 function playStream( url, channel ) {
 	if (stream_handler != null) return;
 	if (channel != null) {
-		leaveChannel( channel.guild );
+		leaveChannel();
 		joinChannel( channel, connection => {
 			stream_handler = connection.playStream(url, { seek: 0, volume: 1 });
 			
@@ -127,7 +128,7 @@ function playStream( url, channel ) {
 function playFile( file, channel ) {
 	if (stream_handler != null) return;
 	if (channel != null) {
-		leaveChannel( channel.guild );
+		leaveChannel();
 		joinChannel( channel, connection => {
 			stream_handler = connection.playFile(file, { seek: 0, volume: 1 });
 			
@@ -177,7 +178,7 @@ function removeTemporaryWebhook(hook) { // Remove a temporary hook
 }
 
 function sendTemporaryMessage(hook, user, msg) { // Sends a message by the user via the specified hook
-	hook.sendMessage(msg, {
+	hook.send(msg, {
 		username: user.username,
 		avatarURL: user.avatarURL
 	}).then(() => {
@@ -250,7 +251,7 @@ client.on('ready', () => {
 });*/
 
 client.on('guildMemberAdd', member => {
-	member.guild.defaultchannel.sendMessage("Velkommen " + member.displayName + " til " + member.guild.name);
+	member.guild.defaultchannel.send("Velkommen " + member.displayName + " til " + member.guild.name);
 });
 
 client.on('message', message => {
@@ -274,12 +275,13 @@ client.on('message', message => {
 		for (var x in txt) {
 			var word = txt[x];
 			if (capitalistWords.indexOf(word) > -1) {
-				message.channel.sendMessage("'**" + word.toUpperCase() + "**' is __CAPITALIST__ word. now off to *GULAG*", {
+                message.channel.send("'**" + word.toUpperCase() + "**' is __CAPITALIST__ word. now off to *GULAG*");
+				message.channel.send({
 					files: ["http://thefern.netau.net/img/server.jpg"]
 				});
 				return;
 			} else if (lies.indexOf(word) > -1) {
-				message.channel.sendMessage("", {
+				message.channel.send({
 					files: ["http://thefern.netau.net/img/deception.png"]
 				});
 				return;
@@ -292,7 +294,8 @@ client.on('message', message => {
 		
 		if (msg.length > minLength) {
 			if (Math.random() > 0.95) {
-				message.channel.sendMessage("10+ meme points to **" + name + "**", {
+                message.channel.send("10+ meme points to **" + name + "**");
+				message.channel.send({
 					files: ["http://thefern.netau.net/img/10points.png"]
 				});
 			}
@@ -309,8 +312,7 @@ client.on('message', message => {
 		message.delete();
 		
 		if (command == "help") {
-			message.channel.sendMessage("**Kommandoer** for **" + name + "**" +
-			"\n  **" + prefix + "meme** `<template>` `<top;bottom>` : Lav en dank mehmay" +
+			message.channel.send("**Kommandoer** for **" + name + "**" +
 			"\n  **" + prefix + "afk**: Detroit: Become human" +
 			"\n  **" + prefix + "banned** : Ulovlig kapitalistisk propaganda" +
 			"\n  **" + prefix + "lectio** `<2.6|2.4>`: F� skemaet" +
@@ -341,45 +343,12 @@ client.on('message', message => {
 			}
 		}*/
 		
-		if (command == "role") {
-			
-		}
-		
-		if (command == "meme") {
-			if (args[0] && args[1]) {
-				var txt = args.slice(1).join(" ");
-				var tbl = txt.split(";");
-				
-				var url = "http://thefern.netau.net/api/meme/generator?meme=" + args[0];
-				
-				if (tbl[1] != null) {
-					url += "&top=" + tbl[0] + "&bottom=" + tbl[1];
-				} else {
-					url += "&top=" + tbl[0];
-				}
-				
-				message.channel.sendMessage("Meme Copyright by **" + name + "**", {
-					files: [url + "&type=.jpg"]
-				});
-			} else {
-				request('http://thefern.netau.net/api/meme/list', { json: true }, (err, res, body) => {
-					if (err) return console.log(err);
-					var txt = "**Holy list of meme templates**";
-					for (i = 0; i < body.length; i++) {
-						txt += "\n  " + body[i];
-					}
-					
-					message.channel.sendMessage(txt);
-				});
-			}
-		}
-		
 		if (command == "banned") {
 			txt = "**Banned capitalist words**";
 			for (var x in capitalistWords) {
 				 txt += "\n  " + capitalistWords[x];
 			}
-			message.channel.sendMessage(txt);
+			message.channel.send(txt);
 		}
 		
 		if (command == "item") {
@@ -432,72 +401,28 @@ client.on('message', message => {
 							embed.addField('Marketable', 'No');
 						}
 						
-						message.channel.sendMessage({embed});
+						message.channel.send({embed: embed});
 					} else {
-						message.channel.sendMessage('Could not find any item `' + search + '`');
+						message.channel.send('Could not find any item `' + search + '`');
 					}
 				});
 			} else {
-				message.channel.sendMessage('A Steam-ID is required');
-			}
-		}
-		
-		if (command == "lectio") {
-			var arg = args[0];
-			var id = '';
-			var name = '';
-			if (arg == "2.6") {
-				id = '22303833699';
-				name = arg;
-			} else if(arg == "2.4") {
-				id = '22352172603';
-				name = arg;
-			}
-			if (id == '') {
-				message.channel.sendMessage("**-lectio** `2.6` eller `2.4`");
-			} else {
-				request('http://thefern.netau.net/api/lectio/schedule?school=523&student=' + id, { json: true }, (err, res, body) => {
-					if (err) return console.log(err);
-					var noter = body['dayschedule']['notes'];
-					var lessons = body['dayschedule']['lessons'];
-					var txt = "```glsl\n#" + body['day'] + " " + name;
-					
-					for (time in lessons) {
-						var lesson = lessons[time];
-						txt += "\n[" + time + '] ' + lesson.title + ' ' + lesson.classroom.join(", ");
-					}
-					
-					txt += "\n#Noter";
-					
-					for (i = 0; i < noter.length; i++) {
-						txt += "\n" + noter[i];
-					}
-					
-					txt += "```";
-					
-					message.channel.sendMessage(txt);
-				});
+				message.channel.send('A Steam-ID is required');
 			}
 		}
 		
 		// Voice
 		
 		if (command == "communism") {
-			var redstar = message.guild.emojis.find("name", "redstar");
-			var marx = message.guild.emojis.find("name", "marx");
-			var stalin = message.guild.emojis.find("name", "stalin");
-			message.channel.sendMessage(redstar + "Special tribute to " + marx + "**Marx**, " + stalin + "**Stalin** and **Lenin** from **" + name + "**" + redstar, {
-				files: ["http://thefern.netau.net/img/communism.gif"]
-			});
 			if (member.voiceChannel) {
+                message.channel.send("*russia*");
 				playVideo( "U06jlgpMtQs", member.voiceChannel );
 			}
 		}
 		
 		if (command == "kalinka") {
 			if (member.voiceChannel) {
-				var redpower = message.guild.emojis.find("name", "redpower");
-				message.channel.sendMessage(redpower + "Special kalinka session by **" + name + "**" + redpower);
+				message.channel.send("klinke");
 				playVideo( "4xJoVCjBUco", member.voiceChannel );
 			}
 		}
@@ -524,7 +449,7 @@ client.on('message', message => {
 					for (var x in sound_files) {
 						txt += "\n  " + sound_files[x];
 					}
-					message.channel.sendMessage(txt);
+					message.channel.send(txt);
 				}
 			}
 		}
@@ -541,7 +466,7 @@ client.on('message', message => {
 			if (member.voiceChannel) {
 				joinChannel(member.voiceChannel);
 			} else {
-				message.channel.sendMessage(name + ", du skal være i en VoiceChannel din tard");
+				message.channel.send(name + ", du skal være i en VoiceChannel din tard");
 			}
 		}
 		
