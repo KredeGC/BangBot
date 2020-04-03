@@ -115,7 +115,7 @@ function playFile( file, channel ) {
 		joinChannel( channel, connection => {
 			stream_handler = connection.play(file, { seek: 0, volume: 1 });
 			
-			stream_handler.once("end", () => {
+			stream_handler.on("finish", () => {
 				if (voice_connection.channel != null) {
 					voice_connection.channel.leave();
 				}
@@ -134,7 +134,7 @@ function playVideo( video, channel ) {
 			var audio_stream = ytdl("https://www.youtube.com/watch?v=" + video, { filter : 'audioonly', quality: 'highestaudio' });
 			stream_handler = connection.play(audio_stream, { seek: 0, volume: 1 });
 			
-			stream_handler.once("end", () => {
+			stream_handler.on("finish", () => {
 				if (voice_connection.channel != null) {
 					voice_connection.channel.leave();
 				}
@@ -298,7 +298,6 @@ client.on('message', message => {
 			message.channel.send("**Kommandoer** for **" + name + "**" +
 			"\n  **" + prefix + "afk**: Detroit: Become human" +
 			"\n  **" + prefix + "banned** : Ulovlig kapitalistisk propaganda" +
-			"\n  **" + prefix + "lectio** `<2.6|2.4>`: F� skemaet" +
 			"\n**Voice Channel**" +
 			"\n  **" + prefix + "communism** : Comrade Stalin approves" +
 			"\n  **" + prefix + "kalinka** : Start kalinka session" +
@@ -423,9 +422,11 @@ client.on('message', message => {
 		
 		if (command == "sound") {
 			if (member.voice.channel) {
-				var arg = args[0];
-				if (sound_files.indexOf(arg) > -1) {
-					playFile( "sound/" + arg + ".mp3", member.voice.channel );
+                var filename = args[0];
+                // var channel = guild.channels.cache.find(channel => channel.name === args[1]);
+                
+				if (sound_files.indexOf(filename) > -1) {
+					playFile( "sound/" + filename + ".mp3", member.voice.channel );
 				} else {
 					var txt = "**" + prefix + "sound**";
 					for (var x in sound_files) {
