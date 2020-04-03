@@ -10,19 +10,19 @@ const fs = require('fs');
 
 const client = new Discord.Client();
 
-var voice_connection = null;
-var stream_handler = null;
+let voice_connection = null;
+let stream_handler = null;
 
 const prefix = "-";
 const minLength = 8;
 
-var active_hooks = [];
-var afk_users = [];
+let active_hooks = [];
+let afk_members = [];
 
-var sound_files = [];
+let sound_files = [];
 fs.readdir('./sound/', (err, files) => {
 	files.forEach(file => {
-		var snd = file.replace(/\.[^/.]+$/, "");
+		let snd = file.replace(/\.[^/.]+$/, "");
 		sound_files.push(snd);
 	});
 })
@@ -82,8 +82,8 @@ const replies = [
 
 
 function getVideoId(string) {
-	var regex = /(?:\?v=|&v=|youtu\.be\/)(.*?)(?:\?|&|$)/; // /^[a-zA-Z0-9-_]{11}$/
-	var matches = string.match(regex);
+	let regex = /(?:\?v=|&v=|youtu\.be\/)(.*?)(?:\?|&|$)/; // /^[a-zA-Z0-9-_]{11}$/
+	let matches = string.match(regex);
 
 	if (matches) {
 		return matches[1];
@@ -135,7 +135,7 @@ function playVideo( video, channel ) {
 	if (channel != null) {
 		leaveChannel();
 		joinChannel( channel, connection => {
-			var audio_stream = ytdl(video, { filter : 'audioonly', quality: 'highestaudio' });
+			let audio_stream = ytdl(video, { filter : 'audioonly', quality: 'highestaudio' });
 			stream_handler = connection.play(audio_stream, { seek: 0, volume: 1 });
 			
 			stream_handler.on("finish", () => {
@@ -157,17 +157,17 @@ function createTemporaryWebhook(channel) { // Returns a promise with a hook
 }
 
 function removeTemporaryWebhook(hook) { // Remove a temporary hook
-	var pos = active_hooks.indexOf(hook);
+	let pos = active_hooks.indexOf(hook);
 	if (pos > -1) {
 		active_hooks.splice(pos, 1);
 		hook.delete();
 	}
 }
 
-function sendTemporaryMessage(hook, user, msg) { // Sends a message by the user via the specified hook
+function sendTemporaryMessage(hook, member, msg) { // Sends a message by the user via the specified hook
 	hook.send(msg, {
-		username: user.username,
-		avatarURL: user.displayAvatarURL()
+		username: member.displayName,
+		avatarURL: member.user.displayAvatarURL()
 	}).then(() => {
 		removeTemporaryWebhook(hook);
 	}).catch(console.error);
@@ -175,9 +175,9 @@ function sendTemporaryMessage(hook, user, msg) { // Sends a message by the user 
 
 function clearTemporaryWebhooks(guild) { // Clear all non-active hooks
 	guild.fetchWebhooks().then(collection => {
-		var hooks = collection.array();
-		for (var i in hooks) {
-			var hook = hooks[i]
+		let hooks = collection.array();
+		for (let i in hooks) {
+			let hook = hooks[i]
 			if (hook.name != "Temporary Webhook") continue;
 			if (hook.channelID in active_hooks) continue;
 			hook.delete();
@@ -186,34 +186,34 @@ function clearTemporaryWebhooks(guild) { // Clear all non-active hooks
 }
 
 function sendAFKMessages(channel) { // Send AFK messages to channel
-	if (afk_users.length > 0) {
-		for (var i in afk_users) {
-			let user = afk_users[i];
+	if (afk_members.length > 0) {
+		for (let i in afk_members) {
+			let member = afk_members[i];
 			setTimeout(() => {
 				createTemporaryWebhook(channel).then(hook => {
-                    var reply = replies[Math.floor(Math.random() * replies.length)];
-                    sendTemporaryMessage(hook, user, reply);
+                    let reply = replies[Math.floor(Math.random() * replies.length)];
+                    sendTemporaryMessage(hook, member, reply);
 				}).catch(console.error);
 			}, 500 + Math.random()*1500);
 		}
 	}
 }
 
-function isAFK(user) {
-	if (afk_users.indexOf(user) > -1) return true;
+function isAFK(member) {
+	if (afk_members.indexOf(member) > -1) return true;
 	return false
 }
 
-function becomeAFK(user) {
-	if (isAFK(user)) return false;
-	afk_users.push( user );
+function becomeAFK(member) {
+	if (isAFK(member)) return false;
+	afk_members.push( member );
 	return true;
 }
 
-function begoneAFK(user) {
-	var pos = afk_users.indexOf(user);
+function begoneAFK(member) {
+	let pos = afk_members.indexOf(member);
 	if (pos > -1) {
-		afk_users.splice(pos, 1);
+		afk_members.splice(pos, 1);
 		return true;
 	}
 	return false;
@@ -226,7 +226,7 @@ client.on('ready', () => {
 
 /*client.on('messageReactionAdd', (react, user) => {
 	if (user.bot) return;
-	var name = react.emoji.name;
+	let name = react.emoji.name;
 	if (name == "👌" || name == "⭐") {
 		react.message.channel.sendMessage("10+ meme points to **" + user.username + "**", {
 			files: ["http://thefern.netau.net/img/10points.png"]
@@ -243,10 +243,10 @@ client.on('message', message => {
 	if (message.author.bot) return;
 	if (!message.guild.available) return;
 	
-	var user = message.author;
-	var member = message.member;
-	var name = member && member.displayName || "";
-	var msg = message.content;
+	let user = message.author;
+	let member = message.member;
+	let name = member && member.displayName || "";
+	let msg = message.content;
     
     
     
@@ -257,10 +257,10 @@ client.on('message', message => {
 			return;
 		}
 		
-		var msg = msg.replace(/[^a-z]/gmi, "").toLowerCase();
-		var txt = msg.split(" ");
-		for (var x in txt) {
-			var word = txt[x];
+		let msg = msg.replace(/[^a-z]/gmi, "").toLowerCase();
+		let txt = msg.split(" ");
+		for (let x in txt) {
+			let word = txt[x];
 			if (capitalistWords.indexOf(word) > -1) {
                 message.channel.send("'**" + word.toUpperCase() + "**' is __CAPITALIST__ word. now off to *GULAG*");
 				message.channel.send({
@@ -292,9 +292,9 @@ client.on('message', message => {
 		
 		sendAFKMessages(message.channel);
 	} else {
-		var command = msg.split(" ")[0];
+		let command = msg.split(" ")[0];
 		command = command.slice(prefix.length).toLowerCase();
-		var args = msg.replace(/\n/g, " ").split(" ").slice(1);
+		let args = msg.replace(/\n/g, " ").split(" ").slice(1);
 		
 		message.delete();
 		
@@ -316,7 +316,7 @@ client.on('message', message => {
 			} else {
 				becomeAFK(user);
 				createTemporaryWebhook(message.channel).then(hook => {
-					sendTemporaryMessage(hook, user, "am bot gib data, beep");
+					sendTemporaryMessage(hook, member, "am bot gib data, beep");
 				}).catch(err => {
 					console.error(err);
 				});
@@ -325,40 +325,40 @@ client.on('message', message => {
 		
 		if (command == "banned") {
 			txt = "**Banned capitalist words**";
-			for (var x in capitalistWords) {
+			for (let x in capitalistWords) {
 				 txt += "\n  " + capitalistWords[x];
 			}
 			message.channel.send(txt);
 		}
 		
 		if (command == "item") {
-			var id =  args[0]; // 76561198077944666
-			var search = args.slice(1).join(" ").toLowerCase();
+			let id =  args[0]; // 76561198077944666
+			let search = args.slice(1).join(" ").toLowerCase();
 			if (id != null && search != null) {
 				request('http://steamcommunity.com/inventory/' + id + '/440/2?l=english&count=5000', { json: true }, (err, res, body) => {
 					if (err) return console.log(err);
 					if (!body['descriptions']) return;
-					var inv = body['descriptions'];
-					var item = null;
-					for (var i in inv) {
-						var name = inv[i]['name'].toLowerCase();
+					let inv = body['descriptions'];
+					let item = null;
+					for (let i in inv) {
+						let name = inv[i]['name'].toLowerCase();
 						if (name.indexOf(search) > -1) {
 							item = inv[i];
 							break;
 						}
 					}
 					if (item != null) {
-						var name = item['name'] || 'Unknown';
-						var desc = '';
-						var type = item['type'];
-						var color = '#' + (item['name_color'] || 'FFFFFF');
-						var img = 'http://community.edgecast.steamstatic.com/economy/image/' + item['icon_url_large'];
+						let name = item['name'] || 'Unknown';
+						let desc = '';
+						let type = item['type'];
+						let color = '#' + (item['name_color'] || 'FFFFFF');
+						let img = 'http://community.edgecast.steamstatic.com/economy/image/' + item['icon_url_large'];
 						
-						for (var i in item['descriptions']) {
+						for (let i in item['descriptions']) {
 							desc += '\n' + item['descriptions'][i]['value'];
 						}
 						
-						var embed = new Discord.RichEmbed()
+						let embed = new Discord.RichEmbed()
 							.setTitle(name)
 							.setDescription(desc)
 							.setThumbnail(img)
@@ -395,14 +395,14 @@ client.on('message', message => {
 		
 		if (command == "sound") {
 			if (member.voice.channel) {
-                var filename = args[0];
-                // var channel = guild.channels.cache.find(channel => channel.name === args[1]);
+                let filename = args[0];
+                // let channel = guild.channels.cache.find(channel => channel.name === args[1]);
                 
 				if (sound_files.indexOf(filename) > -1) {
 					playFile( "sound/" + filename + ".mp3", member.voice.channel );
 				} else {
-					var txt = "**" + prefix + "sound**";
-					for (var x in sound_files) {
+					let txt = "**" + prefix + "sound**";
+					for (let x in sound_files) {
 						txt += "\n  " + sound_files[x];
 					}
 					message.channel.send(txt);
@@ -418,7 +418,7 @@ client.on('message', message => {
 		
 		if (command == "play") {
 			if (member.voice.channel) {
-				var id = getVideoId( args[0] );
+				let id = getVideoId( args[0] );
 				playVideo( id, member.voice.channel );
 			}
 		}
