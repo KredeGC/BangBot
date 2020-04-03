@@ -350,7 +350,7 @@ client.on('message', message => {
 						var desc = '';
 						var type = item['type'];
 						var color = '#' + (item['name_color'] || 'FFFFFF');
-						var img = 'http://community.edgecast.steamstatic.com/economy/image/' + item['icon_url_large'];
+						var img = 'http://steamcommunity-a.akamaihd.net/economy/image/' + item['icon_url_large'];
 						
 						for (var i in item['descriptions']) {
 							desc += '\n' + item['descriptions'][i]['value'];
