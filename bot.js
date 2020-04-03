@@ -232,7 +232,7 @@ client.on('ready', () => {
 			files: ["http://thefern.netau.net/img/10points.png"]
 		});
 	}
-	react.remove(user);
+	// react.remove(user);
 });*/
 
 client.on('guildMemberAdd', member => {
@@ -251,7 +251,7 @@ client.on('message', message => {
     
     
 	if (!msg.startsWith(prefix)) {
-		if (isAFK(user)) {
+		if (isAFK(member)) {
 			message.delete();
 			user.send("Du er en bot. Skriv `" + prefix + "afk`");
 			return;
@@ -263,14 +263,14 @@ client.on('message', message => {
 			var word = txt[x];
 			if (capitalistWords.indexOf(word) > -1) {
                 message.channel.send("'**" + word.toUpperCase() + "**' is __CAPITALIST__ word. now off to *GULAG*");
-				message.channel.send({
+				/*message.channel.send({
 					files: ["http://thefern.netau.net/img/server.jpg"]
-				});
+				});*/
 				return;
 			} else if (lies.indexOf(word) > -1) {
-				message.channel.send({
+				/*message.channel.send({
 					files: ["http://thefern.netau.net/img/deception.png"]
-				});
+				});*/
 				return;
 			} else if (word == "anna") {
 				message.delete();
