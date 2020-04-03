@@ -1,21 +1,55 @@
+'use strict';
+
+/**
+ * Send a user a link to their avatar
+ */
+
+// Import the discord.js module
+const Discord = require('discord.js');
+
+// Create an instance of a Discord client
+const client = new Discord.Client();
+
+/**
+ * The ready event is vital, it means that only _after_ this will your bot start reacting to information
+ * received from Discord
+ */
+client.on('ready', () => {
+  console.log('I am ready!');
+});
+
+// Create an event listener for messages
+client.on('message', message => {
+  // If the message is "what is my avatar"
+  if (message.content === 'what is my avatar') {
+    // Send the user's avatar URL
+    message.reply(message.author.displayAvatarURL());
+  }
+});
+
+// Log our bot in using the token from https://discordapp.com/developers/applications/me
+client.login(process.env.BOT_TOKEN);
+
+
 /* When updating to a newer version:
     'channel.sendMessage' becomes 'channel.send'
 */
+/*'use strict';
 
 const Discord = require('discord.js');
 const request = require('request');
-//const ytdl = require("ytdl-core");
-//const fs = require('fs');
+const ytdl = require("ytdl-core");
+const fs = require('fs');
 
 const client = new Discord.Client();
 
-//var voice_connection = null;
-//var stream_handler = null;
+var voice_connection = null;
+var stream_handler = null;
 
 const prefix = "-";
 const minLength = 8;
 
-/*var active_hooks = [];
+var active_hooks = [];
 var afk_users = [];
 
 var sound_files = [];
