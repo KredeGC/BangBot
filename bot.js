@@ -253,7 +253,7 @@ client.on('message', message => {
 	if (!msg.startsWith(prefix)) {
 		if (isAFK(user)) {
 			message.delete();
-			user.send("Du er AFK. Skriv `" + prefix + "afk` for at blive aktiv");
+			user.send("Du er en bot. Skriv `" + prefix + "afk`");
 			return;
 		}
 		
@@ -311,10 +311,10 @@ client.on('message', message => {
 		// Commands
 		
 		if (command == "afk") {
-			if (isAFK(user)) {
-				begoneAFK(user);
+			if (isAFK(member)) {
+				begoneAFK(member);
 			} else {
-				becomeAFK(user);
+				becomeAFK(member);
 				createTemporaryWebhook(message.channel).then(hook => {
 					sendTemporaryMessage(hook, member, "am bot gib data, beep");
 				}).catch(console.error);
