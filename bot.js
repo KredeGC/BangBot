@@ -187,7 +187,7 @@ function sendAFKMessages(channel) { // Send AFK messages to channel
 			var id = afk_users[i];
 			setTimeout(() => {
 				createTemporaryWebhook(channel).then(hook => {
-					client.fetchUser(id).then(user => {
+					client.users.fetch(id).then(user => {
 						var reply = replies[Math.floor(Math.random() * replies.length)];
 						sendTemporaryMessage(hook, user, reply);
 					}).catch(console.error);
@@ -279,7 +279,7 @@ client.on('message', message => {
 			if (Math.random() > 0.95) {
                 message.channel.send("10+ meme points to **" + name + "**");
 				message.channel.send({
-					files: ["http://thefern.netau.net/img/10points.png"]
+					files: ["http://gphone.icu/10points.png"]
 				});
 			}
 		}
@@ -298,13 +298,8 @@ client.on('message', message => {
 			message.channel.send("**Kommandoer** for **" + name + "**" +
 			"\n  **" + prefix + "afk**: Detroit: Become human" +
 			"\n  **" + prefix + "banned** : Ulovlig kapitalistisk propaganda" +
-			"\n**Voice Channel**" +
-			"\n  **" + prefix + "communism** : Comrade Stalin approves" +
-			"\n  **" + prefix + "kalinka** : Start kalinka session" +
-			"\n  **" + prefix + "skadoo** : Do u no de wey" +
-			"\n  **" + prefix + "sound** `<sound>` : Soundboard" +
 			"\n**Musik**" +
-			"\n  **" + prefix + "join** : Join my meinkraft server" +
+			"\n  **" + prefix + "sound** `<sound>` : Soundboard" +
 			"\n  **" + prefix + "leave** : Unsubscribble to my channel" +
 			"\n  **" + prefix + "play** : Lyt til ulovlige youtube videoer");
 		}
@@ -394,32 +389,6 @@ client.on('message', message => {
 		
 		// Voice
 		
-		if (command == "communism") {
-			if (member.voice.channel) {
-                message.channel.send("*russia*");
-				playVideo( "U06jlgpMtQs", member.voice.channel );
-			}
-		}
-		
-		if (command == "kalinka") {
-			if (member.voice.channel) {
-				message.channel.send("klinke");
-				playVideo( "4xJoVCjBUco", member.voice.channel );
-			}
-		}
-		
-		if (command == "skadoo") {
-			if (member.voice.channel) {
-				playVideo( "ZUODMHX7ZuU", member.voice.channel );
-			}
-		}
-		
-		if (command == "fine") {
-			if (member.voice.channel) {
-				playVideo( "5PdXIHGvMpk", member.voice.channel );
-			}
-		}
-		
 		if (command == "sound") {
 			if (member.voice.channel) {
                 var filename = args[0];
@@ -438,14 +407,6 @@ client.on('message', message => {
 		}
 		
 		// Music
-		
-		if (command == "join") {
-			if (member.voice.channel) {
-				joinChannel(member.voice.channel);
-			} else {
-				message.channel.send(name + ", du skal være i en voice.channel din tard");
-			}
-		}
 		
 		if (command == "leave") {
 			leaveChannel( message.guild );
