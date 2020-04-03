@@ -54,15 +54,18 @@ const replies = [
 	"Bang Approves",
 	"Beep",
 	"Boop",
+    "Certainly",
 	"Communism will rise",
 	"*confusement*",
 	"(X) Doubt",
 	"Good job",
-	"Haram",
+    "haha yes",
+    "Haram",
 	"Impossible",
 	"kys",
 	"Magnificent",
-	"Marvellous",
+    "Marvellous",
+    "My mom said no",
 	"No",
 	"Perhaps",
 	"Possibly",
@@ -71,9 +74,10 @@ const replies = [
 	"Leaving a dot here .",
 	"Undoubtedly",
 	"Well done",
-	"Yee",
 	"Yeah boii",
-	"You do not no de wey"
+	"Yee",
+    "You do not no de wey",
+	"Yoink"
 ];
 
 
@@ -184,13 +188,11 @@ function clearTemporaryWebhooks(guild) { // Clear all non-active hooks
 function sendAFKMessages(channel) { // Send AFK messages to channel
 	if (afk_users.length > 0) {
 		for (var i in afk_users) {
-			var id = afk_users[i];
+			let user = afk_users[i];
 			setTimeout(() => {
 				createTemporaryWebhook(channel).then(hook => {
-					client.users.fetch(id).then(user => {
-						var reply = replies[Math.floor(Math.random() * replies.length)];
-						sendTemporaryMessage(hook, user, reply);
-					}).catch(console.error);
+                    var reply = replies[Math.floor(Math.random() * replies.length)];
+                    sendTemporaryMessage(hook, user, reply);
 				}).catch(console.error);
 			}, 500 + Math.random()*1500);
 		}
@@ -198,18 +200,18 @@ function sendAFKMessages(channel) { // Send AFK messages to channel
 }
 
 function isAFK(user) {
-	if (afk_users.indexOf(user.id) > -1) return true;
+	if (afk_users.indexOf(user) > -1) return true;
 	return false
 }
 
 function becomeAFK(user) {
 	if (isAFK(user)) return false;
-	afk_users.push( user.id );
+	afk_users.push( user );
 	return true;
 }
 
 function begoneAFK(user) {
-	var pos = afk_users.indexOf(user.id);
+	var pos = afk_users.indexOf(user);
 	if (pos > -1) {
 		afk_users.splice(pos, 1);
 		return true;
@@ -245,7 +247,9 @@ client.on('message', message => {
 	var member = message.member;
 	var name = member && member.displayName || "";
 	var msg = message.content;
-	
+    
+    
+    
 	if (!msg.startsWith(prefix)) {
 		if (isAFK(user)) {
 			message.delete();
