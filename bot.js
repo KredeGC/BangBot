@@ -108,32 +108,14 @@ function leaveChannel() {
 	}
 }
 
-function playStream( url, channel ) {
-	if (stream_handler != null) return;
-	if (channel != null) {
-		leaveChannel();
-		joinChannel( channel, connection => {
-			stream_handler = connection.playStream(url, { seek: 0, volume: 1 });
-			
-			stream_handler.once("end", (reason) => {
-				if (voice_connection.channel != null) {
-					voice_connection.channel.leave();
-				}
-				voice_connection = null;
-				stream_handler = null;
-			});
-		});
-	}
-}
-
 function playFile( file, channel ) {
 	if (stream_handler != null) return;
 	if (channel != null) {
 		leaveChannel();
 		joinChannel( channel, connection => {
-			stream_handler = connection.playFile(file, { seek: 0, volume: 1 });
+			stream_handler = connection.play(file, { seek: 0, volume: 1 });
 			
-			stream_handler.once("end", (reason) => {
+			stream_handler.once("end", () => {
 				if (voice_connection.channel != null) {
 					voice_connection.channel.leave();
 				}
@@ -147,12 +129,12 @@ function playFile( file, channel ) {
 function playVideo( video, channel ) {
 	if (stream_handler != null) return;
 	if (channel != null) {
-		leaveChannel( channel.guild );
+		leaveChannel();
 		joinChannel( channel, connection => {
-			var audio_stream = ytdl("https://www.youtube.com/watch?v=" + video, { filter : 'audioonly' });
-			stream_handler = connection.playStream(audio_stream, { seek: 0, volume: 1 });
+			var audio_stream = ytdl("https://www.youtube.com/watch?v=" + video, { filter : 'audioonly', quality: 'highestaudio' });
+			stream_handler = connection.play(audio_stream, { seek: 0, volume: 1 });
 			
-			stream_handler.once("end", reason => {
+			stream_handler.once("end", () => {
 				if (voice_connection.channel != null) {
 					voice_connection.channel.leave();
 				}
@@ -322,7 +304,6 @@ client.on('message', message => {
 			"\n  **" + prefix + "kalinka** : Start kalinka session" +
 			"\n  **" + prefix + "skadoo** : Do u no de wey" +
 			"\n  **" + prefix + "sound** `<sound>` : Soundboard" +
-			"\n  **" + prefix + "tts** `<text>` : Text-to-speech" +
 			"\n**Musik**" +
 			"\n  **" + prefix + "join** : Join my meinkraft server" +
 			"\n  **" + prefix + "leave** : Unsubscribble to my channel" +
@@ -453,12 +434,6 @@ client.on('message', message => {
 					message.channel.send(txt);
 				}
 			}
-		}
-		
-		if (command == "tts") {
-			var url = "https://talk.moustacheminer.com/api/gen.wav?dectalk=";
-			var talk = args.join("%20");
-			playStream( url + talk, member.voice.channel );
 		}
 		
 		// Music
