@@ -4,18 +4,18 @@
 
 const Discord = require('discord.js');
 const request = require('request');
-const ytdl = require("ytdl-core");
-const fs = require('fs');
+//const ytdl = require("ytdl-core");
+//const fs = require('fs');
 
 const client = new Discord.Client();
 
-var voice_connection = null;
-var stream_handler = null;
+//var voice_connection = null;
+//var stream_handler = null;
 
 const prefix = "-";
 const minLength = 8;
 
-var active_hooks = [];
+/*var active_hooks = [];
 var afk_users = [];
 
 var sound_files = [];
@@ -232,7 +232,7 @@ function begoneAFK(user) {
 		return true;
 	}
 	return false;
-}
+}*/
 
 client.on('ready', () => {
     console.log('Bang bang into the room!');
@@ -250,7 +250,7 @@ client.on('ready', () => {
 	react.remove(user);
 });*/
 
-client.on('guildMemberAdd', member => {
+/*client.on('guildMemberAdd', member => {
 	member.guild.defaultchannel.send("Velkommen " + member.displayName + " til " + member.guild.name);
 });
 
@@ -330,7 +330,7 @@ client.on('message', message => {
 		
 		// Commands
 		
-		/*if (command == "afk") {
+		if (command == "afk") {
 			if (isAFK(user)) {
 				begoneAFK(user);
 			} else {
@@ -341,7 +341,7 @@ client.on('message', message => {
 					console.error(err);
 				});
 			}
-		}*/
+		}
 		
 		if (command == "banned") {
 			txt = "**Banned capitalist words**";
@@ -481,6 +481,6 @@ client.on('message', message => {
 			}
 		}
 	}
-});
+});*/
 
 client.login(process.env.BOT_TOKEN);
