@@ -78,7 +78,7 @@ const replies = [
 
 
 function getVideoId(string) {
-	var regex = /(?:\?v=|&v=|youtu\.be\/)(.*?)(?:\?|&|$)/;
+	var regex = /(?:\?v=|&v=|youtu\.be\/)(.*?)(?:\?|&|$)/; // /^[a-zA-Z0-9-_]{11}$/
 	var matches = string.match(regex);
 
 	if (matches) {
@@ -131,7 +131,7 @@ function playVideo( video, channel ) {
 	if (channel != null) {
 		leaveChannel();
 		joinChannel( channel, connection => {
-			var audio_stream = ytdl("https://www.youtube.com/watch?v=" + video, { filter : 'audioonly', quality: 'highestaudio' });
+			var audio_stream = ytdl(video, { filter : 'audioonly', quality: 'highestaudio' });
 			stream_handler = connection.play(audio_stream, { seek: 0, volume: 1 });
 			
 			stream_handler.on("finish", () => {
@@ -163,7 +163,7 @@ function removeTemporaryWebhook(hook) { // Remove a temporary hook
 function sendTemporaryMessage(hook, user, msg) { // Sends a message by the user via the specified hook
 	hook.send(msg, {
 		username: user.username,
-		avatarURL: user.avatarURL
+		avatarURL: user.displayAvatarURL()
 	}).then(() => {
 		removeTemporaryWebhook(hook);
 	}).catch(console.error);
